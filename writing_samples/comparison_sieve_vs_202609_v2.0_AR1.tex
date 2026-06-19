@@ -1,0 +1,190 @@
+\documentclass[11pt,landscape]{article}
+\usepackage{amsmath, amssymb, bm}
+\usepackage[margin=0.5in]{geometry}
+\usepackage{mdframed}
+
+\begin{document}
+
+\title{\vspace{-1.5cm}Rigorous Step-by-Step Derivation: Orthogonalized Sieve-EL (Version 2.0 AR1) vs. Cai et al. (2026)}
+\date{}
+\maketitle
+
+\vspace{-1.5cm}
+\noindent\hrulefill
+
+\vspace{0.5em}
+\noindent
+\begin{minipage}[t]{0.48\textwidth}
+    \begin{center}
+        \Large \textbf{Baseline Framework (Cai et al., 2026)}
+    \end{center}
+\end{minipage}%
+\hfill
+\begin{minipage}[t]{0.48\textwidth}
+    \begin{center}
+        \Large \textbf{Proposed Orthogonalized Sieve-EL (Version 2.0 AR1)}
+    \end{center}
+\end{minipage}
+
+\vspace{0.5em}
+\noindent\hrulefill
+\vspace{1em}
+
+% ------------------- STEP 1 -------------------
+\noindent\textbf{\large Step 1: Model Specification \& DGP} \vspace{0.5em}
+
+\noindent
+\begin{minipage}[t]{0.48\textwidth}
+\textbf{Data-Generating Process:}
+\begin{align}
+    Y_t &= \alpha + \beta X_{t-1} + U_t \\
+    X_t &= \theta + \rho X_{t-1} + \varepsilon_t \\
+    U_t &= \phi \varepsilon_t + z_t \quad (\text{Stambaugh Bias})
+\end{align}
+\textbf{Nuisance Component:} The fixed scalar intercept $\alpha$. \newline
+\textbf{Nuisance Basis Space:} $\text{span}\{1\}$.
+\end{minipage}%
+\hfill
+\begin{minipage}[t]{0.48\textwidth}
+\textbf{Data-Generating Process:}
+\begin{align}
+    Y_t &= m(W_{t-1}) + \beta X_{t-1} + U_t \\
+    X_t &= \theta + \rho X_{t-1} + \varepsilon_t \\
+    U_t &= \phi \varepsilon_t + z_t \quad (\text{Stambaugh Bias})
+\end{align}
+\textbf{Nuisance Component:} The unknown infinite-dimensional non-linear function $m(\cdot)$. \newline
+\textbf{Nuisance Basis Space:} $\text{span}\{\bm{P}_K(W_{t-1})\}$ where $\bm{P}_K \in \mathbb{R}^K$.
+\end{minipage}
+
+\vspace{1em}
+\noindent\hrulefill
+\vspace{1em}
+
+% ------------------- STEP 2 -------------------
+\noindent\textbf{\large Step 2: Nuisance Estimation} \vspace{0.5em}
+
+\noindent
+\begin{minipage}[t]{0.48\textwidth}
+Because $\mathbb{E}[U_t X_{t-1}] \neq 0$ under high persistence, simple OLS is biased. They apply \textit{residual addition}. \newline
+\textbf{1.} Regress $X_t$ on $X_{t-1}$ to get $\widehat{\varepsilon}_t$:
+\begin{equation}
+    \widehat{\varepsilon}_t = X_t - \widehat{\theta} - \widehat{\rho} X_{t-1}
+\end{equation}
+\textbf{2.} Estimate intercept via multivariate OLS:
+\begin{equation}
+    Y_t = \widetilde{\alpha} + \widetilde{\beta} X_{t-1} + \widetilde{\phi} \widehat{\varepsilon}_t + \text{error}
+\end{equation}
+\textbf{3.} Adjust response:
+\begin{equation}
+    \widetilde{Y}_t = Y_t - \widetilde{\alpha}
+\end{equation}
+\end{minipage}%
+\hfill
+\begin{minipage}[t]{0.48\textwidth}
+To handle Stambaugh bias and omit variable bias simultaneously, residual addition is utilized alongside sieve approximation. \newline
+\textbf{1.} AR(1) regression to get $\widehat{\varepsilon}_t$:
+\begin{equation}
+    \widehat{\varepsilon}_t = X_t - \widehat{\theta} - \widehat{\rho} X_{t-1}
+\end{equation}
+\textbf{2.} Joint Sieve-Cai-Wang Estimation via OLS:
+\begin{equation}
+    Y_t = \bm{P}_K(W_{t-1})'\bm{c} + \beta X_{t-1} + \phi \widehat{\varepsilon}_t + \text{error}
+\end{equation}
+This joint regression purges both omitted variable bias and endogeneity bias from $\widehat{\bm{c}}$. \newline
+\textbf{3.} Adjust response:
+\begin{equation}
+    \widetilde{Y}_t = Y_t - \bm{P}_K(W_{t-1})'\widehat{\bm{c}}
+\end{equation}
+\end{minipage}
+
+\vspace{1em}
+\noindent\hrulefill
+\vspace{1em}
+
+% ------------------- STEP 3 -------------------
+\noindent\textbf{\large Step 3: Weight Orthogonalization} \vspace{0.5em}
+
+\noindent
+\begin{minipage}[t]{0.48\textwidth}
+To prevent the estimation error $(\widetilde{\alpha} - \alpha)$ from distorting the EL limit, project raw weight $w(X_{t-1})$ onto the nuisance basis (the constant $1$) via OLS:
+\begin{equation}
+    \bar{w}_T = \left( \sum_{t=1}^T 1 \cdot 1 \right)^{-1} \sum_{t=1}^T 1 \cdot w(X_{t-1}) = \frac{1}{T}\sum_{t=1}^T w(X_{t-1})
+\end{equation}
+The centered weight $w^c_t$ is the OLS residual:
+\begin{equation}
+    w^c_t = w(X_{t-1}) - \bar{w}_T
+\end{equation}
+By OLS normal equations (First-Order Conditions):
+\begin{equation}
+    \sum_{t=1}^T 1 \cdot w^c_t \equiv 0 \quad (\text{Exact in-sample})
+\end{equation}
+\end{minipage}%
+\hfill
+\begin{minipage}[t]{0.48\textwidth}
+To prevent the remaining sieve estimation error from distorting the EL limit, project raw weight $w(X_{t-1})$ onto the nuisance basis ($\bm{P}_K(W_{t-1})$) via OLS:
+\begin{equation}
+    \widehat{\bm{\gamma}} = \left( \sum_{t=1}^T \bm{P}_K \bm{P}_K' \right)^{-1} \sum_{t=1}^T \bm{P}_K w(X_{t-1})
+\end{equation}
+The centered weight $w^c_t$ is the OLS residual:
+\begin{equation}
+    w^c_t = w(X_{t-1}) - \bm{P}_K(W_{t-1})'\widehat{\bm{\gamma}}
+\end{equation}
+By OLS normal equations (First-Order Conditions):
+\begin{equation}
+    \sum_{t=1}^T \bm{P}_K(W_{t-1}) w^c_t \equiv \bm{0} \quad (\text{Exact in-sample})
+\end{equation}
+\end{minipage}
+
+\vspace{1em}
+\noindent\hrulefill
+\vspace{1em}
+
+% ------------------- STEP 4 -------------------
+\noindent\textbf{\large Step 4: Algebraic Elimination in EL Moment Condition} \vspace{0.5em}
+
+\noindent
+\begin{minipage}[t]{0.48\textwidth}
+Construct EL moment under $H_0: \beta = \beta_0$:
+\begin{equation}
+    Z_t(\beta_0) = \left( \widetilde{Y}_t - \beta_0 X_{t-1} \right) w^c_t
+\end{equation}
+Expand $\widetilde{Y}_t$:
+\begin{equation}
+    Z_t(\beta_0) = \left( Y_t - \widetilde{\alpha} - \beta_0 X_{t-1} \right) w^c_t
+\end{equation}
+Substitute true DGP under null ($Y_t - \beta_0 X_{t-1} = \alpha + U_t$):
+\begin{equation}
+    Z_t(\beta_0) = \left( \alpha + U_t - \widetilde{\alpha} \right) w^c_t = U_t w^c_t - (\widetilde{\alpha} - \alpha) w^c_t
+\end{equation}
+Sum the moment conditions:
+\begin{equation}
+    \sum_{t=1}^T Z_t(\beta_0) = \sum_{t=1}^T U_t w^c_t - (\widetilde{\alpha} - \alpha) \underbrace{\sum_{t=1}^T w^c_t}_{=\; 0}
+\end{equation}
+Because the orthogonalization ensures $\sum w^c_t \equiv 0$, the estimation error is perfectly multiplied by zero:
+\begin{equation}
+    \frac{1}{\sqrt{T}}\sum_{t=1}^T Z_t(\beta_0) = \frac{1}{\sqrt{T}}\sum_{t=1}^T U_t w^c_t \xrightarrow{d} N(0, V)
+\end{equation}
+\end{minipage}%
+\hfill
+\begin{minipage}[t]{0.48\textwidth}
+Construct EL moment under $H_0: \beta = \beta_0$:
+\begin{equation}
+    Z_t(\beta_0) = \left( \widetilde{Y}_t - \beta_0 X_{t-1} \right) w^c_t
+\end{equation}
+Because $\widehat{\bm{c}}$ was estimated using the full joint regression, we have $\widetilde{Y}_t - \beta_0 X_{t-1} \approx m(W_{t-1}) + U_t - \bm{P}_K(W_{t-1})'\bm{c}$. Substituting DGP and decomposition $m(W) = \bm{P}_K'\bm{c} + r_t$:
+\begin{align}
+    Z_t(\beta_0) &\approx \left( \bm{P}_K'\bm{c} + r_t + U_t - \bm{P}_K'\widehat{\bm{c}} \right) w^c_t \\
+    &= U_t w^c_t + r_t w^c_t - (\widehat{\bm{c}} - \bm{c})'\bm{P}_K w^c_t
+\end{align}
+Sum the moment conditions:
+\begin{equation}
+    \sum_{t=1}^T Z_t(\beta_0) \approx \sum_{t=1}^T \left( U_t + r_t \right) w^c_t - (\widehat{\bm{c}} - \bm{c})' \underbrace{\sum_{t=1}^T \bm{P}_K w^c_t}_{=\; \bm{0}}
+\end{equation}
+Because the sieve projection ensures $\sum \bm{P}_K w^c_t \equiv \bm{0}$, the multi-dimensional parameter estimation error is multiplied by zero:
+\begin{equation}
+    \frac{1}{\sqrt{T}}\sum_{t=1}^T Z_t(\beta_0) \approx \frac{1}{\sqrt{T}}\sum_{t=1}^T U_t w^c_t + \underbrace{\frac{1}{\sqrt{T}}\sum_{t=1}^T r_t w^c_t}_{=\; o_p(1)}
+\end{equation}
+where the sieve approximation bias $r_t$ vanishes strictly if $T^{\frac{1}{2s}} \ll K \ll T^{\frac{1}{2}}$.
+\end{minipage}
+
+\end{document}

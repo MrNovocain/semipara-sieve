@@ -1,0 +1,209 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{bm}
+
+\begin{document}
+
+\title{Nonparametric Predictive Regression with Exogenous Shocks: A Sieve Empirical Likelihood Approach}
+\author{}
+\date{\today}
+\maketitle
+
+\section{Introduction and Data-Generating Process}
+
+We consider the problem of testing return predictability in the presence of highly persistent predictors and exogenous covariates (such as weather shocks). The data-generating process (DGP) is specified by the following system of equations:
+
+\begin{enumerate}
+    \item \textbf{Predictive Regression:}
+    \begin{equation}
+        Y_t = m(W_{t-1}) + \beta X_{t-1} + U_t
+    \end{equation}
+    \begin{equation}
+        X_t = \theta + \rho X_{t-1} + v_t
+    \end{equation}
+    
+    \item \textbf{Endogeneity:}
+    \begin{equation}
+        U_t = \phi v_t + e_t \quad \text{with } E[e_t \mid v_t] = 0
+    \end{equation}
+\end{enumerate}
+where $Y_t$ represents the asset returns, $W_{t-1}$ is a stationary exogenous weather covariate, and $X_{t-1}$ is a persistent financial predictor that is independent of $W_{t-1}$. The error terms are structured to accommodate potential endogeneity via the parameter $\phi$.
+
+Motivated by Perron (1989), our goal is to investigate return predictability while avoiding size distortions or false inferences caused by near unit roots in the predictor dynamics (i.e., $\rho \approx 1$). This is achieved by testing the null hypothesis of no predictability:
+\begin{equation} 
+\begin{aligned}
+    H_0: \quad &\beta = 0 \\
+    H_1: \quad &\beta \neq 0
+\end{aligned}
+\end{equation}
+
+By extending the empirical likelihood (EL) framework of Cai et al. (2026), we propose a two-stage Orthogonalized Sieve-EL framework that achieves a standard $\chi^2_1$ limiting distribution under the null.
+
+\section{Motivating Empirical Example: El Ni\~no and Cocoa Futures Returns}
+
+To illustrate the practical relevance of our proposed framework, we present an empirical scenario motivated by the agricultural commodity market shocks of 2023--2024. Let $Y_t$ denote the excess returns on cocoa futures contracts, $W_{t-1}$ represent an exogenous climatic indicator such as the Oceanic Ni\~no Index (ONI) measuring El Ni\~no-Southern Oscillation (ENSO) anomalies, and $X_{t-1}$ denote a persistent financial predictor, such as the global commodity speculative net positions or the inventory-to-use ratio. 
+
+During the 2023--2024 period, a historically severe El Ni\~no event induced extreme droughts in West Africa (primarily C\^ote d'Ivoire and Ghana, which account for nearly 60\% of global cocoa supply). This led to a catastrophic supply deficit and triggered an unprecedented rally in cocoa futures, with prices tripling to exceed \$10,000 per metric ton. This setting provides a highly valid and clean empirical application of our model for several key reasons:
+
+\begin{enumerate}
+    \item \textbf{Strict Exogeneity of Weather Shocks:} The climatic shock $W_{t-1}$ is strictly exogenous to the financial markets. The dynamics of ENSO anomalies are governed by global atmospheric and oceanic circulation systems, meaning they are independent of futures trading volume, inventory levels, or financial speculative activity ($X_{t-1}$). Thus, $W_{t-1}$ is strictly independent of $X_s$ for all $t$ and $s$, validating Assumption~A.
+    
+    \item \textbf{Nonlinear Climate-Yield Relationship:} The impact of temperature and rainfall anomalies on cocoa production is highly nonlinear. Mild deviations in ONI may have negligible effects due to soil moisture buffering, whereas extreme anomalies exceeding threshold levels lead to severe crop disease (e.g., black pod disease) and crop failure. A linear specification would fail to capture this threshold-like behavior, necessitating a nonparametric formulation $m(W_{t-1})$ that can be flexibly approximated using the sieve basis in our first step.
+    
+    \item \textbf{High Persistence of the Financial Predictor:} Financial predictors like inventory-to-use ratios or speculative interest rates are highly persistent and are often modeled as near unit root processes (i.e., $\rho \approx 1$). Performing standard OLS inference on $\beta$ in the presence of $m(W_{t-1})$ and a persistent $X_{t-1}$ would generate severe size distortions.
+    
+    \item \textbf{Separability and the Orthogonalized Sieve-EL Solution:} Our proposed framework allows the researcher to first filter out the complex, nonlinear weather impact $m(W_{t-1})$ using the sieve projection (Step 1). Because $W_{t-1}$ and $X_{t-1}$ are independent, this projection is consistent. By subsequently centering the financial predictor's weights against the sieve basis (Step 2), we purge the estimation error of the weather curve from the empirical likelihood moment condition. This enables valid, standard $\chi^2_1$-based inference on the predictive power $\beta$ of the persistent financial variable.
+\end{enumerate}
+
+\section{The Orthogonalized Sieve-EL Framework}
+
+We handle the unknown nonparametric curve $m(W_{t-1})$ by approximating it using a sieve basis of dimension $K$ (e.g., polynomials or splines). Let $\bm{P}_K(W_{t-1}) = (p_1(W_{t-1}), \dots, p_K(W_{t-1}))'$ be the $K \times 1$ vector of these basis functions.
+
+\subsection{The Step-by-Step Algorithm}
+
+The estimation and inference procedure is implemented via the following three steps:
+
+\paragraph{Step 1: Sieve Estimation of the Weather Curve}
+We run an ordinary least squares (OLS) regression of $Y_t$ on the sieve basis $\bm{P}_K(W_{t-1})$ to obtain the estimated coefficient vector $\widehat{\bm{c}}$:
+\begin{equation}
+    \widehat{\bm{c}} = \left( \sum_{t=1}^T \bm{P}_K(W_{t-1}) \bm{P}_K(W_{t-1})' \right)^{-1} \sum_{t=1}^T \bm{P}_K(W_{t-1}) Y_t
+\end{equation}
+The returns are then adjusted by subtracting the estimated nonparametric curve:
+\begin{equation}
+    \widetilde{Y}_t = Y_t - \bm{P}_K(W_{t-1})'\widehat{\bm{c}}
+\end{equation}
+
+\paragraph{Step 2: Weight Projection and Orthogonalization}
+Let $w(X_{t-1})$ be the raw weight function chosen to control the persistence of $X_{t-1}$ (e.g., $w(X_{t-1}) = \tanh(X_{t-1}/b)$). We regress the raw weights $w(X_{t-1})$ on the same sieve basis $\bm{P}_K(W_{t-1})$ via OLS. The centered and orthogonalized weight $w^c_t$ is defined as the residual of this projection:
+\begin{equation}
+    w^c_t = w(X_{t-1}) - \bm{P}_K(W_{t-1})'\widehat{\bm{\gamma}}
+\end{equation}
+where
+\begin{equation}
+    \widehat{\bm{\gamma}} = \left( \sum_{t=1}^T \bm{P}_K(W_{t-1}) \bm{P}_K(W_{t-1})' \right)^{-1} \sum_{t=1}^T \bm{P}_K(W_{t-1}) w(X_{t-1})
+\end{equation}
+
+\paragraph{Step 3: Empirical Likelihood Moment Evaluation}
+For testing $H_0: \beta = \beta_0$, we construct the empirical likelihood moment condition:
+\begin{equation}
+    Z_t(\beta_0) = \left( \widetilde{Y}_t - \beta_0 X_{t-1} \right) w^c_t
+\end{equation}
+The profile empirical likelihood function for $\beta$ is then evaluated as:
+\begin{equation}
+    L_T(\beta) = \sup \left\{ \prod_{t=1}^T (T \pi_t) : \pi_t \ge 0, \, \sum_{t=1}^T \pi_t = 1, \, \sum_{t=1}^T \pi_t Z_t(\beta) = 0 \right\}
+\end{equation}
+
+\subsection{Algebraic Proof of the Orthogonality Property}
+
+We now show why the sieve estimation error from Step 1 does not affect the asymptotic distribution of the empirical likelihood test statistic. Under $H_0: \beta = \beta_0$, let the true weather curve be decomposed as $m(W_{t-1}) = \bm{P}_K(W_{t-1})'\bm{c} + r_t$, where $r_t$ represents the sieve approximation error. The adjusted returns can be written as:
+\begin{align*}
+    \widetilde{Y}_t - \beta_0 X_{t-1} &= Y_t - \bm{P}_K(W_{t-1})'\widehat{\bm{c}} - \beta_0 X_{t-1} \\
+    &= m(W_{t-1}) + U_t - \bm{P}_K(W_{t-1})'\widehat{\bm{c}} \\
+    &= \bm{P}_K(W_{t-1})'\bm{c} + r_t + U_t - \bm{P}_K(W_{t-1})'\widehat{\bm{c}} \\
+    &= U_t + r_t - \bm{P}_K(W_{t-1})'\left(\widehat{\bm{c}} - \bm{c}\right)
+\end{align*}
+Evaluating the sum of the moment conditions yields:
+\begin{align*}
+    \sum_{t=1}^T Z_t(\beta_0) &= \sum_{t=1}^T \left( U_t + r_t - \bm{P}_K(W_{t-1})'\left(\widehat{\bm{c}} - \bm{c}\right) \right) w^c_t \\
+    &= \sum_{t=1}^T U_t w^c_t + \sum_{t=1}^T r_t w^c_t - \left(\widehat{\bm{c}} - \bm{c}\right)' \sum_{t=1}^T \bm{P}_K(W_{t-1}) w^c_t
+\end{align*}
+By construction, $w^c_t$ is the vector of OLS residuals from projecting $w(X_{t-1})$ onto the basis $\bm{P}_K(W_{t-1})$. The first-order conditions of OLS guarantee that the regressors and the residuals are exactly orthogonal in-sample:
+\begin{equation}
+    \sum_{t=1}^T \bm{P}_K(W_{t-1}) w^c_t \equiv \bm{0}
+\end{equation}
+Therefore, the third term vaporizes algebraically:
+\begin{equation}
+    \sum_{t=1}^T Z_t(\beta_0) = \sum_{t=1}^T U_t w^c_t + \sum_{t=1}^T r_t w^c_t
+\end{equation}
+This indicates that the first-stage estimation error $\widehat{\bm{c}} - \bm{c}$ is completely eliminated in-sample.
+
+\subsection{Comparison with Cai et al. (2026)}
+
+Our framework differs from the two-stage approach of Cai et al. (2026) in three fundamental aspects:
+\begin{itemize}
+    \item \textbf{Nuisance Dimensionality}: Cai et al. (2026) handle a fixed scalar intercept $\alpha$, whereas our model contains an infinite-dimensional nuisance function $m(W_{t-1})$, which requires a sieve approximation of dimension $K \to \infty$.
+    \item \textbf{Orthogonalization Space}: In Cai et al. (2026), the weight centering $w^c(x) = w(x) - \frac{1}{T}\sum w(X_s)$ represents a projection onto the constant subspace $\text{span}\{\bm{1}\}$. In contrast, our orthogonalized weight $w^c_t$ is projected onto the $K$-dimensional sieve space $\text{span}\{\bm{P}_K(W_{t-1})\}$.
+    \item \textbf{Purging and Exogeneity}: Because our weather covariate $W_t$ is strictly exogenous and independent of the predictor $X_t$, the OLS estimator in Step 1 is consistent without requiring the addition of predictor innovations $\widehat{v}_t$ to the regression.
+\end{itemize}
+
+\section{The Growth Rate of the Sieve Dimension $K$}
+
+To establish the asymptotic validity of our test statistic, we must place bounds on the growth rate of the tuning parameter $K$ relative to the sample size $T$.
+
+\subsection{Lower Bound (Bias Elimination)}
+Assume the true weather curve $m(W)$ has smoothness $s$ (i.e., is $s$ times continuously differentiable). Sieve theory implies that the approximation error $r_t$ satisfies $\sup |r_t| = O_p(K^{-s})$. To ensure that the approximation bias does not distort the asymptotic distribution, we require $\sqrt{T} \sum_{t=1}^T r_t w^c_t = o_p(1)$, which translates to:
+\begin{equation}
+    \sqrt{T} K^{-s} \to 0 \quad \implies \quad K \gg T^{\frac{1}{2s}}
+\end{equation}
+
+\subsection{Upper Bound (Variance Control and Leakage Mitigation)}
+Estimating $K$ parameters in OLS introduces in-sample variance inflation and potential "future leakage" bias. Although the $\alpha$-mixing property of the weather process $W_t$ with exponential decay prevents leakage from accumulating, the pure variance penalty scales as $K / \sqrt{T}$. To prevent variance inflation from inflating the denominator of the EL ratio, we require:
+\begin{equation}
+    \frac{K}{\sqrt{T}} \to 0 \quad \implies \quad K \ll T^{\frac{1}{2}}
+\end{equation}
+
+\subsection{The Golden Ratio}
+Combining these bounds yields the formal asymptotic growth condition:
+\begin{equation}
+    T^{\frac{1}{2s}} \ll K \ll T^{\frac{1}{2}}
+\end{equation}
+If we assume $m(W)$ is twice-differentiable ($s=2$), the condition becomes $T^{1/4} \ll K \ll T^{1/2}$. In practice, setting $K \approx T^{1/3}$ satisfies these bounds, ensuring that both approximation bias and variance inflation vanish asymptotically.
+
+\section{The Formal Independence Assumption}
+
+To ensure the algebraic orthogonalization rigorously eliminates the nonparametric estimation bias without requiring complex residual-augmented matrices (as in Cai et al., 2026), we must formally state the economic relationship between the financial market predictor and the exogenous weather shock. We impose the following two independence conditions on $W_{t-1}$:
+
+\paragraph*{Assumption 5.1 (Strict Exogeneity to the Market Shock)} \textit{The weather variable $W_{t-1}$ is strictly exogenous to the financial market innovation $U_t$. Mathematically:}
+\begin{equation}
+    \mathbb{E}[U_t \mid \mathcal{F}_{t-1}, W_{t-1}, W_t, W_{t+1}, \dots ] = 0.
+\end{equation}
+
+\noindent \textbf{Remark.} This condition ensures that using the entire dataset to estimate the weather curve $\widehat{\bm{c}}$ does not inadvertently absorb future stock market shocks. It shuts down the "future leakage" trap. Because climatic processes are governed by atmospheric physics, weather shocks are completely oblivious to tomorrow's stock market crashes.
+
+\paragraph*{Assumption 5.2 (Cross-Sectional Independence from the Predictor)} \textit{The exogenous weather process $\{W_t\}$ is strictly independent of the financial predictor innovation process $\{v_t\}$. Consequently, $W_{t-1}$ and $X_{t-1}$ are independent random variables, implying:}
+\begin{equation}
+    \mathbb{E}[w(X_{t-1}) \mid W_{t-1}] = \mathbb{E}[w(X_{t-1})].
+\end{equation}
+
+\noindent \textbf{Remark.} This assumption fundamentally preserves the predictor's signal. Because $W_{t-1}$ and $X_{t-1}$ are independent, projecting the EL weight $w(X_{t-1})$ onto the weather basis $\bm{P}_K(W_{t-1})$ produces an $R^2$ of exactly zero asymptotically. The sieve projection structurally deletes the nonparametric estimation bias without extracting a single drop of the persistent signal from $X_{t-1}$.
+
+\section{Monte Carlo Simulation Study}
+
+To computationally validate the theoretical mechanism, we design a Monte Carlo simulation. We simulate a market where returns are driven by a highly non-linear weather cycle, while simultaneously testing for the predictive power of a financial variable (e.g., Dividend Yield).
+
+\subsection{Simulation Setup}
+We simulate $T = 250$ trading days (approximately one year) across 10,000 parallel replications. The Data Generating Process (DGP) is specified as:
+\begin{itemize}
+    \item \textbf{The Predictor ($X_{t-1}$):} Generated as a pure random walk ($X_t = X_{t-1} + v_t$).
+    \item \textbf{The Weather ($W_{t-1}$):} Generated as an independent, stationary white noise process, $W_{t-1} \sim N(0,1)$.
+    \item \textbf{The Endogeneity:} We introduce severe Stambaugh bias by setting the correlation between $U_t$ and $v_t$ to $\phi = -0.5$.
+    \item \textbf{The True Model:} The return generation process features a highly non-linear sine wave that cannot be captured by a simple constant intercept:
+    \begin{equation}
+        Y_t = \gamma \sin(2\pi W_{t-1}) + \beta X_{t-1} + U_t.
+    \end{equation}
+\end{itemize}
+
+\subsection{Competing Estimators}
+We evaluate two competing estimators on this exact dataset:
+\begin{itemize}
+    \item \textbf{Model A (The Baseline EL):} The standard predictive Empirical Likelihood test that assumes the intercept is simply a constant $\alpha$.
+    \item \textbf{Model B (Our Sieve-EL):} The proposed two-stage procedure utilizing $K=3$ polynomials (a cubic sieve basis: $W, W^2, W^3$) to partial out the weather, generating the residualized weights $w^c_t$.
+\end{itemize}
+
+\subsection{Hypothesized Finite-Sample Properties}
+
+The failure of the baseline EL test in this scenario is not characterized by false positives (size distortion), but rather by a catastrophic loss of statistical power.
+
+\begin{itemize}
+    \item \textbf{Empirical Size (Testing $H_0: \beta = 0$):} Both tests maintain the correct 5\% nominal false-positive rate. Because $W_{t-1}$ and $X_{t-1}$ are independent, the omitted non-linear sine wave in Model A acts merely as "extra random noise" in the error term. It does not bias the mean of the EL moment condition.
+    \item \textbf{Empirical Power (Testing $H_1: \beta \neq 0$):} Under the alternative hypothesis, Model A (baseline EL) suffers a devastating collapse in power. The unmodeled sine wave $\gamma \sin(2\pi W_{t-1})$ is dumped entirely into the error term, massively inflating the variance of the residuals. Since the EL statistic divides by the sample variance, the test statistic is crushed toward zero. Even if the true $\beta$ is exceptionally large, the baseline test will exhibit a flat power curve at 5\%, drowned out by the unmodeled weather variance.
+    
+    Conversely, in Model B (Sieve-EL), the OLS projection mathematically deletes the sine wave variance from both the EL numerator and denominator. The residual variance shrinks back down exactly to the pure financial shock variance $\sigma_U^2$. The test perfectly recovers its sharp $\chi^2_1$ limit, and the power curve shoots rapidly to 100\%.
+\end{itemize}
+
+\section{Conclusion}
+
+When researchers use standard predictive regressions, they are often forced to assume a constant intercept to maintain mathematical tractability. Consequently, all other exogenous macro-environmental factors are relegated to the error term. While this preserves the null hypothesis, it artificially inflates the residual variance, mathematically obliterating the test's power to detect true financial predictability. Our Orthogonalized Sieve-EL estimator allows researchers to surgically remove arbitrary, non-linear environmental noise without violating the stringent requirements of Empirical Likelihood. By doing so, the framework fully recovers the lost signal of the persistent predictor, offering a powerful tool for complex, real-world scenarios such as commodity pricing.
+
+\end{document}

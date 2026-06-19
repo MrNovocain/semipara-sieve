@@ -1,0 +1,135 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{bm}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+
+\title{Econometric Analysis of Variance Inflation and Convex Hull Violations under the Alternative Hypothesis}
+\author{Research Note}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+This note provides a rigorous econometric analysis of the mathematical and algorithmic reasons for the power collapse and numerical failures observed in the two-stage Orthogonalized Sieve Empirical Likelihood (Sieve-EL) framework under the alternative hypothesis $H_1: \beta \neq \beta_0$.
+
+\section{The Convex Hull Violation Pathology}
+
+\subsection{Mathematical Mechanism}
+In standard Empirical Likelihood (EL), the moment condition evaluated at the null hypothesis value $\beta_0$ is defined as:
+\begin{equation}
+    Z_t(\beta_0) = \left( \widetilde{Y}_t - \beta_0 X_{t-1} \right) w^c_t
+\end{equation}
+where $\widetilde{Y}_t = Y_t - \bm{P}_K(W_{t-1})'\widehat{\bm{c}}$ is the response adjusted by the first-stage nonparametric sieve estimator, and $w^c_t$ is the orthogonalized weight.
+
+Let the true data-generating process (DGP) under the alternative hypothesis be:
+\begin{equation}
+    Y_t = m(W_{t-1}) + \beta X_{t-1} + U_t, \quad \text{with } \beta \neq \beta_0
+\end{equation}
+Using the sieve decomposition $m(W_{t-1}) = \bm{P}_K(W_{t-1})'\bm{c} + r_t$, the adjusted return is:
+\begin{equation}
+    \widetilde{Y}_t = \bm{P}_K(W_{t-1})'\bm{c} + r_t + \beta X_{t-1} + U_t - \bm{P}_K(W_{t-1})'\widehat{\bm{c}}
+\end{equation}
+Substituting this into the moment condition yields:
+\begin{equation}
+    Z_t(\beta_0) = \left( U_t + r_t - \bm{P}_K(W_{t-1})'(\widehat{\bm{c}} - \bm{c}) + (\beta - \beta_0) X_{t-1} \right) w^c_t
+\end{equation}
+Since the weight orthogonalization in Step 4 ensures that $\sum_{t=1}^T \bm{P}_K(W_{t-1}) w^c_t \equiv \bm{0}$ in-sample, the sieve estimation error $(\widehat{\bm{c}} - \bm{c})$ is annihilated when summing the moments. However, for individual observations, the moment is dominated by the signal:
+\begin{equation}
+    Z_t(\beta_0) \approx U_t w^c_t + (\beta - \beta_0) X_{t-1} w^c_t
+\end{equation}
+
+\subsection{The Convex Hull Condition}
+The weight function is defined as $w(X_{t-1}) = \tanh(X_{t-1}/c_w)$. Because $\tanh(x)$ is an odd function that preserves the sign of $x$, the product $X_{t-1} w(X_{t-1})$ is strictly positive for all $X_{t-1} \neq 0$:
+\begin{equation}
+    X_{t-1} w(X_{t-1}) = X_{t-1} \tanh\left(\frac{X_{t-1}}{c_w}\right) \ge 0
+\end{equation}
+Since $X_{t-1}$ and $W_{t-1}$ are independent, the projection coefficient $\widehat{\bm{\gamma}} \approx \bm{0}$ asymptotically, meaning $w^c_t \approx w(X_{t-1})$. Consequently:
+\begin{equation}
+    X_{t-1} w^c_t \approx X_{t-1} \tanh\left(\frac{X_{t-1}}{c_w}\right) > 0 \quad \text{a.s.}
+\end{equation}
+Under the alternative hypothesis, the moment is shifted by the signal term:
+\begin{equation}
+    \mathbb{E}[Z_t(\beta_0)] \approx (\beta - \beta_0) \mathbb{E}\left[ X_{t-1} w^c_t \right]
+\end{equation}
+If $\beta > \beta_0$, then $\mathbb{E}[Z_t(\beta_0)] > 0$. If $\beta < \beta_0$, then $\mathbb{E}[Z_t(\beta_0)] < 0$.
+
+In finite samples, as the deviation $|\beta - \beta_0|$ or the sample size $T$ grows, the deterministic signal term $(\beta - \beta_0) X_{t-1} w^c_t$ dominates the zero-mean innovation term $U_t w^c_t$. This causes all sample moments to have the same sign:
+\begin{equation}
+    \text{sign}\left( Z_t(\beta_0) \right) = \text{sign}(\beta - \beta_0) \quad \forall t \in \{1, \dots, T\}
+\end{equation}
+When this occurs, the convex hull of the set $\{Z_t(\beta_0)\}_{t=1}^T$ does not contain zero:
+\begin{equation}
+    0 \notin \text{Conv}\left( \{Z_t(\beta_0)\}_{t=1}^T \right)
+\end{equation}
+
+\subsection{Algorithmic Consequence}
+Under standard EL theory, $0 \notin \text{Conv}(\{Z_t\})$ implies that the null hypothesis is rejected with certainty, corresponding to $\ell_T(\beta_0) = \infty$. 
+
+However, in numerical implementations, this violation causes the root-finding algorithm (e.g., \texttt{brentq} or \texttt{scipy.optimize}) to fail since the gradient does not bracket zero. The code returns a penalty value of $10^6$, which is then filtered out as a ``numerical failure'' in \texttt{diagnostic\_chisq\_test.py}. Filtering out these rejections artificially drops the most powerful test statistics from the Monte Carlo simulation, leading to a flat and severely distorted empirical power curve.
+
+\section{The Variance Inflation Pathology}
+
+Even in cases where $0$ is in the convex hull (e.g., for very small deviations or small sample sizes), the test statistic suffers from severe deflation.
+
+\subsection{Asymptotic Analysis of the EL Statistic}
+By Taylor-expanding the profile EL statistic $\ell_T(\beta_0)$, we obtain:
+\begin{equation}
+    \ell_T(\beta_0) \approx \frac{\left( \frac{1}{\sqrt{T}} \sum_{t=1}^T Z_t(\beta_0) \right)^2}{\frac{1}{T} \sum_{t=1}^T Z_t(\beta_0)^2}
+\end{equation}
+Evaluating the terms under the alternative hypothesis:
+\begin{enumerate}
+    \item \textbf{Numerator (Score-like term):}
+    \begin{equation}
+        \frac{1}{\sqrt{T}} \sum_{t=1}^T Z_t(\beta_0) = \frac{1}{\sqrt{T}} \sum_{t=1}^T U_t w^c_t + (\beta - \beta_0) \frac{1}{\sqrt{T}} \sum_{t=1}^T X_{t-1} w^c_t + o_p(1)
+    \end{equation}
+    The signal term grows at rate $O_p(\sqrt{T}(\beta - \beta_0) \cdot \text{std}(X))$.
+
+    \item \textbf{Denominator (Sample Variance of moments):}
+    \begin{equation}
+        \widehat{V}_T = \frac{1}{T} \sum_{t=1}^T Z_t(\beta_0)^2 \approx \frac{1}{T} \sum_{t=1}^T U_t^2 (w^c_t)^2 + (\beta - \beta_0)^2 \frac{1}{T} \sum_{t=1}^T X_{t-1}^2 (w^c_t)^2
+    \end{equation}
+    Because the moment condition $Z_t(\beta_0)$ is evaluated at the null value $\beta_0$, the signal term $(\beta - \beta_0) X_{t-1}$ is not removed from the residuals. Thus, the sample variance is inflated by the term $(\beta - \beta_0)^2 \frac{1}{T} \sum_{t=1}^T X_{t-1}^2 (w^c_t)^2$.
+\end{enumerate}
+Because $X_{t-1}$ is highly persistent ($\rho \approx 1$), its variance is extremely large, which severely inflates the denominator.
+
+\subsection{Power Collapse}
+As the true parameter $\beta$ moves further from the null $\beta_0$, the signal terms dominate both the numerator and the denominator. Taking the limit as $|\beta - \beta_0| \to \infty$:
+\begin{equation}
+    \lim_{|\beta - \beta_0| \to \infty} \ell_T(\beta_0) \approx \frac{\left( \frac{1}{\sqrt{T}} \sum_{t=1}^T X_{t-1} w^c_t \right)^2}{\frac{1}{T} \sum_{t=1}^T X_{t-1}^2 (w^c_t)^2} = \frac{\left( \sum_{t=1}^T X_{t-1} w^c_t \right)^2}{\sum_{t=1}^T X_{t-1}^2 (w^c_t)^2}
+\end{equation}
+By the Cauchy-Schwarz inequality, this ratio is bounded:
+\begin{equation}
+    \ell_T(\beta_0) \le \sum_{t=1}^T (1)^2 = T
+\end{equation}
+In practice, since $w^c_t \approx \tanh(X_{t-1}/c_w)$, the ratio is bounded by a much smaller constant than $T$. As a result, the EL statistic plateaus and cannot diverge to infinity. The test is unable to consistently detect large deviations from the null, leading to a catastrophic loss of statistical power.
+
+\section{The Proposed Solution}
+
+To restore the power of the test, we must decouple the variance estimator in the denominator from the signal term $(\beta - \beta_0) X_{t-1}$. We replace the standard EL profile optimization with a score-type test statistic that uses the \textbf{unconstrained residuals} to estimate the variance.
+
+\begin{enumerate}
+    \item Estimate the unconstrained model parameters $(\widehat{\bm{c}}, \widehat{\beta}, \widehat{\phi})$ via joint OLS:
+    \begin{equation}
+        Y_t = \bm{P}_K(W_{t-1})'\bm{c} + \beta X_{t-1} + \phi \widehat{\varepsilon}_t + \text{error}_t
+    \end{equation}
+    \item Compute the unconstrained residuals:
+    \begin{equation}
+        \widehat{U}_t = Y_t - \bm{P}_K(W_{t-1})'\widehat{\bm{c}} - \widehat{\beta} X_{t-1} - \widehat{\phi} \widehat{\varepsilon}_t
+    \end{equation}
+    Since $\widehat{\beta} \xrightarrow{p} \beta$ under both the null and the alternative, the unconstrained residuals consistently estimate the pure innovations $z_t$: $\widehat{U}_t \xrightarrow{p} z_t$.
+    \item Construct the unconstrained variance estimator:
+    \begin{equation}
+        \widehat{V}_{unconstrained} = \frac{1}{T} \sum_{t=1}^T \widehat{U}_t^2 (w^c_t)^2
+    \end{equation}
+    This estimator is strictly locked to the innovation variance and does not suffer from variance inflation under the alternative.
+    \item Define the robust score-type test statistic:
+    \begin{equation}
+        S_T(\beta_0) = \frac{\left( \frac{1}{\sqrt{T}} \sum_{t=1}^T Z_t(\beta_0) \right)^2}{\widehat{V}_{unconstrained}}
+    \end{equation}
+    Under $H_0$, $S_T(\beta_0) \xrightarrow{d} \chi^2_1$. Under $H_1$, the denominator remains $O_p(1)$ while the numerator grows at rate $O_p(T (\beta - \beta_0)^2)$, restoring 100\% asymptotic power.
+\end{enumerate}
+
+\end{document}
