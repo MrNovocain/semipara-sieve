@@ -36,7 +36,7 @@ We consider the problem of testing return predictability in the presence of high
         U_t = \phi \varepsilon_t + z_t \quad \text{with } E[z_t \mid \varepsilon_t] = 0
     \end{equation}
 \end{enumerate}
-where $Y_t$ represents the asset returns, $W_{t-1}$ is a stationary exogenous weather covariate, and $X_{t-1}$ is a persistent financial predictor. The key exclusion restriction is that the weather process is external to the predictor dynamics: $\{W_s:s\in\mathbb Z\}$ is independent of $X_0$ and of the predictor innovations $\{\varepsilon_t:t\geq1\}$. Hence $W_{t-1}$ is independent of $X_{t-1}$, although $X_t$ may still be endogenous with the return shock through $U_t=\phi\varepsilon_t+z_t$.
+where $Y_t$ represents the asset returns, $W_{t-1}$ is a stationary exogenous weather covariate, and $X_{t-1}$ is a persistent financial predictor. The key timing restriction is daily contemporaneous orthogonality: realized local weather shocks $W_{t-1}$ are orthogonal to the predetermined price predictor $X_{t-1}$ at the sampling frequency used for inference. This restriction does not rule out weather effects on subsequent returns through $m(W_{t-1})$, nor does it rule out price adjustment in future values of $X_t$.
 
 Motivated by Perron (1989), our goal is to investigate return predictability while avoiding size distortions or false inferences caused by near unit roots in the predictor dynamics (i.e., $\rho \approx 1$). This is achieved by testing the null hypothesis of no predictability:
 \begin{equation} 
@@ -55,13 +55,13 @@ We motivate our framework with the 2023--2024 agricultural commodity shocks. Let
 During 2023--2024, extreme weather conditions, including severe droughts in West Africa, led to supply deficits and a substantial increase in cocoa prices. This context illustrates the key features of our model:
 
 \begin{enumerate}
-    \item \textbf{Exogeneity of Weather Shocks:} Local weather variables ($W_{t-1}$) are determined by atmospheric systems, external to financial variables ($X_{t-1}$) such as trading volume or lagged prices. In the model this means the entire weather path is independent of the initial predictor and its innovations, so $W_{t-1}\perp X_{t-1}$, as formalized in Assumption~\ref{ass:sieve-projection}.
+    \item \textbf{Exogeneity of Weather Shocks:} Local weather variables ($W_{t-1}$) are realized shocks at the daily sampling frequency. They are contemporaneously orthogonal to predetermined financial variables ($X_{t-1}$) such as trading volume or lagged prices, while still being allowed to affect subsequent returns and future prices. This timing restriction is formalized in Assumption~\ref{ass:sieve-projection}.
     
     \item \textbf{Nonlinear Weather Impact:} The effect of temperature and rainfall on crop yield is highly nonlinear, with extreme weather deviations causing disproportionate impacts on supply. A nonparametric formulation $m(W_{t-1})$ is necessary to capture this threshold behavior, which we approximate using a sieve basis.
     
     \item \textbf{Predictor Persistence:} Financial predictors ($X_{t-1}$) often exhibit near unit root behavior ($\rho \approx 1$). Standard OLS inference on $\beta$ with $m(W_{t-1})$ and persistent $X_{t-1}$ leads to size distortions.
     
-    \item \textbf{Orthogonalized Sieve-EL Application:} Our framework first filters the nonlinear weather impact $m(W_{t-1})$ via sieve projection. The independence of $W_{t-1}$ and $X_{t-1}$ ensures consistency. Centering the predictor's weights against the sieve basis purges the nonparametric estimation error from the EL moment condition, allowing for standard $\chi^2_1$ inference on $\beta$.
+    \item \textbf{Orthogonalized Sieve-EL Application:} Our framework first filters the nonlinear weather impact $m(W_{t-1})$ via sieve projection. The contemporaneous orthogonality of $W_{t-1}$ and the predictor weight $w(X_{t-1})$ ensures that this projection does not remove the persistent predictor signal. Centering the predictor's weights against the sieve basis purges the nonparametric estimation error from the EL moment condition, allowing for standard $\chi^2_1$ inference on $\beta$.
 \end{enumerate}
 
 \section{The Orthogonalized Sieve-EL Framework}
@@ -151,21 +151,22 @@ To ensure the algebraic orthogonalization rigorously eliminates the nonparametri
 
 \paragraph*{Assumption 5.1 (Strict Exogeneity to the Market Shock)} \textit{The weather variable $W_{t-1}$ is strictly exogenous to the financial market innovation $U_t$. Mathematically:}
 \begin{equation}
-    \mathbb{E}[U_t \mid \mathcal{F}_{t-1}, W_{t-1}, W_t, W_{t+1}, \dots ] = 0.
+    \mathbb{E}[U_t \mid \mathcal{F}_{t-1}, W_{t-1}] = 0.
 \end{equation}
 
-\noindent \textbf{Remark.} This condition ensures that using the entire dataset to estimate the weather curve does not inadvertently absorb future stock market shocks. It shuts down the "future leakage" trap. Because climatic processes are governed by atmospheric physics, weather shocks are completely oblivious to tomorrow's stock market crashes.
+\noindent \textbf{Remark.} This condition says the realized local weather shock is not a proxy for the residual market innovation $U_t$ after conditioning on predetermined market information. It still allows $W_{t-1}$ to affect returns through the structural component $m(W_{t-1})$ and to be incorporated into future prices.
 
-\paragraph*{Assumption 5.2 (Independence from the Predictor Process)} \textit{The exogenous weather process is independent of the predictor's initial condition and innovation sequence:}
-\begin{equation}
-    \{W_s:s\in\mathbb Z\}\ \perp\!\!\!\perp\ \{X_0,\varepsilon_t:t\geq1\}.
-\end{equation}
-\textit{Since $X_{t-1}$ is generated from $X_0$ and $\{\varepsilon_s:s\leq t-1\}$, this implies $W_{t-1}$ and $X_{t-1}$ are independent random variables. Therefore, for the EL weight $w(X_{t-1})$,}
+\paragraph*{Assumption 5.2 (Contemporaneous Sieve Orthogonality Between Weather and Predictor Weight)} \textit{At the daily sampling frequency, realized local weather shocks are contemporaneously orthogonal to the predetermined persistent price predictor in the sieve directions used for profiling. For the EL weight $w(X_{t-1})$,}
 \begin{equation}
     \mathbb{E}[w(X_{t-1}) \mid W_{t-1}] = \mathbb{E}[w(X_{t-1})].
 \end{equation}
+\textit{Equivalently, for any centered nonconstant weather sieve vector $\bm R_K(W_{t-1})$,}
+\begin{equation}
+    \mathbb{E}\left[\bm R_K(W_{t-1})\{w(X_{t-1})-\mathbb{E}w(X_{t-1})\}\right]=\bm0.
+\end{equation}
+\textit{This is a timing restriction, not a dynamic exclusion: $W_{t-1}$ may affect $Y_t$ through $m(W_{t-1})$ and may affect subsequent returns and future prices.}
 
-\noindent \textbf{Remark.} This assumption fundamentally preserves the predictor's signal. Because $W_{t-1}$ and $X_{t-1}$ are independent, projecting the EL weight $w(X_{t-1})$ onto the weather basis $\bm{P}_K(W_{t-1})$ produces an $R^2$ of exactly zero asymptotically. The sieve projection structurally deletes the nonparametric estimation bias without extracting a single drop of the persistent signal from $X_{t-1}$.
+\noindent \textbf{Remark.} This assumption is the population version of the sample orthogonality condition used in the proof, $\|T^{-1}\bm R'\widetilde{\bm w}\|=O_p(\sqrt{K/T})$. It preserves the persistent predictor signal at the moment used for inference while allowing weather information to enter later price adjustment.
 
 \section{Wilks' Theorem for Mean Predictability}
 \label{sec:mean-wilks}
@@ -247,7 +248,7 @@ integrated, and mildly explosive cases.  With respect to the filtration
 \[
     \mathcal H_t
     =\sigma\{(z_s,\varepsilon_s):s\leq t\}
-       \vee\sigma\{W_s:s\in\mathbb Z\},
+       \vee\sigma\{W_s:s\leq t\},
 \]
 \(E(U_t\mid\mathcal H_{t-1})=0\),
 \(\sup_tE|U_t|^{2+\delta}<\infty\) for some \(\delta>0\), and the
@@ -271,16 +272,24 @@ The raw weight is uniformly bounded and satisfies the CCHT saturation
 condition.
 \end{assumption}
 
-\begin{assumption}[Weather process and sieve projection]
+\begin{assumption}[Weather sieve orthogonality and projection]
 \label{ass:sieve-projection}
-The entire weather process is independent of
-\(\{X_0,z_t,\varepsilon_t:t\geq1\}\), and the strict-exogeneity condition in
-Assumption~\ref{ass:ccht-core} holds after enlarging the filtration by the
-entire weather path.  The first component of \(\bm P_K(W)\) is one.  After
-centering the remaining basis functions in sample, write the corresponding
-\(T\times(K-1)\) matrix as \(\bm R\), so that
-\(\bm 1_T'\bm R=\bm0\) and
-\(\operatorname{span}(\bm P)=\operatorname{span}(\bm1_T,\bm R)\).
+The first component of \(\bm P_K(W)\) is one.  After centering the remaining
+basis functions in sample, write the corresponding \(T\times(K-1)\) matrix
+as \(\bm R\), so that \(\bm 1_T'\bm R=\bm0\) and
+\(\operatorname{span}(\bm P)=\operatorname{span}(\bm1_T,\bm R)\).  The
+primitive timing restriction is contemporaneous sieve orthogonality:
+\[
+    \mathbb E\left[\bm R_K(W_{t-1})
+    \{w(X_{t-1})-\mathbb E w(X_{t-1})\}\right]=\bm0,
+\]
+where \(\bm R_K(W_{t-1})\) denotes the population counterpart of the centered
+nonconstant sieve vector.  This condition allows \(W_{t-1}\) to affect
+\(Y_t\) and future values of \(X\); it only rules out contemporaneous
+projection of the predictor weight onto the weather sieve.  The
+strict-exogeneity condition in Assumption~\ref{ass:ccht-core} holds with
+contemporaneous weather information included in the conditioning set.
+
 There are constants \(0<c<C<\infty\) such that, with probability tending to
 one,
 \[
@@ -288,7 +297,8 @@ one,
       \leq\lambda_{\max}(T^{-1}\bm R'\bm R)\leq C.
 \]
 Let \(\zeta_K=\max_{t\leq T}\|\bm R_t\|\), where \(\bm R_t'\) is row \(t\)
-of \(\bm R\).  The following increasing-dimensional score bounds hold:
+of \(\bm R\).  The sample analogue of the population orthogonality and the
+remaining increasing-dimensional score bounds are:
 \begin{align}
     \left\|T^{-1}\bm R'\widetilde{\bm w}\right\|
         &=O_p\!\left(\sqrt{K/T}\right),                                  \label{eq:rate-Rw}\\
@@ -297,10 +307,9 @@ of \(\bm R\).  The following increasing-dimensional score bounds hold:
         &=O_p\!\left(\sqrt{K/T}\right),                                  \label{eq:rate-PU}
 \end{align}
 where \(\widetilde{\bm w}=(\widetilde w_1,\ldots,\widetilde w_T)'\) and
-\(\bm U=(U_1,\ldots,U_T)'\).  These bounds are implied, for example, by
-process independence, exponential mixing of \(W_t\), uniformly bounded basis
-moments, and the martingale moment condition in
-Assumption~\ref{ass:ccht-core}.
+\(\bm U=(U_1,\ldots,U_T)'\).  These bounds follow under the stated sieve
+orthogonality, exponential mixing of \(W_t\), uniformly bounded basis moments,
+and the martingale moment condition in Assumption~\ref{ass:ccht-core}.
 \end{assumption}
 
 \begin{assumption}[Approximation and growth rates]
