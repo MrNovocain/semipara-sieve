@@ -1,6 +1,7 @@
 import numpy as np
 import scipy.optimize as opt
 from scipy.special import eval_legendre
+from scipy.interpolate import BSpline
 import multiprocessing as mp
 import time
 import matplotlib.pyplot as plt
@@ -125,9 +126,44 @@ class LegendreSieve(SieveBasis):
         return P_K
 
 class BSplineSieve(SieveBasis):
+    def __init__(self, K: int, degree: int = 3):
+        super().__init__(K)
+        self.degree = degree
+
     def construct(self, W: np.ndarray) -> np.ndarray:
-        """Placeholder for B-Spline implementation to expand modularity."""
-        raise NotImplementedError("B-Spline basis to be implemented.")
+        T = len(W)
+        K = self.K
+        degree = self.degree
+        
+        # Ensure degree is compatible with K
+        if K < degree + 1:
+            degree = K - 1
+            
+        n_internal = K - degree - 1
+        
+        # Place internal knots at quantiles of W
+        if n_internal > 0:
+            qs = np.linspace(0, 100, n_internal + 2)[1:-1]
+            knots_internal = np.percentile(W, qs)
+        else:
+            knots_internal = []
+            
+        W_min, W_max = np.min(W), np.max(W)
+        # Add boundary knots with small offsets to prevent out-of-bounds evaluation issues
+        knots = np.concatenate([
+            [W_min - 1e-4] * (degree + 1),
+            knots_internal,
+            [W_max + 1e-4] * (degree + 1)
+        ])
+        
+        P_K = np.zeros((T, K))
+        for i in range(K):
+            coefs = np.zeros(K)
+            coefs[i] = 1.0
+            spl = BSpline(knots, coefs, degree, extrapolate=True)
+            P_K[:, i] = spl(W)
+            
+        return P_K
 
 # =============================================================================
 # 3. Estimation Core Algorithm
@@ -217,7 +253,8 @@ class SieveELEstimator:
         # Step 5: Compute Robust Score
         Z = (Y_adj - beta_0 * X_lag) * w_c
         num = np.sum(Z)
-        den = np.sum((U_hat * w_c) ** 2)
+        df_corr = len(Y) / (len(Y) - P_K.shape[1] - 2)
+        den = np.sum((U_hat * w_c) ** 2) * df_corr
         
         if den == 0:
             return 0.0

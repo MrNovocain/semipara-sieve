@@ -5,8 +5,8 @@
 
 \begin{document}
 
-\title{Nonparametric Predictive Regression with Exogenous Shocks: A Sieve Empirical Likelihood Approach (Version 2.0 AR1)}
-\author{}
+\title{Nonparametric Predictive Regression with Exogenous Shocks: A Sieve Empirical Likelihood Approach (In progress Version 2.0 AR1)}
+\author{Siyan Dong}
 \date{\today}
 \maketitle
 
@@ -40,20 +40,20 @@ Motivated by Perron (1989), our goal is to investigate return predictability whi
 
 By extending the empirical likelihood (EL) framework of Cai et al. (2026), we propose a two-stage Orthogonalized Sieve-EL framework that achieves a standard $\chi^2_1$ limiting distribution under the null.
 
-\section{Motivating Empirical Example: El Ni\~no and Cocoa Futures Returns}
+\section{Empirical Motivation: Weather Shocks and Cocoa Futures}
 
-To illustrate the practical relevance of our proposed framework, we present an empirical scenario motivated by the agricultural commodity market shocks of 2023--2024. Let $Y_t$ denote the excess returns on cocoa futures contracts, $W_{t-1}$ represent an exogenous climatic indicator such as the Oceanic Ni\~no Index (ONI) measuring El Ni\~no-Southern Oscillation (ENSO) anomalies, and $X_{t-1}$ denote a persistent financial predictor, such as the global commodity speculative net positions or the inventory-to-use ratio. 
+We motivate our framework with the 2023--2024 agricultural commodity shocks. Let $Y_t$ denote excess returns on cocoa futures, $W_{t-1}$ an exogenous local weather variable such as precipitation or average temperature, and $X_{t-1}$ a persistent financial predictor, such as the lagged price. 
 
-During the 2023--2024 period, a historically severe El Ni\~no event induced extreme droughts in West Africa (primarily C\^ote d'Ivoire and Ghana, which account for nearly 60\% of global cocoa supply). This led to a catastrophic supply deficit and triggered an unprecedented rally in cocoa futures, with prices tripling to exceed \$10,000 per metric ton. This setting provides a highly valid and clean empirical application of our model for several key reasons:
+During 2023--2024, extreme weather conditions, including severe droughts in West Africa, led to supply deficits and a substantial increase in cocoa prices. This context illustrates the key features of our model:
 
 \begin{enumerate}
-    \item \textbf{Strict Exogeneity of Weather Shocks:} The climatic shock $W_{t-1}$ is strictly exogenous to the financial markets. The dynamics of ENSO anomalies are governed by global atmospheric and oceanic circulation systems, meaning they are independent of futures trading volume, inventory levels, or financial speculative activity ($X_{t-1}$). Thus, $W_{t-1}$ is strictly independent of $X_s$ for all $t$ and $s$, validating Assumption~A.
+    \item \textbf{Exogeneity of Weather Shocks:} Local weather variables ($W_{t-1}$) are determined by atmospheric systems, exogenous to financial variables ($X_{t-1}$) such as trading volume or lagged prices. Thus, $W_{t-1}$ and $X_{t-1}$ are independent, satisfying Assumption~A.
     
-    \item \textbf{Nonlinear Climate-Yield Relationship:} The impact of temperature and rainfall anomalies on cocoa production is highly nonlinear. Mild deviations in ONI may have negligible effects due to soil moisture buffering, whereas extreme anomalies exceeding threshold levels lead to severe crop disease (e.g., black pod disease) and crop failure. A linear specification would fail to capture this threshold-like behavior, necessitating a nonparametric formulation $m(W_{t-1})$ that can be flexibly approximated using the sieve basis in our first step.
+    \item \textbf{Nonlinear Weather Impact:} The effect of temperature and rainfall on crop yield is highly nonlinear, with extreme weather deviations causing disproportionate impacts on supply. A nonparametric formulation $m(W_{t-1})$ is necessary to capture this threshold behavior, which we approximate using a sieve basis.
     
-    \item \textbf{High Persistence of the Financial Predictor:} Financial predictors like inventory-to-use ratios or speculative interest rates are highly persistent and are often modeled as near unit root processes (i.e., $\rho \approx 1$). Performing standard OLS inference on $\beta$ in the presence of $m(W_{t-1})$ and a persistent $X_{t-1}$ would generate severe size distortions.
+    \item \textbf{Predictor Persistence:} Financial predictors ($X_{t-1}$) often exhibit near unit root behavior ($\rho \approx 1$). Standard OLS inference on $\beta$ with $m(W_{t-1})$ and persistent $X_{t-1}$ leads to size distortions.
     
-    \item \textbf{Separability and the Orthogonalized Sieve-EL Solution:} Our proposed framework allows the researcher to first filter out the complex, nonlinear weather impact $m(W_{t-1})$ using the sieve projection (Step 1). Because $W_{t-1}$ and $X_{t-1}$ are independent, this projection is consistent. By subsequently centering the financial predictor's weights against the sieve basis, we purge the estimation error of the weather curve from the empirical likelihood moment condition. This enables valid, standard $\chi^2_1$-based inference on the predictive power $\beta$ of the persistent financial variable.
+    \item \textbf{Orthogonalized Sieve-EL Application:} Our framework first filters the nonlinear weather impact $m(W_{t-1})$ via sieve projection. The independence of $W_{t-1}$ and $X_{t-1}$ ensures consistency. Centering the predictor's weights against the sieve basis purges the nonparametric estimation error from the EL moment condition, allowing for standard $\chi^2_1$ inference on $\beta$.
 \end{enumerate}
 
 \section{The Orthogonalized Sieve-EL Framework (Version 2.0 AR1)}
@@ -71,7 +71,7 @@ Following the methodology of Cai \& Wang (2014), we first isolate the true innov
 \end{equation}
 The OLS estimators for the intercept and persistence parameter are given by:
 \begin{equation}
-    \begin{pmatrix} \widehat{\theta} \\ \widehat{\rho} \end{equation} = \left( \sum_{t=1}^T \begin{pmatrix} 1 \\ X_{t-1} \end{pmatrix} \begin{pmatrix} 1 & X_{t-1} \end{pmatrix} \right)^{-1} \sum_{t=1}^T \begin{pmatrix} 1 \\ X_{t-1} \end{pmatrix} X_t
+    \begin{pmatrix} \widehat{\theta} \\ \widehat{\rho} \end{pmatrix} = \left( \sum_{t=1}^T \begin{pmatrix} 1 \\ X_{t-1} \end{pmatrix} \begin{pmatrix} 1 & X_{t-1} \end{pmatrix} \right)^{-1} \sum_{t=1}^T \begin{pmatrix} 1 \\ X_{t-1} \end{pmatrix} X_t
 \end{equation}
 We then compute and save the estimated residuals, which act as our proxy for the pure financial shock:
 \begin{equation}
@@ -166,7 +166,7 @@ Estimating $K$ parameters in OLS introduces in-sample variance inflation and pot
     \frac{K}{\sqrt{T}} \to 0 \quad \implies \quad K \ll T^{\frac{1}{2}}
 \end{equation}
 
-\subsection{The Golden Ratio}
+\subsection{Growth rate of K}
 Combining these bounds yields the formal asymptotic growth condition:
 \begin{equation}
     T^{\frac{1}{2s}} \ll K \ll T^{\frac{1}{2}}
