@@ -133,9 +133,9 @@ Our framework differs from the two-stage approach of Cai et al. (2026) in three 
 To establish the asymptotic validity of our test statistic, we must place bounds on the growth rate of the tuning parameter $K$ relative to the sample size $T$.
 
 \subsection{Lower Bound (Bias Elimination)}
-Assume the true weather curve $m(W)$ has smoothness $s$ (i.e., is $s$ times continuously differentiable). Sieve theory implies that the approximation error $r_t$ satisfies $\sup |r_t| = O_p(K^{-s})$. To ensure that the approximation bias does not distort the asymptotic distribution, we require $\sqrt{T} \sum_{t=1}^T r_t w^c_t = o_p(1)$, which translates to:
+Assume the true weather curve $m(W)$ has smoothness $s$ and that $W$ is $d$-dimensional. Sieve theory implies that the approximation error $r_t$ satisfies $\sup |r_t| = O_p(K^{-s/d})$. To ensure that the approximation bias does not distort the asymptotic distribution, we require $\sqrt{T} \sum_{t=1}^T r_t w^c_t = o_p(1)$, which translates to:
 \begin{equation}
-    \sqrt{T} K^{-s} \to 0 \quad \implies \quad K \gg T^{\frac{1}{2s}}
+    \sqrt{T} K^{-s/d} \to 0 \quad \implies \quad K \gg T^{\frac{d}{2s}}
 \end{equation}
 
 \subsection{Upper Bound (Variance Control and Leakage Mitigation)}
@@ -147,9 +147,10 @@ Estimating $K$ parameters in OLS introduces in-sample variance inflation and pot
 \subsection{The Golden Ratio}
 Combining these bounds yields the formal asymptotic growth condition:
 \begin{equation}
-    T^{\frac{1}{2s}} \ll K \ll T^{\frac{1}{2}}
+    T^{\frac{d}{2s}} \ll K \ll T^{\frac{1}{2}}
 \end{equation}
-If we assume $m(W)$ is twice-differentiable ($s=2$), the condition becomes $T^{1/4} \ll K \ll T^{1/2}$. In practice, setting $K \approx T^{1/3}$ satisfies these bounds, ensuring that both approximation bias and variance inflation vanish asymptotically.
+This rate window is nonempty when $s>d$.
+If $W$ is scalar and $m(W)$ is twice-differentiable ($d=1$, $s=2$), the condition becomes $T^{1/4} \ll K \ll T^{1/2}$. In practice, setting $K \approx T^{1/3}$ satisfies these bounds, ensuring that both approximation bias and variance inflation vanish asymptotically.
 
 \section{The Formal Independence Assumption}
 
