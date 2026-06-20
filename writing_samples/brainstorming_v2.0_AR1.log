@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2024.9.22)  19 JUN 2026 23:39
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2024.9.22)  20 JUN 2026 17:10
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -145,24 +145,465 @@ Overfull \hbox (6.68112pt too wide) in paragraph at lines 59--59
 []\OT1/cmr/bx/n/14.4 The Or-thog-o-nal-ized Sieve-EL Frame-work (Ver-
  []
 
-[2] [3] [4] [5] [6] [7] (brainstorming_v2.0_AR1.aux)
+[2] [3] [4] [5]
+
+w:/Research/semipara sieve/writing_samples/brainstorming_v2.0_AR1.tex:223: LaTeX Error: Environment assumption undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.223 \begin{assumption}
+                        [CCHT mean-score conditions]
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+w:/Research/semipara sieve/writing_samples/brainstorming_v2.0_AR1.tex:255: LaTeX Error: \begin{document} ended by \end{assumption}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.255 \end{assumption}
+                      
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+w:/Research/semipara sieve/writing_samples/brainstorming_v2.0_AR1.tex:257: LaTeX Error: Environment assumption undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.257 \begin{assumption}
+                        [Weather process and sieve projection]
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+[6]
+
+LaTeX Warning: Reference `ass:ccht-core' on page 7 undefined on input line 261.
+
+
+LaTeX Warning: Reference `ass:ccht-core' on page 7 undefined on input line 286.
+
+
+w:/Research/semipara sieve/writing_samples/brainstorming_v2.0_AR1.tex:287: LaTeX Error: \begin{document} ended by \end{assumption}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.287 \end{assumption}
+                      
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+w:/Research/semipara sieve/writing_samples/brainstorming_v2.0_AR1.tex:289: LaTeX Error: Environment assumption undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.289 \begin{assumption}
+                        [Approximation and growth rates]
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+LaTeX Warning: Reference `eq:K-rates' on page 7 undefined on input line 310.
+
+
+w:/Research/semipara sieve/writing_samples/brainstorming_v2.0_AR1.tex:313: LaTeX Error: \begin{document} ended by \end{assumption}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.313 \end{assumption}
+                      
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+w:/Research/semipara sieve/writing_samples/brainstorming_v2.0_AR1.tex:315: LaTeX Error: Environment assumption undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.315 \begin{assumption}
+                        [Nondegeneracy and convex hull]
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+w:/Research/semipara sieve/writing_samples/brainstorming_v2.0_AR1.tex:325: LaTeX Error: \begin{document} ended by \end{assumption}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.325 \end{assumption}
+                      
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+w:/Research/semipara sieve/writing_samples/brainstorming_v2.0_AR1.tex:327: LaTeX Error: Environment lemma undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.327 \begin{lemma}
+                   [Negligibility of the growing sieve projection]
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+LaTeX Warning: Reference `ass:sieve-projection' on page 7 undefined on input line 329.
+
+
+LaTeX Warning: Reference `ass:approximation' on page 7 undefined on input line 329.
+
+[7]
+
+w:/Research/semipara sieve/writing_samples/brainstorming_v2.0_AR1.tex:343: LaTeX Error: \begin{document} ended by \end{lemma}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.343 \end{lemma}
+                 
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+w:/Research/semipara sieve/writing_samples/brainstorming_v2.0_AR1.tex:345: LaTeX Error: Environment proof undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.345 \begin{proof}
+                   
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+LaTeX Warning: Reference `eq:rate-Rw' on page 8 undefined on input line 355.
+
+
+LaTeX Warning: Reference `eq:weight-L2' on page 8 undefined on input line 363.
+
+
+LaTeX Warning: Reference `eq:weight-max' on page 8 undefined on input line 369.
+
+
+LaTeX Warning: Reference `eq:weight-score' on page 8 undefined on input line 377.
+
+
+LaTeX Warning: Reference `eq:rate-PU' on page 8 undefined on input line 381.
+
+
+LaTeX Warning: Reference `eq:U-proj-L2' on page 8 undefined on input line 383.
+
+
+LaTeX Warning: Reference `eq:U-proj-max' on page 8 undefined on input line 384.
+
+
+w:/Research/semipara sieve/writing_samples/brainstorming_v2.0_AR1.tex:385: LaTeX Error: \begin{document} ended by \end{proof}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.385 \end{proof}
+                 
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+w:/Research/semipara sieve/writing_samples/brainstorming_v2.0_AR1.tex:387: LaTeX Error: Environment lemma undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.387 \begin{lemma}
+                   [Asymptotic equivalence of the feasible and oracle scores]
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+LaTeX Warning: Reference `ass:ccht-core' on page 8 undefined on input line 389.
+
+
+LaTeX Warning: Reference `ass:approximation' on page 8 undefined on input line 389.
+
+
+w:/Research/semipara sieve/writing_samples/brainstorming_v2.0_AR1.tex:400: LaTeX Error: \begin{document} ended by \end{lemma}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.400 \end{lemma}
+                 
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+w:/Research/semipara sieve/writing_samples/brainstorming_v2.0_AR1.tex:402: LaTeX Error: Environment proof undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.402 \begin{proof}
+                   
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+[8]
+
+LaTeX Warning: Reference `lem:projection-negligible' on page 9 undefined on input line 419.
+
+
+LaTeX Warning: Reference `eq:numerator-equivalence' on page 9 undefined on input line 429.
+
+
+LaTeX Warning: Reference `lem:projection-negligible' on page 9 undefined on input line 441.
+
+
+LaTeX Warning: Reference `eq:variance-equivalence' on page 9 undefined on input line 461.
+
+
+LaTeX Warning: Reference `eq:U-proj-max' on page 9 undefined on input line 465.
+
+
+LaTeX Warning: Reference `eq:max-score' on page 9 undefined on input line 466.
+
+
+w:/Research/semipara sieve/writing_samples/brainstorming_v2.0_AR1.tex:467: LaTeX Error: \begin{document} ended by \end{proof}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.467 \end{proof}
+                 
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+w:/Research/semipara sieve/writing_samples/brainstorming_v2.0_AR1.tex:469: LaTeX Error: Environment theorem undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.469 \begin{theorem}
+                     [Wilks phenomenon for sieve-orthogonalized mean EL]
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+LaTeX Warning: Reference `ass:ccht-core' on page 9 undefined on input line 471.
+
+
+LaTeX Warning: Reference `ass:convex-hull' on page 9 undefined on input line 471.
+
+
+w:/Research/semipara sieve/writing_samples/brainstorming_v2.0_AR1.tex:479: LaTeX Error: \begin{document} ended by \end{theorem}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.479 \end{theorem}
+                   
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+w:/Research/semipara sieve/writing_samples/brainstorming_v2.0_AR1.tex:481: LaTeX Error: Environment proof undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.481 \begin{proof}
+                   
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+LaTeX Warning: Reference `lem:score-equivalence' on page 9 undefined on input line 482.
+
+
+LaTeX Warning: Reference `ass:ccht-core' on page 9 undefined on input line 483.
+
+[9]
+
+LaTeX Warning: Reference `eq:lambda-equation' on page 10 undefined on input line 509.
+
+
+LaTeX Warning: Reference `eq:profile-elr' on page 10 undefined on input line 523.
+
+
+LaTeX Warning: Reference `eq:self-normalized-limit' on page 10 undefined on input line 534.
+
+
+w:/Research/semipara sieve/writing_samples/brainstorming_v2.0_AR1.tex:536: LaTeX Error: \begin{document} ended by \end{proof}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.536 \end{proof}
+                 
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+w:/Research/semipara sieve/writing_samples/brainstorming_v2.0_AR1.tex:538: LaTeX Error: Environment corollary undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.538 \begin{corollary}
+                       [Test of no mean predictability]
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+w:/Research/semipara sieve/writing_samples/brainstorming_v2.0_AR1.tex:551: LaTeX Error: \begin{document} ended by \end{corollary}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.551 \end{corollary}
+                     
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+w:/Research/semipara sieve/writing_samples/brainstorming_v2.0_AR1.tex:553: LaTeX Error: Environment remark undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.553 \begin{remark}
+                    [Relation to the unrestricted two-stage estimator]
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+LaTeX Warning: Reference `eq:profile-sieve' on page 10 undefined on input line 555.
+
+
+LaTeX Warning: Reference `thm:sieve-wilks' on page 10 undefined on input line 556.
+
+
+w:/Research/semipara sieve/writing_samples/brainstorming_v2.0_AR1.tex:568: LaTeX Error: \begin{document} ended by \end{remark}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.568 \end{remark}
+                  
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+w:/Research/semipara sieve/writing_samples/brainstorming_v2.0_AR1.tex:570: LaTeX Error: Environment remark undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.570 \begin{remark}
+                    [Why the same argument is not immediately a quantile the...
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+[10]
+
+LaTeX Warning: Reference `thm:sieve-wilks' on page 11 undefined on input line 588.
+
+
+w:/Research/semipara sieve/writing_samples/brainstorming_v2.0_AR1.tex:591: LaTeX Error: \begin{document} ended by \end{remark}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.591 \end{remark}
+                  
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+[11] (brainstorming_v2.0_AR1.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-01-04>
  ***********
+
+
+LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
  ) 
 Here is how much of TeX's memory you used:
- 1848 strings out of 474485
- 26571 string characters out of 5743734
- 1936542 words of memory out of 5000000
- 24146 multiletter control sequences out of 15000+600000
- 573384 words of font info for 92 fonts, out of 8000000 for 9000
+ 1894 strings out of 474485
+ 27541 string characters out of 5743734
+ 1942542 words of memory out of 5000000
+ 24193 multiletter control sequences out of 15000+600000
+ 571178 words of font info for 84 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 56i,11n,65p,962b,218s stack positions out of 10000i,1000n,20000p,200000b,200000s
- <C:\Users\shane\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tcrm1000.pk><C:/Users/shane/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:/Users/shane/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Users/shane/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx7.pfb><C:/Users/shane/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Users/shane/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Users/shane/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi12.pfb><C:/Users/shane/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi5.pfb><C:/Users/shane/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Users/shane/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmib10.pfb><C:/Users/shane/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/shane/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Users/shane/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr17.pfb><C:/Users/shane/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr5.pfb><C:/Users/shane/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Users/shane/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/shane/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C:/Users/shane/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmti10.pfb><C:/Users/shane/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on brainstorming_v2.0_AR1.pdf (7 pages, 248671 bytes).
+ 56i,11n,65p,962b,249s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ <C:\Users\shane\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tcrm1000.pk><C:/Users/shane/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:/Users/shane/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Users/shane/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx7.pfb><C:/Users/shane/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Users/shane/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Users/shane/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi5.pfb><C:/Users/shane/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Users/shane/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmib10.pfb><C:/Users/shane/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/shane/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Users/shane/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr17.pfb><C:/Users/shane/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr5.pfb><C:/Users/shane/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Users/shane/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/shane/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C:/Users/shane/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
+Output written on brainstorming_v2.0_AR1.pdf (11 pages, 252833 bytes).
 PDF statistics:
- 121 PDF objects out of 1000 (max. 8388607)
+ 123 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 
