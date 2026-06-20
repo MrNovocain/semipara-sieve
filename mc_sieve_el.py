@@ -41,6 +41,7 @@ class SimulatedDGP(DataProvider):
         self.beta = beta
         self.phi = phi
         self.theta = theta
+        self._data = None
         if seed is not None:
             np.random.seed(seed)
 
@@ -67,7 +68,7 @@ class SimulatedDGP(DataProvider):
             X[t] = self.theta + self.rho * X[t-1] + eps[t]
         return X, eps
 
-    def get_data(self) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+    def _simulate_data(self) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
         # Generate T+1 periods to extract t and t-1
         W_full = self._generate_alpha_mixing_W(self.T + 1)
         X_full, eps_full = self._generate_X(self.T + 1)
@@ -82,6 +83,11 @@ class SimulatedDGP(DataProvider):
         Y = self._m(W_lag) + self.beta * X_lag + U
         
         return Y, X, X_lag, W_lag, eps
+
+    def get_data(self) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+        if self._data is None:
+            self._data = self._simulate_data()
+        return self._data
 
 class RealDataProvider(DataProvider):
     """
@@ -267,10 +273,11 @@ class SieveELEstimator:
 
 class MonteCarloRunner:
     """Manages the execution of simulation experiments in parallel."""
-    def __init__(self, iterations: int, T: int, K: int):
+    def __init__(self, iterations: int, T: int, K: int, n_jobs: Optional[int] = None):
         self.iterations = iterations
         self.T = T
         self.K = K
+        self.n_jobs = n_jobs
 
     @staticmethod
     def _run_single_iteration(seed: int, T: int, rho: float, beta_true: float, beta_0: float, phi: float, K: int, theta: float = 0.0) -> Tuple[float, float, float]:
@@ -287,8 +294,10 @@ class MonteCarloRunner:
         # Compute Standard OLS t-stat for comparison
         Y, _, X_lag, W_lag, _ = dgp.get_data()
         X_mat = np.column_stack((np.ones(T), X_lag, W_lag))
-        coefs, residuals, _, _ = np.linalg.lstsq(X_mat, Y, rcond=None)
-        var_res = np.var(residuals)
+        coefs, _, _, _ = np.linalg.lstsq(X_mat, Y, rcond=None)
+        residuals = Y - X_mat @ coefs
+        dof = max(T - X_mat.shape[1], 1)
+        var_res = np.sum(residuals ** 2) / dof
         inv_xx = np.linalg.inv(X_mat.T @ X_mat)
         var_beta_ols = var_res * inv_xx[1, 1]
         t_stat_ols = (coefs[1] - beta_0) / np.sqrt(var_beta_ols)
@@ -299,8 +308,12 @@ class MonteCarloRunner:
         seeds = np.random.randint(0, 1000000, size=self.iterations)
         func = partial(self._run_single_iteration, T=self.T, rho=rho, beta_true=beta_true, beta_0=beta_0, phi=phi, K=self.K, theta=theta)
         
-        with mp.Pool(mp.cpu_count()) as pool:
-            results = pool.map(func, seeds)
+        if self.n_jobs == 1:
+            results = list(map(func, seeds))
+        else:
+            process_count = self.n_jobs or mp.cpu_count()
+            with mp.Pool(process_count) as pool:
+                results = pool.map(func, seeds)
             
         el_stats = np.array([r[0] for r in results])
         score_stats = np.array([r[1] for r in results])
