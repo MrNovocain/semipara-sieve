@@ -13,7 +13,7 @@
 
 \begin{document}
 
-\title{Nonparametric Predictive Regression with Exogenous Shocks: A Sieve Empirical Likelihood Approach (In progress Version 2.0 AR1)}
+\title{Nonparametric Predictive Regression with Exogenous Shocks: A Sieve Empirical Likelihood Approach (In progress)}
 \author{Siyan Dong}
 \date{\today}
 \maketitle
@@ -36,7 +36,7 @@ We consider the problem of testing return predictability in the presence of high
         U_t = \phi \varepsilon_t + z_t \quad \text{with } E[z_t \mid \varepsilon_t] = 0
     \end{equation}
 \end{enumerate}
-where $Y_t$ represents the asset returns, $W_{t-1}$ is a stationary exogenous weather covariate, and $X_{t-1}$ is a persistent financial predictor that is independent of $W_{t-1}$. The error terms are structured to accommodate potential endogeneity via the parameter $\phi$.
+where $Y_t$ represents the asset returns, $W_{t-1}$ is a stationary exogenous weather covariate, and $X_{t-1}$ is a persistent financial predictor. The key exclusion restriction is that the weather process is external to the predictor dynamics: $\{W_s:s\in\mathbb Z\}$ is independent of $X_0$ and of the predictor innovations $\{\varepsilon_t:t\geq1\}$. Hence $W_{t-1}$ is independent of $X_{t-1}$, although $X_t$ may still be endogenous with the return shock through $U_t=\phi\varepsilon_t+z_t$.
 
 Motivated by Perron (1989), our goal is to investigate return predictability while avoiding size distortions or false inferences caused by near unit roots in the predictor dynamics (i.e., $\rho \approx 1$). This is achieved by testing the null hypothesis of no predictability:
 \begin{equation} 
@@ -55,7 +55,7 @@ We motivate our framework with the 2023--2024 agricultural commodity shocks. Let
 During 2023--2024, extreme weather conditions, including severe droughts in West Africa, led to supply deficits and a substantial increase in cocoa prices. This context illustrates the key features of our model:
 
 \begin{enumerate}
-    \item \textbf{Exogeneity of Weather Shocks:} Local weather variables ($W_{t-1}$) are determined by atmospheric systems, exogenous to financial variables ($X_{t-1}$) such as trading volume or lagged prices. Thus, $W_{t-1}$ and $X_{t-1}$ are independent, satisfying Assumption~A.
+    \item \textbf{Exogeneity of Weather Shocks:} Local weather variables ($W_{t-1}$) are determined by atmospheric systems, external to financial variables ($X_{t-1}$) such as trading volume or lagged prices. In the model this means the entire weather path is independent of the initial predictor and its innovations, so $W_{t-1}\perp X_{t-1}$, as formalized in Assumption~\ref{ass:sieve-projection}.
     
     \item \textbf{Nonlinear Weather Impact:} The effect of temperature and rainfall on crop yield is highly nonlinear, with extreme weather deviations causing disproportionate impacts on supply. A nonparametric formulation $m(W_{t-1})$ is necessary to capture this threshold behavior, which we approximate using a sieve basis.
     
@@ -64,98 +64,62 @@ During 2023--2024, extreme weather conditions, including severe droughts in West
     \item \textbf{Orthogonalized Sieve-EL Application:} Our framework first filters the nonlinear weather impact $m(W_{t-1})$ via sieve projection. The independence of $W_{t-1}$ and $X_{t-1}$ ensures consistency. Centering the predictor's weights against the sieve basis purges the nonparametric estimation error from the EL moment condition, allowing for standard $\chi^2_1$ inference on $\beta$.
 \end{enumerate}
 
-\section{The Orthogonalized Sieve-EL Framework (Version 2.0 AR1)}
+\section{The Orthogonalized Sieve-EL Framework}
 
 We handle the unknown nonparametric curve $m(W_{t-1})$ by approximating it using a sieve basis of dimension $K$ (e.g., polynomials or splines). Let $\bm{P}_K(W_{t-1}) = (p_1(W_{t-1}), \dots, p_K(W_{t-1}))'$ be the $K \times 1$ vector of these basis functions.
 
 \subsection{The Step-by-Step Algorithm}
 
-The estimation and inference procedure is implemented sequentially via the following five steps, detailing the explicit matrix algebra that guarantees robustness.
+The estimation and inference procedure is implemented sequentially via the following three steps, detailing the explicit matrix algebra that guarantees robustness.
 
-\subsubsection*{Step 1: The First-Stage AR(1) (Purging the Predictor)}
-Following the methodology of Cai \& Wang (2014), we first isolate the true innovations of the highly persistent predictor $X_t$. We estimate a first-order autoregression via OLS:
+\subsubsection*{Step 1: Profiling out the Weather Curve}
+For each candidate parameter $\beta$ under the null hypothesis, we profile out the nonparametric weather curve $m(W_{t-1})$. Let $\bm{Y} = (Y_1, \dots, Y_T)'$ and $\bm{X}_{lag} = (X_0, \dots, X_{T-1})'$. Let $\bm{P}$ be the $T \times K$ matrix whose $t$-th row is $\bm{P}_K(W_{t-1})'$. The profile sieve coefficients for the weather curve are:
 \begin{equation}
-    X_t = \theta + \rho X_{t-1} + \varepsilon_t, \quad t=1,\dots,T
+    \widehat{\bm{c}}_K(\beta) = (\bm{P}'\bm{P})^{-1}\bm{P}'(\bm{Y} - \beta \bm{X}_{lag})
 \end{equation}
-The OLS estimators for the intercept and persistence parameter are given by:
+The residualized dependent variable (the adjusted return) is defined using the sieve annihilator matrix $\bm{M}_K = \bm{I}_T - \bm{P}(\bm{P}'\bm{P})^{-1}\bm{P}'$:
 \begin{equation}
-    \begin{pmatrix} \widehat{\theta} \\ \widehat{\rho} \end{pmatrix} = \left( \sum_{t=1}^T \begin{pmatrix} 1 \\ X_{t-1} \end{pmatrix} \begin{pmatrix} 1 & X_{t-1} \end{pmatrix} \right)^{-1} \sum_{t=1}^T \begin{pmatrix} 1 \\ X_{t-1} \end{pmatrix} X_t
+    \widehat{\bm{u}}(\beta) = \bm{M}_K(\bm{Y} - \beta \bm{X}_{lag})
 \end{equation}
-We then compute and save the estimated residuals, which act as our proxy for the pure financial shock:
+Under the null hypothesis $\beta = \beta_0$, substituting the true DGP $\bm{Y} = \bm{P}\bm{c} + \bm{r} + \beta_0 \bm{X}_{lag} + \bm{U}$ (where $\bm{r}$ is the approximation error) yields:
 \begin{equation}
-    \widehat{\varepsilon}_t = X_t - \widehat{\theta} - \widehat{\rho} X_{t-1}
-\end{equation}
-
-\subsubsection*{Step 2: The Joint Sieve-Cai-Wang Estimation (Purging the Weather Curve)}
-To estimate the nonparametric weather curve $m(W_{t-1})$ without absorbing any endogenous financial shocks, we set up a joint OLS regression. The return shock is decomposed as $U_t = \phi \varepsilon_t + z_t$. Substituting this into the return equation yields the full regression model:
-\begin{equation}
-    Y_t = \bm{P}_K(W_{t-1})' \bm{c} + \beta X_{t-1} + \phi \widehat{\varepsilon}_t + \text{error}_t
-\end{equation}
-Let $\bm{\Lambda}_t = \left( \bm{P}_K(W_{t-1})', X_{t-1}, \widehat{\varepsilon}_t \right)'$ denote the $(K+2) \times 1$ concatenated regressor vector. The joint OLS estimator $\widehat{\bm{\delta}} = \left( \widehat{\bm{c}}', \widehat{\beta}, \widehat{\phi} \right)'$ is defined as:
-\begin{equation}
-    \widehat{\bm{\delta}} = \left( \sum_{t=1}^T \bm{\Lambda}_t \bm{\Lambda}_t' \right)^{-1} \sum_{t=1}^T \bm{\Lambda}_t Y_t
-\end{equation}
-We extract the first $K$ elements of $\widehat{\bm{\delta}}$ to serve as our robust estimator for the Sieve coefficients, $\widehat{\bm{c}}$. 
-\begin{itemize}
-    \item \textbf{No Omitted Variable Bias:} By explicitly including $X_{t-1}$ in $\bm{\Lambda}_t$, the projection of $Y_t$ onto the Sieve basis is orthogonalized against the predictor, preventing $\widehat{\bm{c}}$ from spuriously absorbing the predictive signal $\beta_0 X_{t-1}$.
-    \item \textbf{No Stambaugh Bias:} By including $\widehat{\varepsilon}_t$, the endogeneity correlation $\mathbb{E}[U_t \varepsilon_t] \neq 0$ is explicitly partialled out. The remaining error is strictly orthogonal to the predictor's innovations, thereby unbiasing the estimation.
-\end{itemize}
-
-\subsubsection*{Step 3: Redefining the Adjusted Return}
-With a clean estimator $\widehat{\bm{c}}$ in hand, we isolate the financial components of the return by subtracting the estimated nonparametric weather impact. The adjusted dependent variable is defined as:
-\begin{equation}
-    \widetilde{Y}_t = Y_t - \bm{P}_K(W_{t-1})'\widehat{\bm{c}}
-\end{equation}
-Under the null hypothesis $H_0: \beta = \beta_0$, substituting the true DGP $Y_t = m(W_{t-1}) + \beta_0 X_{t-1} + U_t$ and the Sieve decomposition $m(W_{t-1}) = \bm{P}_K(W_{t-1})'\bm{c} + r_t$ (where $r_t$ is the approximation error) yields:
-\begin{align}
-    \widetilde{Y}_t - \beta_0 X_{t-1} &= m(W_{t-1}) + U_t - \bm{P}_K(W_{t-1})'\widehat{\bm{c}} \\
-    &= \bm{P}_K(W_{t-1})'\bm{c} + r_t + U_t - \bm{P}_K(W_{t-1})'\widehat{\bm{c}} \\
-    &= U_t + r_t - \bm{P}_K(W_{t-1})'(\widehat{\bm{c}} - \bm{c})
-\end{align}
-
-\subsubsection*{Step 4: The Sieve Weight Projection}
-In standard Empirical Likelihood, the estimation error $(\widehat{\bm{c}} - \bm{c})$ would severely distort the asymptotic distribution. To neutralize this, we construct an orthogonalized weight function. Let $w(X_{t-1})$ be the raw weight (e.g., $\tanh(X_{t-1}/c_w)$). We project $w(X_{t-1})$ onto the Sieve basis:
-\begin{equation}
-    \widehat{\bm{\gamma}} = \left( \sum_{t=1}^T \bm{P}_K(W_{t-1}) \bm{P}_K(W_{t-1})' \right)^{-1} \sum_{t=1}^T \bm{P}_K(W_{t-1}) w(X_{t-1})
-\end{equation}
-The orthogonalized, centered weight $w^c_t$ is defined as the residual of this regression:
-\begin{equation}
-    w^c_t = w(X_{t-1}) - \bm{P}_K(W_{t-1})' \widehat{\bm{\gamma}}
-\end{equation}
-By the fundamental first-order conditions of OLS, the residuals are exactly orthogonal to the regressors in-sample:
-\begin{equation}
-    \sum_{t=1}^T \bm{P}_K(W_{t-1}) w^c_t \equiv \bm{0}
+    \widehat{\bm{u}}(\beta_0) = \bm{M}_K(\bm{P}\bm{c} + \bm{r} + \bm{U}) = \bm{M}_K(\bm{r} + \bm{U})
 \end{equation}
 
-\subsubsection*{Step 5: Algebraic Elimination in the EL Moment Condition}
+\subsubsection*{Step 2: The Sieve Weight Projection}
+In standard Empirical Likelihood, the nonparametric estimation error would severely distort the asymptotic distribution. To neutralize this, we construct an orthogonalized weight function. Let $\bm{w} = (w_1, \dots, w_T)'$ where $w_t = w(X_{t-1})$ is the raw weight (e.g., $\tanh(X_{t-1}/c_w)$). We project the weights onto the same sieve basis and define the orthogonalized weight $\bm{w}^c$ as the residual:
+\begin{equation}
+    \bm{w}^c = \bm{M}_K \bm{w}
+\end{equation}
+Let $w_t^c = (\bm{w}^c)_t$. By the properties of orthogonal projection, the centered weights are perfectly orthogonal to the sieve basis in-sample:
+\begin{equation}
+    \sum_{t=1}^T \bm{P}_K(W_{t-1}) w_t^c \equiv \bm{0}
+\end{equation}
+
+\subsubsection*{Step 3: Algebraic Elimination in the EL Moment Condition}
 For testing $H_0: \beta = \beta_0$, the EL moment condition is evaluated as:
 \begin{equation}
-    Z_t(\beta_0) = \left( \widetilde{Y}_t - \beta_0 X_{t-1} \right) w^c_t
-\end{equation}
-Substituting the expansion from Step 3:
-\begin{equation}
-    Z_t(\beta_0) = \Big( U_t + r_t - \bm{P}_K(W_{t-1})'(\widehat{\bm{c}} - \bm{c}) \Big) w^c_t
+    \widehat{Z}_t(\beta_0) = \widehat{u}_t(\beta_0) w_t^c
 \end{equation}
 Summing the moment conditions across the sample to evaluate the numerator of the EL statistic:
 \begin{equation}
-    \sum_{t=1}^T Z_t(\beta_0) = \sum_{t=1}^T (U_t + r_t) w^c_t - (\widehat{\bm{c}} - \bm{c})' \underbrace{\sum_{t=1}^T \bm{P}_K(W_{t-1}) w^c_t}_{=\; \bm{0} \text{ (from Step 4)}}
+    \sum_{t=1}^T \widehat{Z}_t(\beta_0) = \widehat{\bm{u}}(\beta_0)' \bm{w}^c = (\bm{r} + \bm{U})' \bm{M}_K \bm{M}_K \bm{w} = (\bm{r} + \bm{U})' \bm{w}^c
 \end{equation}
-The multi-dimensional Sieve estimation error $\widehat{\bm{c}} - \bm{c}$ is thereby perfectly annihilated algebraically. We are left with:
+The multi-dimensional Sieve estimation error is thereby perfectly annihilated algebraically. We are left with:
 \begin{equation}
-    \frac{1}{\sqrt{T}} \sum_{t=1}^T Z_t(\beta_0) = \frac{1}{\sqrt{T}} \sum_{t=1}^T U_t w^c_t + \underbrace{\frac{1}{\sqrt{T}} \sum_{t=1}^T r_t w^c_t}_{=\; o_p(1)}
+    \frac{1}{\sqrt{T}} \sum_{t=1}^T \widehat{Z}_t(\beta_0) = \frac{1}{\sqrt{T}} \sum_{t=1}^T U_t w_t^c + \underbrace{\frac{1}{\sqrt{T}} \sum_{t=1}^T r_t w_t^c}_{=\; o_p(1)}
 \end{equation}
-Because the condition is structurally stripped of estimation variance, the sample variance of $Z_t(\beta_0)$ accurately reflects the pure innovation variance. As a result, the Empirical Likelihood ratio statistic (where $\widehat{\lambda}$ is the Lagrange multiplier) achieves the standard chi-squared limit:
+Because the condition is structurally stripped of estimation variance, the sample variance of $\widehat{Z}_t(\beta_0)$ accurately reflects the pure innovation variance. As a result, the Empirical Likelihood ratio statistic (where $\widehat{\lambda}$ is the Lagrange multiplier) achieves the standard chi-squared limit:
 \begin{equation}
-    \ell_T(\beta_0) = 2 \sum_{t=1}^T \log(1 + \widehat{\lambda} Z_t(\beta_0)) \xrightarrow{d} \chi^2_1
+    \ell_T(\beta_0) = 2 \sum_{t=1}^T \log(1 + \widehat{\lambda} \widehat{Z}_t(\beta_0)) \xrightarrow{d} \chi^2_1
 \end{equation}
 
 \subsection{Comparison with Cai et al. (2026)}
 
-Our framework differs from the two-stage approach of Cai et al. (2026) in three fundamental aspects:
+Our framework differs from the approach of Cai et al. (2026) in two fundamental aspects:
 \begin{itemize}
     \item \textbf{Nuisance Dimensionality}: Cai et al. (2026) handle a fixed scalar intercept $\alpha$, whereas our model contains an infinite-dimensional nuisance function $m(W_{t-1})$, which requires a sieve approximation of dimension $K \to \infty$.
-    \item \textbf{Orthogonalization Space}: In Cai et al. (2026), the weight centering $w^c(x) = w(x) - \frac{1}{T}\sum w(X_s)$ represents a projection onto the constant subspace $\text{span}\{\bm{1}\}$. In contrast, our orthogonalized weight $w^c_t$ is projected onto the $K$-dimensional sieve space $\text{span}\{\bm{P}_K(W_{t-1})\}$.
-    \item \textbf{Purging and Exogeneity}: By jointly estimating the sieve basis alongside $X_{t-1}$ and $\widehat{\varepsilon}_t$, we ensure the nonparametric components are fully immune to both omitted variable bias and Stambaugh endogeneity bias, mirroring the core philosophy of CCHT.
+    \item \textbf{Orthogonalization Space}: The true generalization is that the demeaning against a constant $1$ is replaced by residualizing against the Sieve basis $\bm{P}_K(W)$. In Cai et al. (2026), the weight centering $w^c(x) = w(x) - \frac{1}{T}\sum w(X_s)$ represents a projection onto the constant subspace $\text{span}\{\bm{1}\}$. In contrast, our orthogonalized weight $\bm{w}^c$ is projected onto the $K$-dimensional sieve space $\text{span}\{\bm{P}_K(W_{t-1})\}$. We keep the AR(1) equation as the persistence DGP, but we do not use AR(1) OLS residuals in the EL statistic.
 \end{itemize}
 
 \section{The Growth Rate of the Sieve Dimension $K$}
@@ -192,7 +156,11 @@ To ensure the algebraic orthogonalization rigorously eliminates the nonparametri
 
 \noindent \textbf{Remark.} This condition ensures that using the entire dataset to estimate the weather curve does not inadvertently absorb future stock market shocks. It shuts down the "future leakage" trap. Because climatic processes are governed by atmospheric physics, weather shocks are completely oblivious to tomorrow's stock market crashes.
 
-\paragraph*{Assumption 5.2 (Cross-Sectional Independence from the Predictor)} \textit{The exogenous weather process $\{W_t\}$ is strictly independent of the financial predictor innovation process $\{v_t\}$. Consequently, $W_{t-1}$ and $X_{t-1}$ are independent random variables, implying:}
+\paragraph*{Assumption 5.2 (Independence from the Predictor Process)} \textit{The exogenous weather process is independent of the predictor's initial condition and innovation sequence:}
+\begin{equation}
+    \{W_s:s\in\mathbb Z\}\ \perp\!\!\!\perp\ \{X_0,\varepsilon_t:t\geq1\}.
+\end{equation}
+\textit{Since $X_{t-1}$ is generated from $X_0$ and $\{\varepsilon_s:s\leq t-1\}$, this implies $W_{t-1}$ and $X_{t-1}$ are independent random variables. Therefore, for the EL weight $w(X_{t-1})$,}
 \begin{equation}
     \mathbb{E}[w(X_{t-1}) \mid W_{t-1}] = \mathbb{E}[w(X_{t-1})].
 \end{equation}
@@ -206,7 +174,7 @@ This section gives a formal Wilks theorem for the mean-predictability test.  It 
 useful to write the nuisance step in null-imposed profile form.  Let
 \[
     \bm Y=(Y_1,\ldots,Y_T)',\qquad
-    \bm X_-=(X_0,\ldots,X_{T-1})',
+    \bm X_{lag}=(X_0,\ldots,X_{T-1})',
 \]
 and let \(\bm P\) be the \(T\times K\) matrix whose \(t\)-th row is
 \(\bm P_K(W_{t-1})'\).  Define
@@ -219,10 +187,10 @@ For each candidate value \(\beta\), define the null-imposed profile sieve
 coefficient and the corresponding residual by
 \begin{equation}
     \widehat{\bm c}_K(\beta)
-    =(\bm P'\bm P)^{-1}\bm P'(\bm Y-\beta\bm X_-),
+    =(\bm P'\bm P)^{-1}\bm P'(\bm Y-\beta\bm X_{lag}),
     \qquad
     \widehat{\bm u}(\beta)
-    =\bm M_K(\bm Y-\beta\bm X_-).
+    =\bm M_K(\bm Y-\beta\bm X_{lag}).
     \label{eq:profile-sieve}
 \end{equation}
 Let \(w_t=w(X_{t-1})\), \(\bm w=(w_1,\ldots,w_T)'\), and define the
@@ -451,7 +419,7 @@ Under Assumptions~\ref{ass:ccht-core}--\ref{ass:approximation}, under
 \begin{proof}
 Under the null,
 \[
-    \bm Y-\beta_0\bm X_-
+    \bm Y-\beta_0\bm X_{lag}
        =\bm P\bm c_K+\bm r_K+\bm U,
     \qquad
     \widehat{\bm u}(\beta_0)
@@ -641,6 +609,6 @@ extension is a separate methodological problem.
 
 \section{Conclusion}
 
-When researchers use standard predictive regressions, they are often forced to assume a constant intercept to maintain mathematical tractability. Consequently, all other exogenous macro-environmental factors are relegated to the error term. While this preserves the null hypothesis, it artificially inflates the residual variance, mathematically obliterating the test's power to detect true financial predictability. Our Orthogonalized Sieve-EL estimator, augmented with the CCHT first-stage AR(1) purging step, allows researchers to surgically remove arbitrary, non-linear environmental noise without violating the stringent requirements of Empirical Likelihood or suffering from Stambaugh bias. By doing so, the framework fully recovers the lost signal of the persistent predictor, offering a powerful tool for complex, real-world scenarios such as commodity pricing.
+When researchers use standard predictive regressions, they are often forced to assume a constant intercept to maintain mathematical tractability. Consequently, all other exogenous macro-environmental factors are relegated to the error term. While this preserves the null hypothesis, it artificially inflates the residual variance, mathematically obliterating the test's power to detect true financial predictability. The proposed method uses the AR(1) specification only to describe the persistence class of the predictor. The empirical likelihood statistic itself does not estimate or include AR residuals. Instead, it profiles out the nonparametric nuisance $m(W)$ under each candidate $\beta$ and residualizes the EL weight against the same sieve space. By doing so, the framework fully recovers the lost signal of the persistent predictor, offering a powerful tool for complex, real-world scenarios such as commodity pricing.
 
 \end{document}
