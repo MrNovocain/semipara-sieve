@@ -8,6 +8,9 @@ import matplotlib.pyplot as plt
 from functools import partial
 from abc import ABC, abstractmethod
 from typing import Tuple, Optional, Dict
+from pathlib import Path
+
+LEGACY_RESULT_DIR = Path(__file__).resolve().parents[2] / "result" / "legacy"
 
 
 # =============================================================================
@@ -413,8 +416,10 @@ class AcademicPlotter:
         plt.title("Size Distortion under Persistent Predictors")
         plt.legend()
         plt.tight_layout()
-        plt.savefig("size_distortion.png", dpi=300)
-        print("Saved plot to size_distortion.png")
+        LEGACY_RESULT_DIR.mkdir(parents=True, exist_ok=True)
+        output = LEGACY_RESULT_DIR / "size_distortion.png"
+        plt.savefig(output, dpi=300)
+        print(f"Saved plot to {output}")
 
     @classmethod
     def plot_power(cls, runner: MonteCarloRunner, rho: float = 0.99):
@@ -438,8 +443,10 @@ class AcademicPlotter:
         plt.title(f"Power Curve ($\\rho = {rho}$)")
         plt.legend()
         plt.tight_layout()
-        plt.savefig("power_curve.png", dpi=300)
-        print("Saved plot to power_curve.png")
+        LEGACY_RESULT_DIR.mkdir(parents=True, exist_ok=True)
+        output = LEGACY_RESULT_DIR / "power_curve.png"
+        plt.savefig(output, dpi=300)
+        print(f"Saved plot to {output}")
 
 
 if __name__ == "__main__":

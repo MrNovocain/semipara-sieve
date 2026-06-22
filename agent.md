@@ -3,7 +3,7 @@
 ## Project Identity
 - This is a working paper project targeting *Statistica Sinica*.
 - Treat the main project as the profile sieve paper, not as an application-materials or advisor-search workspace.
-- Maintain a fully replicable, modular research structure: paper source, simulation code, data, generated results, and background knowledge should remain separated by purpose.
+- Maintain a fully replicable, modular research structure: source package, scripts, notebooks, paper source, data, generated results, and background knowledge should remain separated by purpose.
 
 ## Hard Constraints
 - Do not modify `writing_samples/profile sieve.tex`.
@@ -18,8 +18,8 @@
 
 ## Replicable Modular Structure
 - Put raw inputs under `data/raw/` and cleaned analysis inputs under `data/processed/`.
-- Put generated tables, figures, and simulation summaries under `result/`.
-- Keep reusable simulation and diagnostic logic in scripts rather than notebook-only cells.
+- Put generated tables, figures, and simulation summaries under `result/`; do not put generated plots in the repository root.
+- Keep reusable implementation logic in `src/profile_sieve/` and command-line workflows in `scripts/` rather than notebook-only cells.
 - Keep paper-facing writing in `writing_samples/`; do not mix CV, transcript, advisor-selection, or admissions material into paper directories.
 - Keep each computational claim auditable from source code plus saved CSV or figure output.
 

@@ -11,7 +11,7 @@ import pandas as pd
 import scipy.stats as stats
 
 
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parents[2]
 RESULT = ROOT / "result"
 CHI2_95 = stats.chi2.ppf(0.95, df=1)
 
@@ -126,7 +126,7 @@ def main():
     qq_png = out_dir / "01_qq_convergence_profile_el.png"
     qq_csv = out_dir / "01_qq_convergence_profile_el.csv"
     run([
-        py, "batched_qq_convergence.py",
+        py, str(ROOT / "scripts" / "simulation" / "batched_qq_convergence.py"),
         "--batches", "60",
         "--iterations-per-batch", "50",
         "--jobs", "1",
@@ -144,7 +144,7 @@ def main():
     scored = []
     for m_type, loading in stress_candidates:
         run([
-            py, "k_sensitivity_chisq.py",
+            py, str(ROOT / "scripts" / "simulation" / "k_sensitivity_chisq.py"),
             "--T", "500",
             "--K-grid", "1,2,4,6,8,12,16,20,30,50,100,150",
             "--m-type", m_type,

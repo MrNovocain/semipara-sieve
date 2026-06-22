@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "profile-sieve"
+version = "0.1.0"
+description = "Profile sieve empirical likelihood simulations for a Statistica Sinica working paper."
+requires-python = ">=3.10"
+dependencies = [
+    "matplotlib",
+    "numpy",
+    "pandas",
+    "scipy",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]

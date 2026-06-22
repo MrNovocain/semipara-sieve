@@ -25,3 +25,6 @@ __pycache__/
 *.nav
 *.snm
 *.vrb
+
+# Keep accidental generated plots out of the repository root
+/*.png

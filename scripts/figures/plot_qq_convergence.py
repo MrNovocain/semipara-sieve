@@ -9,7 +9,15 @@ import matplotlib.pyplot as plt
 import numpy as np
 import scipy.stats as stats
 
-from mc_sieve_el import BSplineSieve, LegendreSieve, SimulatedDGP, SieveELEstimator
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[2]
+SRC = ROOT / "src"
+if str(SRC) not in sys.path:
+    sys.path.insert(0, str(SRC))
+
+from profile_sieve.mc_sieve_el import BSplineSieve, LegendreSieve, SimulatedDGP, SieveELEstimator
 
 
 CHI2_5PCT_CV = stats.chi2.ppf(0.95, df=1)
@@ -44,7 +52,7 @@ def run_simulations_for_T(T: int, K: int, iterations: int, rho: float, phi: floa
 
 def timestamped_result_path(stem: str, suffix: str = ".png") -> Path:
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    result_dir = Path("result")
+    result_dir = ROOT / "result"
     result_dir.mkdir(parents=True, exist_ok=True)
     return result_dir / f"{stem}_{timestamp}{suffix}"
 
