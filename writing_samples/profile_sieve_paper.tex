@@ -1,0 +1,348 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{bm}
+\usepackage{amsthm}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+\newtheorem{assumption}{Assumption}
+\newtheorem{remark}{Remark}
+
+\title{Sieve-Orthogonalized Empirical Likelihood for Predictive Regressions with Exogenous Covariates}
+\author{Siyan Dong}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This note develops an empirical likelihood test for mean predictability when a persistent financial predictor is accompanied by an unknown nonparametric exogenous-control component. The nuisance component is profiled out with a sieve, and the empirical likelihood weight is residualized against the same sieve space. The resulting moment condition is orthogonal to the fitted nuisance space, so the feasible score is asymptotically equivalent to a centered oracle score under high-level persistent-predictor regularity conditions. Under standard persistence classes for the predictor and sieve growth conditions, the empirical likelihood ratio has a standard \(\chi_1^2\) limit.
+\end{abstract}
+
+\section{Introduction}
+
+Predictive regressions often include persistent predictors, such as lagged asset prices or valuation ratios, together with other predetermined state variables. A fixed intercept is too restrictive when those state variables have a nonlinear effect on returns. This paper treats that intercept-like component as an unknown function and tests predictability after removing it nonparametrically.
+
+The maintained model is
+\begin{equation}
+    Y_t=m(W_{t-1})+\beta X_{t-1}+U_t,
+    \qquad
+    X_t=\theta+\rho_T X_{t-1}+\varepsilon_t,
+    \label{eq:intro-dgp}
+\end{equation}
+where \(Y_t\) is the return, \(X_{t-1}\) is a persistent predictor, and \(W_{t-1}\in\mathbb R^d\) is a stationary exogenous covariate vector. The function \(m(\cdot)\) is unrestricted up to sieve smoothness conditions. The null hypothesis is \(H_0:\beta=\beta_0\), with \(\beta_0=0\) giving the usual test of no mean predictability.
+
+The main contribution is a sieve-orthogonalized empirical likelihood (EL) construction. The nuisance function \(m\) is profiled out under each candidate \(\beta\). The EL weight is then projected off the same sieve basis. This makes the fitted nuisance component algebraically orthogonal to the estimating equation, while the remaining approximation and projection errors vanish under a transparent growth window for the sieve dimension \(K\).
+
+The framework is motivated by settings such as agricultural commodity returns, where local weather variables may affect supply and returns nonlinearly while lagged financial predictors remain highly persistent. The theory itself is generic: the formal result only requires a stationary exogenous covariate vector satisfying the stated orthogonality and regularity conditions.
+
+\section{Model and Sieve-EL Construction}
+
+Let
+\[
+    \bm Y=(Y_1,\ldots,Y_T)',\qquad
+    \bm X_{lag}=(X_0,\ldots,X_{T-1})'.
+\]
+Let \(\bm P\) be the \(T\times K\) sieve matrix whose \(t\)-th row is \(\bm P_K(W_{t-1})'\), where
+\[
+    \bm P_K(W_{t-1})=(p_1(W_{t-1}),\ldots,p_K(W_{t-1}))'.
+\]
+When \(d>1\), the basis functions \(p_j\) are multivariate. Define
+\[
+    \bm\Pi_K=\bm P(\bm P'\bm P)^{-1}\bm P',
+    \qquad
+    \bm M_K=\bm I_T-\bm\Pi_K.
+\]
+For each candidate value \(\beta\), the null-imposed profile sieve coefficient and residual are
+\begin{equation}
+    \widehat{\bm c}_K(\beta)
+    =(\bm P'\bm P)^{-1}\bm P'(\bm Y-\beta\bm X_{lag}),
+    \qquad
+    \widehat{\bm u}(\beta)=\bm M_K(\bm Y-\beta\bm X_{lag}).
+    \label{eq:paper-profile-sieve}
+\end{equation}
+Let \(w_t=w(X_{t-1})\) be a bounded saturated weight, let \(\bm w=(w_1,\ldots,w_T)'\), and define the sieve-orthogonalized weight
+\begin{equation}
+    \bm w^c=\bm M_K\bm w,
+    \qquad
+    w_t^c=(\bm w^c)_t.
+    \label{eq:paper-weight}
+\end{equation}
+The key identity is \(\bm P'\bm w^c=\bm0\). Intuitively, \(\bm\Pi_K\bm w\) is the fitted value from projecting the raw weight vector \(\bm w\) on the sieve regressors \(\bm P\), and \(\bm w^c=\bm w-\bm\Pi_K\bm w\) is the corresponding residual. The normal equations for this least-squares projection give \(\bm P'(\bm w-\bm\Pi_K\bm w)=\bm0\), so the orthogonalized weight has zero sample covariance with every fitted sieve direction. The feasible scalar score is
+\begin{equation}
+    \widehat Z_t(\beta)=\widehat u_t(\beta)w_t^c.
+    \label{eq:paper-score}
+\end{equation}
+The profile empirical likelihood and log-likelihood ratio are
+\begin{align}
+    L_T(\beta)
+    &=\sup\left\{
+       \prod_{t=1}^T(T\pi_t):
+       \pi_t\geq0,\quad
+       \sum_{t=1}^T\pi_t=1,\quad
+       \sum_{t=1}^T\pi_t\widehat Z_t(\beta)=0
+       \right\},                                                    \label{eq:paper-el}\\
+    \ell_T(\beta)
+    &=-2\log L_T(\beta)
+      =2\sum_{t=1}^T\log\{1+\widehat\lambda(\beta)\widehat Z_t(\beta)\},
+      \label{eq:paper-elr}
+\end{align}
+where \(\widehat\lambda(\beta)\) solves the usual EL multiplier equation.
+
+\section{Assumptions and Sieve Growth}
+
+Write \(\overline w_T=T^{-1}\sum_{t=1}^T w_t\), \(\widetilde w_t=w_t-\overline w_T\), and define the empirical norm by \(\|\bm v\|_T^2=T^{-1}\sum_{t=1}^T v_t^2\) for \(\bm v=(v_1,\ldots,v_T)'\).
+
+\begin{assumption}[Oracle persistent-predictor score conditions]
+\label{ass:paper-score}
+The predictor persistence process belongs to a regularity class for which the centered weighted oracle score admits a mixed-normal self-normalized limit. With respect to the enlarged filtration
+\[
+    \mathcal H_t=\sigma\{(z_s,\varepsilon_s):s\leq t\}\vee\sigma\{W_s:s\leq t\},
+\]
+\(E(U_t\mid\mathcal H_{t-1})=0\), \(\sup_tE|U_t|^{2+\delta}<\infty\) for some \(\delta>0\), the raw weight is uniformly bounded, and the conditional-variance and maximum-score conditions needed for self-normalized empirical likelihood hold. In particular, for
+\[
+    A_T=\frac1{\sqrt T}\sum_{t=1}^T U_t\widetilde w_t,
+    \qquad
+    V_T=\frac1T\sum_{t=1}^T U_t^2\widetilde w_t^2,
+\]
+there exists an a.s. positive, possibly random, variable \(\eta^2\) such that
+\begin{equation}
+    A_T\xrightarrow{\mathrm{st}}MN(0,\eta^2),
+    \qquad
+    V_T\xrightarrow{p}\eta^2,
+    \qquad
+    \max_{t\leq T}|U_t\widetilde w_t|=o_p(\sqrt T).
+    \label{eq:paper-oracle}
+\end{equation}
+\end{assumption}
+
+\begin{assumption}[Sieve orthogonality and projection]
+\label{ass:paper-projection}
+The first component of \(\bm P_K(W)\) is one. After centering the remaining basis functions in sample, write the corresponding \(T\times(K-1)\) matrix as \(\bm R\), so that \(\bm1_T'\bm R=\bm0\) and \(\operatorname{span}(\bm P)=\operatorname{span}(\bm1_T,\bm R)\). The primitive timing restriction is
+\[
+    \mathbb E\left[\bm R_K(W_{t-1})\{w(X_{t-1})-\mathbb Ew(X_{t-1})\}\right]=\bm0.
+\]
+The Gram matrix \(T^{-1}\bm R'\bm R\) has eigenvalues bounded away from zero and infinity with probability tending to one. If \(\zeta_K=\max_{t\leq T}\|\bm R_t\|\), then
+\begin{align}
+    \left\|T^{-1}\bm R'\widetilde{\bm w}\right\|&=O_p(\sqrt{K/T}),
+      \label{eq:paper-rate-rw}\\
+    \left\|T^{-1/2}\bm R'\bm U\right\|&=O_p(\sqrt K),
+      \label{eq:paper-rate-ru}\\
+    \left\|T^{-1}\bm P'\bm U\right\|&=O_p(\sqrt{K/T}).
+      \label{eq:paper-rate-pu}
+\end{align}
+These sample bounds are the high-level projection conditions used in the proof. They can be verified under the stated sieve orthogonality, exponential mixing of \(W_t\), uniformly bounded sieve-basis moments, and the martingale condition in Assumption~\ref{ass:paper-score}.
+\end{assumption}
+
+\begin{assumption}[Approximation, rates, and nondegeneracy]
+\label{ass:paper-approx}
+For some \(\bm c_K\),
+\[
+    m(W_{t-1})=\bm P_K(W_{t-1})'\bm c_K+r_{K,t},
+\]
+where \(\|\bm r_K\|_T=O(a_K)\), \(\|\bm r_K\|_\infty=O(a_K)\), and \(\sqrt T a_K\to0\). The sieve projector is stable in sup norm on the approximation residual: \(\|\bm M_K\bm r_K\|_\infty=O(a_K)\). Moreover,
+\[
+    K/\sqrt T\to0,
+    \qquad
+    \zeta_K\sqrt{K/T}\to0,
+\]
+and \(P(\eta^2\geq\underline\eta^2)=1\) for some \(\underline\eta>0\). The EL convex-hull condition holds under the null.
+\end{assumption}
+
+If \(m\) has smoothness \(s\), \(W\) is \(d\)-dimensional, and \(a_K\asymp K^{-s/d}\), then \(\sqrt T a_K\to0\) and \(K/\sqrt T\to0\) give the rate window
+\begin{equation}
+    T^{d/(2s)}\ll K\ll T^{1/2},
+    \label{eq:paper-rate-window}
+\end{equation}
+which is nonempty when \(s>d\).
+
+\section{Main Result}
+
+\begin{theorem}[Wilks phenomenon]
+\label{thm:paper-wilks}
+Under Assumptions~\ref{ass:paper-score}--\ref{ass:paper-approx}, under \(H_0:\beta=\beta_0\),
+\[
+    \ell_T(\beta_0)\xrightarrow{d}\chi_1^2.
+\]
+\end{theorem}
+
+\paragraph{Proof sketch.}
+Assumption~\ref{ass:paper-score} supplies the high-level oracle score limit for
+\[
+    A_T=T^{-1/2}\sum_tU_t\widetilde w_t,
+    \qquad
+    V_T=T^{-1}\sum_tU_t^2\widetilde w_t^2.
+\]
+Lemma~\ref{lem:paper-projection} in the appendix shows that the growing sieve projection of the centered weight and oracle error is negligible. Lemma~\ref{lem:paper-score} then proves
+\[
+    T^{-1/2}\sum_t\widehat Z_t(\beta_0)=A_T+o_p(1),
+    \qquad
+    T^{-1}\sum_t\widehat Z_t(\beta_0)^2=V_T+o_p(1).
+\]
+The denominator equivalence is the key feasible-oracle step: the residual \(\Delta_{Z,t}=\widehat Z_t(\beta_0)-U_t\widetilde w_t\) satisfies \(\|\bm\Delta_Z\|_T=o_p(1)\), so Cauchy--Schwarz gives \(\widehat V_T-V_T=o_p(1)\). The standard scalar EL expansion then yields \(\ell_T(\beta_0)=S_T^2/\widehat V_T+o_p(1)\), and the result follows by Slutsky's theorem. Full details are in Appendix~\ref{app:proofs}.
+
+\begin{corollary}[No-predictability test]
+For \(H_0:\beta=0\), reject at asymptotic level \(\alpha\) whenever
+\[
+    \ell_T(0)>\chi^2_{1,1-\alpha}.
+\]
+A confidence set for \(\beta\) is \(\{\beta:\ell_T(\beta)\leq\chi^2_{1,1-\alpha}\}\).
+\end{corollary}
+
+\section{Interpretation: Weather Shocks and Commodity Returns}
+
+The formal model treats \(W_{t-1}\) as a generic stationary exogenous covariate vector. A motivating application is commodity-return prediction with local weather conditions. For cocoa futures, for example, precipitation, temperature, humidity, or other regional weather variables can affect expected supply and returns through a nonlinear response surface \(m(W_{t-1})\). At the same time, lagged prices and related financial predictors may be highly persistent.
+
+The proposed procedure separates these roles. The sieve profile absorbs the flexible weather-response component. The empirical likelihood score then tests the incremental predictive content of \(X_{t-1}\), while the orthogonalized weight prevents first-stage nuisance fitting from changing the limiting distribution.
+
+\section{Conclusion}
+
+The method extends fixed-intercept predictive-regression EL to settings with an unknown exogenous-control function. The proof isolates the new sieve step by showing that the sieve-profiled and sieve-orthogonalized feasible score is asymptotically equivalent to a centered oracle score. Under the rate window \(T^{d/(2s)}\ll K\ll T^{1/2}\), the empirical likelihood ratio retains the standard \(\chi_1^2\) limit for mean predictability.
+
+\appendix
+\section{Proofs}
+\label{app:proofs}
+
+Throughout the appendix, all notation is as defined in the main text. Under \(H_0:\beta=\beta_0\), write
+\[
+    \bm Y-\beta_0\bm X_{lag}=\bm P\bm c_K+\bm r_K+\bm U,
+    \qquad
+    \widehat{\bm u}(\beta_0)=\bm M_K(\bm U+\bm r_K).
+\]
+
+\begin{lemma}[Negligibility of the growing sieve projection]
+\label{lem:paper-projection}
+Under Assumptions~\ref{ass:paper-projection}--\ref{ass:paper-approx},
+\begin{align}
+    \|\bm w^c-\widetilde{\bm w}\|_T&=O_p(\sqrt{K/T}),
+       \label{eq:paper-weight-l2}\\
+    \max_{t\leq T}|w_t^c-\widetilde w_t|&=O_p(\zeta_K\sqrt{K/T})=o_p(1),
+       \label{eq:paper-weight-max}\\
+    T^{-1/2}\sum_{t=1}^TU_t(w_t^c-\widetilde w_t)&=O_p(K/\sqrt T)=o_p(1),
+       \label{eq:paper-weight-score}\\
+    \|\bm\Pi_K\bm U\|_T&=O_p(\sqrt{K/T}),
+       \label{eq:paper-u-proj-l2}\\
+    \max_{t\leq T}|(\bm\Pi_K\bm U)_t|&=O_p(\zeta_K\sqrt{K/T})=o_p(1).
+       \label{eq:paper-u-proj-max}
+\end{align}
+\end{lemma}
+
+\begin{proof}
+Because the sieve contains a constant and \(\bm1_T'\bm R=\bm0\), residualizing \(\bm w\) on \(\bm P\) is equivalent to residualizing \(\widetilde{\bm w}\) on \(\bm R\). Thus
+\[
+    \bm w^c=\widetilde{\bm w}-\bm R\widehat{\bm\delta}_K,
+    \qquad
+    \widehat{\bm\delta}_K=(\bm R'\bm R)^{-1}\bm R'\widetilde{\bm w}.
+\]
+The Gram condition and \eqref{eq:paper-rate-rw} imply \(\|\widehat{\bm\delta}_K\|=O_p(\sqrt{K/T})\). Therefore
+\[
+    \|\bm R\widehat{\bm\delta}_K\|_T^2
+      =\widehat{\bm\delta}_K'(T^{-1}\bm R'\bm R)\widehat{\bm\delta}_K
+      =O_p(K/T),
+\]
+and \(\max_t|\bm R_t'\widehat{\bm\delta}_K|\leq\zeta_K\|\widehat{\bm\delta}_K\|=O_p(\zeta_K\sqrt{K/T})\). Also,
+\[
+    T^{-1/2}\bm U'(\bm w^c-\widetilde{\bm w})
+      =-(T^{-1/2}\bm R'\bm U)'\widehat{\bm\delta}_K
+      =O_p(\sqrt K)O_p(\sqrt{K/T})=O_p(K/\sqrt T).
+\]
+Finally, with \(\widehat{\bm\gamma}_U=(\bm P'\bm P)^{-1}\bm P'\bm U\), \eqref{eq:paper-rate-pu} implies \(\|\widehat{\bm\gamma}_U\|=O_p(\sqrt{K/T})\). The same quadratic-form and maximum-row arguments yield \eqref{eq:paper-u-proj-l2} and \eqref{eq:paper-u-proj-max}.
+\end{proof}
+
+\begin{lemma}[Feasible-oracle score and variance equivalence]
+\label{lem:paper-score}
+Under Assumptions~\ref{ass:paper-score}--\ref{ass:paper-approx}, under \(H_0:\beta=\beta_0\),
+\begin{align}
+    S_T:=T^{-1/2}\sum_{t=1}^T\widehat Z_t(\beta_0)
+      &=T^{-1/2}\sum_{t=1}^TU_t\widetilde w_t+o_p(1),
+      \label{eq:paper-num-eq}\\
+    \widehat V_T:=T^{-1}\sum_{t=1}^T\widehat Z_t(\beta_0)^2
+      &=T^{-1}\sum_{t=1}^TU_t^2\widetilde w_t^2+o_p(1),
+      \label{eq:paper-var-eq}\\
+    \max_{t\leq T}|\widehat Z_t(\beta_0)|&=o_p(\sqrt T).
+      \label{eq:paper-max-eq}
+\end{align}
+Consequently, \(\widehat V_T\xrightarrow{p}\eta^2\).
+\end{lemma}
+
+\begin{proof}
+Because \(\bm M_K\) is symmetric and idempotent and \(\bm w^c=\bm M_K\bm w\),
+\[
+    S_T=T^{-1/2}(\bm U+\bm r_K)'\bm w^c.
+\]
+Lemma~\ref{lem:paper-projection} gives \(T^{-1/2}\bm U'\bm w^c=T^{-1/2}\bm U'\widetilde{\bm w}+o_p(1)\). Also,
+\[
+    |T^{-1/2}\bm r_K'\bm w^c|
+      \leq \sqrt T\|\bm r_K\|_T\|\bm w^c\|_T
+      \leq \sqrt T\|\bm r_K\|_T\|\bm w\|_T=o_p(1),
+\]
+which proves \eqref{eq:paper-num-eq}.
+
+For the denominator, define
+\[
+    \Delta_{u,t}=\widehat u_t(\beta_0)-U_t,
+    \qquad
+    \Delta_{w,t}=w_t^c-\widetilde w_t,
+    \qquad
+    \Delta_{Z,t}=\widehat Z_t(\beta_0)-U_t\widetilde w_t.
+\]
+Then \(\bm\Delta_u=-\bm\Pi_K\bm U+\bm M_K\bm r_K\), so
+\[
+    \|\bm\Delta_u\|_T=O_p(\sqrt{K/T}+a_K)=o_p(1).
+\]
+Moreover, \(\max_t|\Delta_{w,t}|=o_p(1)\), \(\max_t|w_t^c|=O_p(1)\), and \(T^{-1}\sum_tU_t^2=O_p(1)\). Since
+\[
+    \Delta_{Z,t}=\Delta_{u,t}w_t^c+U_t\Delta_{w,t},
+\]
+we have
+\[
+    \|\bm\Delta_Z\|_T^2
+    \leq 2\max_t|w_t^c|^2\|\bm\Delta_u\|_T^2
+      +2\max_t|\Delta_{w,t}|^2T^{-1}\sum_{t=1}^TU_t^2=o_p(1).
+\]
+Let \(V_T=T^{-1}\sum_{t=1}^TU_t^2\widetilde w_t^2\). Then
+\[
+    \widehat V_T-V_T
+      =\frac2T\sum_{t=1}^TU_t\widetilde w_t\Delta_{Z,t}
+       +\|\bm\Delta_Z\|_T^2.
+\]
+By Cauchy--Schwarz,
+\[
+    |\widehat V_T-V_T|
+      \leq 2V_T^{1/2}\|\bm\Delta_Z\|_T+\|\bm\Delta_Z\|_T^2=o_p(1),
+\]
+because \(V_T=O_p(1)\) by Assumption~\ref{ass:paper-score}. This proves \eqref{eq:paper-var-eq}, and \(\widehat V_T\to_p\eta^2\) follows from \eqref{eq:paper-oracle}.
+
+Finally, \(\max_t|U_t|=o_p(\sqrt T)\) follows from the uniform \((2+\delta)\)-moment bound. Together with \eqref{eq:paper-u-proj-max}, the sup-norm stability of \(\bm M_K\bm r_K\), and \(\max_t|w_t^c|=O_p(1)\), this proves \eqref{eq:paper-max-eq}.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:paper-wilks}]
+By Assumption~\ref{ass:paper-score} and Lemma~\ref{lem:paper-score},
+\[
+    S_T\xrightarrow{\mathrm{st}}MN(0,\eta^2),
+    \qquad
+    \widehat V_T\xrightarrow{p}\eta^2.
+\]
+Hence \(S_T^2/\widehat V_T\xrightarrow{d}\chi_1^2\). The convex-hull condition, \(\widehat V_T\to_p\eta^2>0\), and \(\max_t|\widehat Z_t(\beta_0)|=o_p(\sqrt T)\) imply the standard scalar-EL bounds \(\widehat\lambda=O_p(T^{-1/2})\) and \(\max_t|\widehat\lambda\widehat Z_t|=o_p(1)\). Expanding the multiplier equation gives
+\[
+    \widehat\lambda
+      =\frac{\sum_{t=1}^T\widehat Z_t(\beta_0)}
+             {\sum_{t=1}^T\widehat Z_t(\beta_0)^2}
+       +o_p(T^{-1/2}).
+\]
+A second-order expansion of \eqref{eq:paper-elr} yields
+\[
+    \ell_T(\beta_0)
+      =\frac{\{T^{-1/2}\sum_{t=1}^T\widehat Z_t(\beta_0)\}^2}
+             {T^{-1}\sum_{t=1}^T\widehat Z_t(\beta_0)^2}
+       +o_p(1)
+      =\frac{S_T^2}{\widehat V_T}+o_p(1).
+\]
+The result follows by Slutsky's theorem.
+\end{proof}
+
+\end{document}

@@ -1,0 +1,5 @@
+m_type,x_w_loading,score,low_bad,selected_size,selected_K,high_bad,csv,plot
+rough,0,9.71445146547012e-17,0.075,0.0833333333333333,8,0.0958333333333333,W:\Research\semipara sieve\result\k_sensitivity_chisq_summary_20260621_035953.csv,W:\Research\semipara sieve\result\k_sensitivity_chisq_20260621_035953.png
+rough,1,-0.02499999999999991,0.0708333333333333,0.0916666666666666,8,0.0875,W:\Research\semipara sieve\result\k_sensitivity_chisq_summary_20260621_040023.csv,W:\Research\semipara sieve\result\k_sensitivity_chisq_20260621_040023.png
+rough,3,0.11666666666666661,0.1583333333333333,0.0625,8,0.0916666666666666,W:\Research\semipara sieve\result\k_sensitivity_chisq_summary_20260621_040052.csv,W:\Research\semipara sieve\result\k_sensitivity_chisq_20260621_040052.png
+mixed,2,0.3958333333333334,0.45,0.0666666666666666,8,0.0916666666666666,W:\Research\semipara sieve\result\k_sensitivity_chisq_summary_20260621_040122.csv,W:\Research\semipara sieve\result\k_sensitivity_chisq_20260621_040122.png

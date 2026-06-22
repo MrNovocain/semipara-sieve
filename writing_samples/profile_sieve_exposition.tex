@@ -1,0 +1,140 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{bm}
+\usepackage{amsthm}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+
+\newtheorem{theorem}{Theorem}
+
+\title{A Readable Overview of Sieve-Orthogonalized Empirical Likelihood}
+\author{Siyan Dong}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{The Problem}
+
+Predictive regressions are often written with a fixed intercept and a persistent predictor. That is too narrow when returns also depend on a predetermined state variable in a nonlinear way. The setting here is
+\begin{equation}
+    Y_t=m(W_{t-1})+\beta X_{t-1}+U_t,
+    \qquad
+    X_t=\theta+\rho_T X_{t-1}+\varepsilon_t,
+    \label{eq:expo-model}
+\end{equation}
+where \(X_{t-1}\) is persistent and \(W_{t-1}\in\mathbb R^d\) is a stationary exogenous covariate vector. The goal is to test whether \(X_{t-1}\) predicts returns after allowing the intercept-like component to be an unknown function \(m(W_{t-1})\).
+
+The null hypothesis is
+\[
+    H_0:\beta=\beta_0,
+\]
+with \(\beta_0=0\) corresponding to no mean predictability.
+
+\section{Why a Fixed Intercept Is Not Enough}
+
+If \(m(W_{t-1})\) is nonlinear, forcing it into a constant intercept leaves systematic variation in the regression error. That residual nuisance variation can contaminate the empirical likelihood moment used to test \(\beta\), especially when the predictor is persistent.
+
+The point of the sieve step is to remove this nuisance component flexibly. The point of the orthogonalization step is to make sure that estimating the nuisance function does not change the limiting distribution of the empirical likelihood statistic.
+
+\section{The Core Construction}
+
+Approximate the nuisance function using a sieve basis:
+\[
+    m(W_{t-1})\approx \bm P_K(W_{t-1})'\bm c_K.
+\]
+Let \(\bm P\) be the matrix of sieve basis functions and define the projection and annihilator matrices
+\[
+    \bm\Pi_K=\bm P(\bm P'\bm P)^{-1}\bm P',
+    \qquad
+    \bm M_K=\bm I_T-\bm\Pi_K.
+\]
+For each candidate \(\beta\), profile out the nuisance component:
+\begin{equation}
+    \widehat{\bm u}(\beta)=\bm M_K(\bm Y-\beta\bm X_{lag}).
+    \label{eq:expo-profile}
+\end{equation}
+
+Now take the raw bounded weight \(w_t=w(X_{t-1})\), collect it in \(\bm w\), and residualize it against the same sieve space:
+\begin{equation}
+    \bm w^c=\bm M_K\bm w.
+    \label{eq:expo-weight}
+\end{equation}
+This gives the exact sample orthogonality condition
+\[
+    \bm P'\bm w^c=\bm0.
+\]
+The empirical likelihood score is then
+\begin{equation}
+    \widehat Z_t(\beta)=\widehat u_t(\beta)w_t^c.
+    \label{eq:expo-score}
+\end{equation}
+
+\section{Why Orthogonalization Helps}
+
+Under the null, the profiled residual has the form
+\[
+    \widehat{\bm u}(\beta_0)=\bm M_K(\bm U+\bm r_K),
+\]
+where \(\bm r_K\) is the sieve approximation error. Because \(\bm w^c\) is orthogonal to the fitted sieve space, the fitted nuisance component does not enter the score numerator. The remaining terms are the centered oracle score plus small approximation and projection errors:
+\[
+    \frac1{\sqrt T}\sum_{t=1}^T\widehat Z_t(\beta_0)
+    =\frac1{\sqrt T}\sum_{t=1}^TU_t\widetilde w_t+o_p(1),
+\]
+where \(\widetilde w_t=w_t-T^{-1}\sum_s w_s\).
+
+The denominator requires the same kind of check. If
+\[
+    \Delta_{Z,t}=\widehat Z_t(\beta_0)-U_t\widetilde w_t,
+\]
+then the proof shows \(\|\bm\Delta_Z\|_T=o_p(1)\). Hence
+\[
+    \frac1T\sum_t\widehat Z_t(\beta_0)^2
+    =\frac1T\sum_tU_t^2\widetilde w_t^2+o_p(1).
+\]
+This is the step that lets the feasible statistic inherit the oracle variance limit.
+
+\section{Main Result}
+
+\begin{theorem}[Informal Wilks result]
+Assume a high-level oracle score limit holds for the centered score \(T^{-1/2}\sum_tU_t\widetilde w_t\), and assume the sieve approximation, projection, and nondegeneracy conditions hold. Then, under \(H_0:\beta=\beta_0\),
+\[
+    \ell_T(\beta_0)\xrightarrow{d}\chi_1^2.
+\]
+\end{theorem}
+
+The theorem says that the empirical likelihood test keeps the standard one-degree-of-freedom chi-square calibration, even though the regression contains an unknown nonparametric nuisance function and the predictor may be highly persistent.
+
+\section{Rate Intuition}
+
+There are two opposing requirements for the sieve dimension \(K\). First, the sieve must be large enough that the approximation bias is negligible. If \(m\) has smoothness \(s\) and \(W\) is \(d\)-dimensional, the approximation error behaves like \(K^{-s/d}\), so the bias condition is
+\[
+    \sqrt T K^{-s/d}\to0,
+    \qquad\text{or}\qquad
+    K\gg T^{d/(2s)}.
+\]
+Second, the sieve cannot be too large, because estimating many nuisance coefficients creates variance inflation and projection leakage. The variance condition is
+\[
+    K/\sqrt T\to0,
+    \qquad\text{or}\qquad
+    K\ll T^{1/2}.
+\]
+Together, the useful growth window is
+\begin{equation}
+    T^{d/(2s)}\ll K\ll T^{1/2},
+    \label{eq:expo-rate-window}
+\end{equation}
+which is nonempty when \(s>d\).
+
+\section{Motivating Example: Weather and Commodity Returns}
+
+A useful example is commodity-return prediction with weather controls. For cocoa futures, local precipitation, temperature, humidity, or other weather variables can affect expected supply and returns in a nonlinear way. This effect is naturally represented by \(m(W_{t-1})\), where \(W_{t-1}\) may contain several weather variables.
+
+At the same time, lagged prices or related financial predictors may be persistent. The proposed method lets the researcher test the predictive content of those financial variables while flexibly controlling for the nonlinear weather-response surface.
+
+\section{Takeaway}
+
+The method has one main idea: profile out the nuisance function and residualize the empirical likelihood weight against the same sieve space. This makes the feasible score behave like the centered oracle score. The proof burden is therefore to show that the numerator and denominator errors created by sieve profiling are both \(o_p(1)\).
+
+\end{document}

@@ -1,0 +1,27 @@
+application_materials/
+knowledge/
+.venv/
+.jupyter_runtime/
+.ipynb_checkpoints/
+
+# Python build/cache artifacts
+__pycache__/
+*.py[cod]
+
+# LaTeX build artifacts
+*.aux
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.blg
+*.bbl
+*.bcf
+*.run.xml
+*.nav
+*.snm
+*.vrb

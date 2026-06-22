@@ -5,7 +5,7 @@
 
 \begin{document}
 
-\title{\vspace{-1.5cm}Rigorous Step-by-Step Derivation: Orthogonalized Sieve-EL (Version 2.0 AR1) vs. Cai et al. (2026)}
+\title{\vspace{-1.5cm}Rigorous Step-by-Step Derivation: Orthogonalized Sieve-EL (Version 2.0 AR1) and a Fixed-Intercept Benchmark}
 \date{}
 \maketitle
 
@@ -16,7 +16,7 @@
 \noindent
 \begin{minipage}[t]{0.48\textwidth}
     \begin{center}
-        \Large \textbf{Baseline Framework (Cai et al., 2026)}
+        \Large \textbf{Baseline Fixed-Intercept Framework}
     \end{center}
 \end{minipage}%
 \hfill
@@ -86,7 +86,7 @@ To handle Stambaugh bias and omit variable bias simultaneously, residual additio
 \begin{equation}
     \widehat{\varepsilon}_t = X_t - \widehat{\theta} - \widehat{\rho} X_{t-1}
 \end{equation}
-\textbf{2.} Joint Sieve-Cai-Wang Estimation via OLS:
+\textbf{2.} Joint Sieve-AR(1) Estimation via OLS:
 \begin{equation}
     Y_t = \bm{P}_K(W_{t-1})'\bm{c} + \beta X_{t-1} + \phi \widehat{\varepsilon}_t + \text{error}
 \end{equation}

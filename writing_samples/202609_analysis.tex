@@ -37,7 +37,7 @@
 \title{\textbf{Unified Inference for Predictive Mean and Quantile Regressions via Empirical Likelihood}\\[4pt]
 \large A Comprehensive Technical Analysis}
 \author{%
-    Zongwu Cai \quad Yifeng Chen \quad Seok Young Hong \quad Daniel Tsvetanov\\[4pt]
+    External benchmark paper\\[4pt]
     \small\textit{Original Paper: January 27, 2026}\\[2pt]
     \small\textit{Analysis compiled: \today}
 }
@@ -49,7 +49,7 @@
 \begin{abstract}
 \noindent This document provides a structured technical analysis of the paper
 \textit{``Unified Inference for Predictive Mean and Quantile Regressions via Empirical Likelihood''}
-by Cai, Chen, Hong, and Tsvetanov (2026).
+in a 2026 external benchmark paper.
 The paper develops an empirical likelihood (EL) framework for testing return predictability
 in both conditional mean and conditional quantile settings.
 A unified chi-square limit theory is established across a broad spectrum of predictor persistence,
@@ -293,7 +293,7 @@ The paper proposes a new two-stage procedure that retains the full sample:
 \begin{enumerate}[leftmargin=*, label=\textbf{Stage \arabic*:}]
     \item Run AR(1) for $X_t$ to obtain residuals $\widehat{\varepsilon}_t$;
     regress $Y_t$ on $\widehat{\varepsilon}_t$ and $X_{t-1}$ via OLS
-    to estimate $\alpha$ (following Cai \& Wang, 2014).
+    to estimate $\alpha$ using a first-stage AR(1) estimator.
     The estimator $\widetilde{\alpha}$ is $\sqrt{T}$-consistent.
     \item Define $\widetilde{Y}_t = Y_t - \widetilde{\alpha}$ and apply EL directly
     with the \textbf{centered weight} $w_c(\cdot)$ from~\eqref{eq:centered_weight}.
@@ -410,7 +410,7 @@ Under the same conditions as Theorem~\ref{thm:1}:
 \begin{proof}[Proof Sketch]
 \begin{enumerate}[leftmargin=*, label=\textbf{\arabic*}.]
     \item \textbf{Intercept estimation:}
-    Estimate $\alpha$ via the Cai--Wang (2014) method, yielding
+    Estimate $\alpha$ via a two-stage AR(1) method, yielding
     $\sqrt{T}$-consistency: $\widetilde{\alpha} - \alpha = O_p(T^{-1/2})$.
     \item \textbf{Centered weight:}
     Define $w_c(X_{t-1}) = w(X_{t-1}) - \bar{w}_T$.
@@ -703,13 +703,13 @@ the CGS (2025) paper previously analyzed in this project:
 
 \begin{thebibliography}{99}
 
-\bibitem{CaiWang2014}
-Cai, Z.\ and Wang, Y.\ (2014).
+\bibitem{TwoStageEL2014}
+Anonymous benchmark authors (2014).
 A two-stage empirical likelihood method for predictive regressions.
 \textit{Econometric Theory}, forthcoming.
 
-\bibitem{Cai2023}
-Cai, Z., Chen, L., and Gunawan, D.\ (2023).
+\bibitem{BreakForecasting2023}
+Anonymous benchmark authors (2023).
 Nonparametric combination forecasting with structural breaks.
 \textit{Working Paper}.
 
@@ -775,7 +775,7 @@ Quantile cointegrating regression.
 \textit{Journal of Econometrics}, 150(2), 248--260.
 
 \bibitem{Zhu2014}
-Zhu, F., Cai, Z., and Peng, L.\ (2014).
+Zhu, F., Anonymous coauthor, and Peng, L.\ (2014).
 Predictive regressions for macroeconomic data.
 \textit{Annals of Applied Statistics}, 8(1), 577--594.
 

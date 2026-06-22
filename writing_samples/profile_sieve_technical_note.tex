@@ -1,0 +1,304 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{bm}
+\usepackage{amsthm}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+\newtheorem{assumption}{Assumption}
+\newtheorem{remark}{Remark}
+
+\title{Technical Note: Sieve-Orthogonalized Mean Empirical Likelihood}
+\author{Siyan Dong}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{Purpose and Model}
+
+This note records the proof of the Wilks result for a mean empirical likelihood statistic when the predictive regression contains an unknown exogenous-control function. The model is
+\begin{equation}
+    Y_t=m(W_{t-1})+\beta X_{t-1}+U_t,
+    \qquad
+    X_t=\theta+\rho_T X_{t-1}+\varepsilon_t,
+    \label{eq:tn-dgp}
+\end{equation}
+where \(W_{t-1}\in\mathbb R^d\) is a stationary exogenous covariate vector and \(X_{t-1}\) is persistent. The maintained endogeneity structure allows the return innovation to be correlated with the predictor innovation; for example, one may write \(U_t=\phi\varepsilon_t+z_t\) with the martingale condition imposed below.
+
+The object of inference is \(\beta\). The nuisance function \(m\) is approximated by an increasing-dimensional sieve and profiled out under the null value \(\beta_0\). The proof separates the high-level persistent-predictor score limit from the new sieve perturbation argument.
+
+\section{Notation and Profile Score}
+
+Let
+\[
+    \bm Y=(Y_1,\ldots,Y_T)',\qquad
+    \bm X_{lag}=(X_0,\ldots,X_{T-1})'.
+\]
+Let \(\bm P\) be the \(T\times K\) matrix with row \(t\) equal to \(\bm P_K(W_{t-1})'\). Define
+\[
+    \bm\Pi_K=\bm P(\bm P'\bm P)^{-1}\bm P',
+    \qquad
+    \bm M_K=\bm I_T-\bm\Pi_K.
+\]
+For a candidate \(\beta\), set
+\begin{equation}
+    \widehat{\bm c}_K(\beta)
+      =(\bm P'\bm P)^{-1}\bm P'(\bm Y-\beta\bm X_{lag}),
+    \qquad
+    \widehat{\bm u}(\beta)=\bm M_K(\bm Y-\beta\bm X_{lag}).
+    \label{eq:tn-profile}
+\end{equation}
+Let \(w_t=w(X_{t-1})\), \(\bm w=(w_1,\ldots,w_T)'\), \(\overline w_T=T^{-1}\sum_t w_t\), and \(\widetilde w_t=w_t-\overline w_T\). The sieve-orthogonalized weight and score are
+\begin{equation}
+    \bm w^c=\bm M_K\bm w,
+    \qquad
+    \widehat Z_t(\beta)=\widehat u_t(\beta)w_t^c.
+    \label{eq:tn-score}
+\end{equation}
+For any vector \(\bm v=(v_1,\ldots,v_T)'\), write the empirical norm as \(\|\bm v\|_T^2=T^{-1}\sum_{t=1}^T v_t^2\).
+
+The empirical likelihood ratio is
+\begin{equation}
+    \ell_T(\beta)=2\sum_{t=1}^T\log\{1+\widehat\lambda(\beta)\widehat Z_t(\beta)\},
+    \label{eq:tn-elr}
+\end{equation}
+where \(\widehat\lambda(\beta)\) solves
+\begin{equation}
+    \sum_{t=1}^T\frac{\widehat Z_t(\beta)}{1+\widehat\lambda(\beta)\widehat Z_t(\beta)}=0.
+    \label{eq:tn-lambda}
+\end{equation}
+
+\section{Assumptions}
+
+\begin{assumption}[Oracle persistent-predictor score conditions]
+\label{ass:tn-score}
+With respect to
+\[
+    \mathcal H_t=\sigma\{(z_s,\varepsilon_s):s\leq t\}\vee\sigma\{W_s:s\leq t\},
+\]
+\(E(U_t\mid\mathcal H_{t-1})=0\), \(\sup_tE|U_t|^{2+\delta}<\infty\) for some \(\delta>0\), the predictor persistence, bounded-weight, conditional-variance, and maximum-score conditions needed for a self-normalized oracle score limit hold. For
+\[
+    A_T=T^{-1/2}\sum_{t=1}^TU_t\widetilde w_t,
+    \qquad
+    V_T=T^{-1}\sum_{t=1}^TU_t^2\widetilde w_t^2,
+\]
+there exists an a.s. positive, possibly random, \(\eta^2\) such that
+\begin{equation}
+    A_T\xrightarrow{\mathrm{st}}MN(0,\eta^2),
+    \qquad
+    V_T\xrightarrow{p}\eta^2,
+    \qquad
+    \max_{t\leq T}|U_t\widetilde w_t|=o_p(\sqrt T).
+    \label{eq:tn-score-oracle}
+\end{equation}
+\end{assumption}
+
+\begin{assumption}[Sieve projection conditions]
+\label{ass:tn-projection}
+The first component of \(\bm P_K(W)\) is one. After centering the remaining basis functions in sample, write the associated matrix as \(\bm R\), so \(\bm1_T'\bm R=\bm0\) and \(\operatorname{span}(\bm P)=\operatorname{span}(\bm1_T,\bm R)\). The population timing restriction is
+\[
+    \mathbb E\left[\bm R_K(W_{t-1})\{w(X_{t-1})-\mathbb Ew(X_{t-1})\}\right]=\bm0.
+\]
+The eigenvalues of \(T^{-1}\bm R'\bm R\) are bounded away from zero and infinity with probability tending to one. For \(\zeta_K=\max_{t\leq T}\|\bm R_t\|\),
+\begin{align}
+    \|T^{-1}\bm R'\widetilde{\bm w}\|&=O_p(\sqrt{K/T}),
+      \label{eq:tn-rate-rw}\\
+    \|T^{-1/2}\bm R'\bm U\|&=O_p(\sqrt K),
+      \label{eq:tn-rate-ru}\\
+    \|T^{-1}\bm P'\bm U\|&=O_p(\sqrt{K/T}).
+      \label{eq:tn-rate-pu}
+\end{align}
+These sample projection bounds can be verified under the stated sieve orthogonality, exponential mixing of \(W_t\), uniformly bounded sieve-basis moments, and the martingale condition in Assumption~\ref{ass:tn-score}.
+\end{assumption}
+
+\begin{assumption}[Approximation and growth]
+\label{ass:tn-approx}
+For some \(\bm c_K\),
+\[
+    m(W_{t-1})=\bm P_K(W_{t-1})'\bm c_K+r_{K,t},
+\]
+where \(\|\bm r_K\|_T=O(a_K)\), \(\|\bm r_K\|_\infty=O(a_K)\), and \(\sqrt Ta_K\to0\). The sieve projector is stable on the approximation residual: \(\|\bm M_K\bm r_K\|_\infty=O(a_K)\). Also,
+\[
+    K/\sqrt T\to0,
+    \qquad
+    \zeta_K\sqrt{K/T}\to0.
+\]
+If \(a_K\asymp K^{-s/d}\), a sufficient window is \(T^{d/(2s)}\ll K\ll T^{1/2}\), nonempty when \(s>d\).
+\end{assumption}
+
+\begin{assumption}[Nondegeneracy and convex hull]
+\label{ass:tn-hull}
+There exists \(\underline\eta>0\) such that \(P(\eta^2\geq\underline\eta^2)=1\). Under \(H_0:\beta=\beta_0\),
+\[
+    P\{\min_{t\leq T}\widehat Z_t(\beta_0)<0<\max_{t\leq T}\widehat Z_t(\beta_0)\}\to1.
+\]
+\end{assumption}
+
+\section{Projection Lemma}
+
+\begin{lemma}[Growing sieve projection is negligible]
+\label{lem:tn-projection}
+Under Assumptions~\ref{ass:tn-projection}--\ref{ass:tn-approx},
+\begin{align}
+    \|\bm w^c-\widetilde{\bm w}\|_T&=O_p(\sqrt{K/T}),
+      \label{eq:tn-weight-l2}\\
+    \max_{t\leq T}|w_t^c-\widetilde w_t|&=O_p(\zeta_K\sqrt{K/T})=o_p(1),
+      \label{eq:tn-weight-max}\\
+    T^{-1/2}\sum_{t=1}^TU_t(w_t^c-\widetilde w_t)&=O_p(K/\sqrt T)=o_p(1),
+      \label{eq:tn-weight-score}\\
+    \|\bm\Pi_K\bm U\|_T&=O_p(\sqrt{K/T}),
+      \label{eq:tn-u-l2}\\
+    \max_{t\leq T}|(\bm\Pi_K\bm U)_t|&=O_p(\zeta_K\sqrt{K/T})=o_p(1).
+      \label{eq:tn-u-max}
+\end{align}
+\end{lemma}
+
+\begin{proof}
+Because the sieve contains a constant and \(\bm1_T'\bm R=\bm0\),
+\[
+    \bm w^c=\widetilde{\bm w}-\bm R\widehat{\bm\delta}_K,
+    \qquad
+    \widehat{\bm\delta}_K=(\bm R'\bm R)^{-1}\bm R'\widetilde{\bm w}.
+\]
+By the Gram condition and \eqref{eq:tn-rate-rw}, \(\|\widehat{\bm\delta}_K\|=O_p(\sqrt{K/T})\). Hence
+\[
+    \|\bm R\widehat{\bm\delta}_K\|_T^2
+    =\widehat{\bm\delta}_K'(T^{-1}\bm R'\bm R)\widehat{\bm\delta}_K=O_p(K/T),
+\]
+which proves \eqref{eq:tn-weight-l2}. The maximum bound follows from \(\max_t|\bm R_t'\widehat{\bm\delta}_K|\leq\zeta_K\|\widehat{\bm\delta}_K\|\). Also,
+\[
+    T^{-1/2}\bm U'(\bm w^c-\widetilde{\bm w})
+      =-(T^{-1/2}\bm R'\bm U)'\widehat{\bm\delta}_K
+      =O_p(\sqrt K)O_p(\sqrt{K/T})=O_p(K/\sqrt T).
+\]
+For the projection of \(\bm U\), let \(\widehat{\bm\gamma}_U=(\bm P'\bm P)^{-1}\bm P'\bm U\). Assumption~\ref{ass:tn-projection} implies \(\|\widehat{\bm\gamma}_U\|=O_p(\sqrt{K/T})\), and the same quadratic-form and maximum-row arguments give \eqref{eq:tn-u-l2}--\eqref{eq:tn-u-max}.
+\end{proof}
+
+\section{Feasible-Oracle Equivalence}
+
+\begin{lemma}[Score and denominator equivalence]
+\label{lem:tn-score}
+Under Assumptions~\ref{ass:tn-score}--\ref{ass:tn-approx}, under \(H_0:\beta=\beta_0\),
+\begin{align}
+    S_T:=T^{-1/2}\sum_{t=1}^T\widehat Z_t(\beta_0)
+      &=T^{-1/2}\sum_{t=1}^TU_t\widetilde w_t+o_p(1),
+      \label{eq:tn-num}\\
+    \widehat V_T:=T^{-1}\sum_{t=1}^T\widehat Z_t(\beta_0)^2
+      &=T^{-1}\sum_{t=1}^TU_t^2\widetilde w_t^2+o_p(1),
+      \label{eq:tn-var}\\
+    \max_{t\leq T}|\widehat Z_t(\beta_0)|&=o_p(\sqrt T).
+      \label{eq:tn-max}
+\end{align}
+Consequently, \(\widehat V_T\to_p\eta^2\).
+\end{lemma}
+
+\begin{proof}
+Under the null,
+\[
+    \bm Y-\beta_0\bm X_{lag}=\bm P\bm c_K+\bm r_K+\bm U,
+    \qquad
+    \widehat{\bm u}(\beta_0)=\bm M_K(\bm U+\bm r_K).
+\]
+Using symmetry and idempotence of \(\bm M_K\),
+\[
+    S_T=T^{-1/2}(\bm U+\bm r_K)'\bm w^c.
+\]
+The term \(T^{-1/2}\bm U'\bm w^c\) equals \(T^{-1/2}\bm U'\widetilde{\bm w}+o_p(1)\) by Lemma~\ref{lem:tn-projection}. The approximation term satisfies
+\[
+    |T^{-1/2}\bm r_K'\bm w^c|
+    \leq \sqrt T\|\bm r_K\|_T\|\bm w^c\|_T
+    \leq \sqrt T\|\bm r_K\|_T\|\bm w\|_T=o_p(1),
+\]
+which proves \eqref{eq:tn-num}.
+
+Define the feasible-oracle residuals
+\[
+    \Delta_{u,t}=\widehat u_t(\beta_0)-U_t,
+    \qquad
+    \Delta_{w,t}=w_t^c-\widetilde w_t,
+    \qquad
+    \Delta_{Z,t}=\widehat Z_t(\beta_0)-U_t\widetilde w_t.
+\]
+Since \(\bm\Delta_u=-\bm\Pi_K\bm U+\bm M_K\bm r_K\), Lemma~\ref{lem:tn-projection} and Assumption~\ref{ass:tn-approx} give
+\[
+    \|\bm\Delta_u\|_T=O_p(\sqrt{K/T}+a_K)=o_p(1).
+\]
+Furthermore \(\max_t|\Delta_{w,t}|=o_p(1)\), \(\max_t|w_t^c|=O_p(1)\), and \(T^{-1}\sum_tU_t^2=O_p(1)\). Therefore
+\[
+    \Delta_{Z,t}=\Delta_{u,t}w_t^c+U_t\Delta_{w,t}
+\]
+implies
+\[
+    \|\bm\Delta_Z\|_T^2
+    \leq2\max_t|w_t^c|^2\|\bm\Delta_u\|_T^2
+       +2\max_t|\Delta_{w,t}|^2T^{-1}\sum_{t=1}^TU_t^2=o_p(1).
+\]
+Let \(V_T=T^{-1}\sum_tU_t^2\widetilde w_t^2\). Then
+\[
+    \widehat V_T-V_T
+      =\frac2T\sum_{t=1}^TU_t\widetilde w_t\Delta_{Z,t}+\|\bm\Delta_Z\|_T^2,
+\]
+and Cauchy--Schwarz gives
+\[
+    |\widehat V_T-V_T|
+      \leq2V_T^{1/2}\|\bm\Delta_Z\|_T+\|\bm\Delta_Z\|_T^2=o_p(1),
+\]
+because \(V_T=O_p(1)\) by Assumption~\ref{ass:tn-score}. This proves \eqref{eq:tn-var}; \(\widehat V_T\to_p\eta^2\) follows from \eqref{eq:tn-score-oracle}.
+
+Finally, the uniform moment bound implies \(\max_t|U_t|=o_p(\sqrt T)\). Combining this with \eqref{eq:tn-u-max}, \(\|\bm M_K\bm r_K\|_\infty=O(a_K)\), and \(\max_t|w_t^c|=O_p(1)\) proves \eqref{eq:tn-max}.
+\end{proof}
+
+\section{Wilks Theorem}
+
+\begin{theorem}[Sieve-orthogonalized mean EL]
+\label{thm:tn-wilks}
+Suppose Assumptions~\ref{ass:tn-score}--\ref{ass:tn-hull} hold. Under \(H_0:\beta=\beta_0\),
+\[
+    \ell_T(\beta_0)\xrightarrow{d}\chi_1^2.
+\]
+\end{theorem}
+
+\begin{proof}
+By Assumption~\ref{ass:tn-score} and Lemma~\ref{lem:tn-score},
+\[
+    S_T\xrightarrow{\mathrm{st}}MN(0,\eta^2),
+    \qquad
+    \widehat V_T\xrightarrow{p}\eta^2.
+\]
+Thus \(S_T^2/\widehat V_T\xrightarrow{d}\chi_1^2\). The convex-hull condition, nondegeneracy, and \(\max_t|\widehat Z_t(\beta_0)|=o_p(\sqrt T)\) imply the standard scalar-EL bounds
+\[
+    \widehat\lambda=O_p(T^{-1/2}),
+    \qquad
+    \max_t|\widehat\lambda\widehat Z_t(\beta_0)|=o_p(1).
+\]
+Expanding \eqref{eq:tn-lambda} gives
+\[
+    \widehat\lambda
+      =\frac{\sum_t\widehat Z_t(\beta_0)}{\sum_t\widehat Z_t(\beta_0)^2}+o_p(T^{-1/2}).
+\]
+A second-order expansion of \eqref{eq:tn-elr} yields
+\[
+    \ell_T(\beta_0)
+      =\frac{\{T^{-1/2}\sum_t\widehat Z_t(\beta_0)\}^2}
+             {T^{-1}\sum_t\widehat Z_t(\beta_0)^2}+o_p(1)
+      =\frac{S_T^2}{\widehat V_T}+o_p(1).
+\]
+The conclusion follows.
+\end{proof}
+
+\section{Technical Remarks}
+
+\begin{remark}[Role of the oracle score condition]
+The oracle convergence \(A_T\xrightarrow{\mathrm{st}}MN(0,\eta^2)\) and \(V_T\to_p\eta^2\) is imposed as a high-level persistent-predictor score condition under the enlarged filtration including \(W_t\). The new work here is the perturbation argument proving \(S_T=A_T+o_p(1)\) and \(\widehat V_T=V_T+o_p(1)\).
+\end{remark}
+
+\begin{remark}[Why this is a mean theorem]
+For quantile scores, the fitted nuisance error enters through a nonlinear indicator. The algebraic identity \(\bm P'\bm w^c=\bm0\) no longer cancels the first-stage effect directly. A quantile extension would require a density-weighted orthogonalization or additional nonparametric expansion arguments.
+\end{remark}
+
+\end{document}

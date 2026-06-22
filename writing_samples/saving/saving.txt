@@ -1,0 +1,2626 @@
+能推，而且推下来以后，最重要的结论是：
+
+[
+\boxed{
+\text{你现有的 }M_K\text{、profile residual、matched projection、EL 展开全部保留。}
+}
+]
+
+真正需要改的是 **oracle score 的定义**。你现在的 oracle 是 bounded-score 的 bounded centered score (U_t\widetilde w_t)；semiparametric efficiency 要把 oracle 升级成一个 optimal orthogonal score。你现稿已经有
+
+[
+\widehat u(\beta)=M_K(Y-\beta X),\qquad
+w^c=M_Kw,
+]
+
+以及 (P'w^c=0) 和相应的代数消除。 现有 feasible–oracle lemma 的目标则是 (U_t\widetilde w_t)。
+
+下面完整推。
+
+---
+
+# 一、首先必须确定“在哪个模型里 efficient”
+
+你的 paper 目前是一个 **conditional-mean / conditional-moment paper**，不是完整联合似然模型。最自然的 semiparametric model 是
+
+[
+Y_t=m_0(W_{t-1})+\beta_0X_{t-1}+U_t,
+]
+
+并假设
+
+[
+E(U_t\mid\mathcal G_{t-1})=0,
+\qquad
+(X_{t-1},W_{t-1})\in\mathcal G_{t-1}.
+]
+
+令
+
+[
+D_t:=X_{t-1},\qquad W_t^-:=W_{t-1},
+]
+
+以及
+
+[
+\omega_0(D_t,W_t^-)
+:=
+E(U_t^2\mid D_t,W_t^-).
+]
+
+这里的 nuisance 包括：
+
+[
+m_0(\cdot),\quad
+\omega_0(\cdot),\quad
+\text{以及 }(D_t,W_t^-)\text{ 的联合分布}.
+]
+
+我们讨论的是：
+
+> 在只使用条件均值限制
+> [
+> E{Y_t-m(W_t^-)-\beta D_t\mid D_t,W_t^-}=0
+> ]
+> 的半参数模型里，(\beta) 的效率界。
+
+这点很重要。因为如果你把
+
+[
+D_t=\theta+\rho D_{t-1}+\varepsilon_t
+]
+
+和
+
+[
+U_t=\phi\varepsilon_t+z_t
+]
+
+也作为完整联合似然的一部分，那么一个 fully efficient procedure 可能需要使用 (\varepsilon_t) 和 (\phi) 的信息。那是另一种更强的 efficiency notion，也会迫使你重新使用 AR residuals。
+
+为了保住你现有 paper，最自然的定义是：
+
+[
+\boxed{
+\text{semiparametric efficiency conditional on the predictor process,}
+}
+]
+
+即把 (X) 的动态分布视为 nuisance，只用 conditional mean restriction 推断 (\beta)。
+
+这与你现稿“AR(1) 只描述 persistence class，不进入 EL statistic”的设计完全一致。
+
+---
+
+# 二、所有 orthogonal instruments 长什么样
+
+考虑一个可预测 instrument
+
+[
+a_t=a(D_t,W_t^-).
+]
+
+相应矩条件为
+
+[
+E\left[
+a_t{Y_t-m(W_t^-)-\beta D_t}
+\right]=0.
+]
+
+如果 (m) 沿着方向 (h(W)) 发生扰动：
+
+[
+m_\eta(W)=m_0(W)+\eta h(W),
+]
+
+那么矩条件关于 nuisance 的一阶导数为
+
+[
+-,
+E{a_t h(W_t^-)}.
+]
+
+要让这个导数对所有 (h) 都为零，必须且只需
+
+[
+\boxed{
+E(a_t\mid W_t^-)=0.
+}
+]
+
+这就是 population Neyman orthogonality。
+
+因此，所有合法的 orthogonal instruments 属于
+
+[
+\mathcal A
+==========
+
+\left{
+a(D,W):
+E(a\mid W)=0,\quad
+0<E(\omega_0a^2)<\infty
+\right}.
+]
+
+你现在做的
+
+[
+w^c=M_Kw
+]
+
+正是在样本中强制
+
+[
+P'w^c=0.
+]
+
+所以从 semiparametric 角度看，你不是在做一个任意的 sieve trick；你是在用有限维 sieve space 逼近条件
+
+[
+E(a\mid W)=0.
+]
+
+---
+
+# 三、给定一个 instrument，影响函数和方差是多少
+
+令
+
+[
+G(a):=E(a_tD_t).
+]
+
+只要
+
+[
+G(a)\neq0,
+]
+
+由矩条件得到的 estimator 具有候选影响函数
+
+[
+\phi_a(O_t)
+===========
+
+\frac{a_tU_t}{G(a)}.
+]
+
+它的方差为
+
+[
+V(a)
+====
+
+# E{\phi_a^2}
+
+\frac{E(\omega_0a_t^2)}
+{{E(a_tD_t)}^2}.
+]
+
+所以 semiparametric efficiency 问题变成：
+
+[
+\inf_{a:,E(a\mid W)=0}
+\frac{E(\omega_0a^2)}
+{{E(aD)}^2}.
+]
+
+等价地，最大化 information ratio
+
+[
+J(a)
+====
+
+\frac{{E(aD)}^2}{E(\omega_0a^2)}.
+]
+
+EL 自身不会自动解决这个问题。EL 能对你给定的 moment 做 self-normalization，但若给它一个低效 instrument，它不会自动恢复被 instrument 丢掉的信息。
+
+所以：
+
+[
+\boxed{
+\text{Wilks validity 和 semiparametric efficiency 是两件事。}
+}
+]
+
+---
+
+# 四、推导 efficient instrument
+
+定义 variance-weighted conditional projection
+
+[
+\mu_\omega(W)
+=============
+
+\frac{
+E{D/\omega_0(D,W)\mid W}
+}{
+E{1/\omega_0(D,W)\mid W}
+}.
+]
+
+再定义
+
+[
+q_0(D,W)
+========
+
+\frac{D-\mu_\omega(W)}
+{\omega_0(D,W)}.
+]
+
+首先，
+
+[
+\begin{aligned}
+E(q_0\mid W)
+&=
+E\left[
+\left.
+\frac{D-\mu_\omega(W)}{\omega_0(D,W)}
+\right|W
+\right]  \
+&=
+E(D/\omega_0\mid W)
+-------------------
+
+\mu_\omega(W)E(1/\omega_0\mid W)\
+&=0.
+\end{aligned}
+]
+
+所以 (q_0\in\mathcal A)。
+
+对任意 admissible (a)，因为 (E(a\mid W)=0)，
+
+[
+E(aD)
+=====
+
+E\left[a{D-\mu_\omega(W)}\right].
+]
+
+注意到
+
+[
+D-\mu_\omega(W)
+===============
+
+\omega_0q_0,
+]
+
+所以
+
+[
+E(aD)=E(\omega_0aq_0).
+]
+
+由 Cauchy–Schwarz，
+
+[
+{E(aD)}^2
+\le
+E(\omega_0a^2)E(\omega_0q_0^2).
+]
+
+定义
+
+[
+\mathcal I_{\mathrm{eff}}
+:=
+E(\omega_0q_0^2)
+================
+
+E\left[
+\frac{{D-\mu_\omega(W)}^2}
+{\omega_0(D,W)}
+\right].
+]
+
+于是
+
+[
+J(a)
+====
+
+\frac{{E(aD)}^2}{E(\omega_0a^2)}
+\le
+\mathcal I_{\mathrm{eff}},
+]
+
+等号当且仅当
+
+[
+a=cq_0
+]
+
+几乎处处成立。
+
+因此 efficient instrument 是
+
+[
+\boxed{
+a_{\mathrm{eff}}(D,W)
+=====================
+
+\frac{D-\mu_\omega(W)}
+{\omega_0(D,W)}.
+}
+]
+
+efficient influence function 是
+
+[
+\boxed{
+\phi_{\mathrm{eff},t}
+=====================
+
+\mathcal I_{\mathrm{eff}}^{-1}
+\frac{D_t-\mu_\omega(W_t^-)}
+{\omega_0(D_t,W_t^-)}
+U_t.
+}
+]
+
+效率界为
+
+[
+\boxed{
+V_{\mathrm{eff}}
+================
+
+\mathcal I_{\mathrm{eff}}^{-1}.
+}
+]
+
+---
+
+# 五、同样的结果从 tangent path 得到
+
+考虑一条 regular path (P_\eta)，满足
+
+[
+\beta_\eta=\beta_0+\eta\dot\beta+o(\eta),
+]
+
+[
+m_\eta=m_0+\eta h+o(\eta),
+]
+
+并令 (s_t) 为 path score。
+
+对条件均值限制求导：
+
+[
+E_\eta[
+Y_t-m_\eta(W_t^-)-\beta_\eta D_t
+\mid D_t,W_t^-
+]=0.
+]
+
+在 (\eta=0) 处得到
+
+[
+E(U_ts_t\mid D_t,W_t^-)
+=======================
+
+\dot\beta D_t+h(W_t^-).
+]
+
+于是
+
+[
+\begin{aligned}
+E(\phi_{\mathrm{eff},t}s_t)
+&=
+\mathcal I_{\mathrm{eff}}^{-1}
+E\left[
+q_{0,t}
+E(U_ts_t\mid D_t,W_t^-)
+\right]\
+&=
+\mathcal I_{\mathrm{eff}}^{-1}
+E\left[
+q_{0,t}
+{\dot\beta D_t+h(W_t^-)}
+\right]\
+&=
+\mathcal I_{\mathrm{eff}}^{-1}
+\dot\beta E(q_{0,t}D_t),
+\end{aligned}
+]
+
+因为
+
+[
+E{q_{0,t}h(W_t^-)}
+==================
+
+E[E(q_{0,t}\mid W_t^-)h(W_t^-)]
+=0.
+]
+
+同时
+
+[
+E(q_0D)
+=======
+
+E\left[
+\frac{{D-\mu_\omega(W)}^2}{\omega_0}
+\right]
+=======
+
+\mathcal I_{\mathrm{eff}}.
+]
+
+因此
+
+[
+E(\phi_{\mathrm{eff}}s)=\dot\beta.
+]
+
+这表明它确实代表 (\beta) 的 pathwise derivative，并且前面的 Cauchy–Schwarz 证明了它具有最小方差。
+
+---
+
+# 六、homo­skedastic 情况：与你现有 (M_K) 完全接上
+
+先取最干净的情况：
+
+[
+E(U_t^2\mid D_t,W_t^-)=\sigma^2.
+]
+
+那么
+
+[
+\mu_\omega(W)=E(D\mid W).
+]
+
+定义
+
+[
+g_0(W):=E(D\mid W),
+\qquad
+V_t:=D_t-g_0(W_t^-).
+]
+
+于是 efficient instrument 简化为
+
+[
+q_{0,t}=\frac{V_t}{\sigma^2},
+]
+
+efficient information 为
+
+[
+\mathcal I_{\mathrm{eff}}
+=========================
+
+\frac{E(V_t^2)}{\sigma^2},
+]
+
+efficient influence function 为
+
+[
+\boxed{
+\phi_{\mathrm{eff},t}
+=====================
+
+\frac{V_tU_t}{E(V_t^2)}.
+}
+]
+
+效率界为
+
+[
+\boxed{
+\operatorname{Var}(\phi_{\mathrm{eff}})
+=======================================
+
+\frac{\sigma^2}{E(V_t^2)}.
+}
+]
+
+这正是 partialling-out：
+
+[
+X_{t-1}
+\longmapsto
+X_{t-1}-E(X_{t-1}\mid W_{t-1}).
+]
+
+---
+
+# 七、样本里怎么实现：只需把当前 raw weight 设为 (X)
+
+你当前定义的是
+
+[
+\widehat u(\beta)=M_K(Y-\beta D).
+]
+
+现在再定义
+
+[
+\widehat V=M_KD.
+]
+
+也就是直接把你现有
+
+[
+w^c=M_Kw
+]
+
+中的 raw weight 取为
+
+[
+w_t=D_t=X_{t-1}.
+]
+
+efficient-score version 的 moment 为
+
+[
+\boxed{
+\widehat Z_t^{\mathrm{eff}}(\beta)
+==================================
+
+\widehat u_t(\beta)\widehat V_t.
+}
+]
+
+所有现有代数原封不动：
+
+[
+P'\widehat V
+============
+
+P'M_KD
+=0.
+]
+
+并且
+
+[
+\begin{aligned}
+\sum_{t=1}^T
+\widehat Z_t^{\mathrm{eff}}(\beta)
+&=
+\widehat u(\beta)'\widehat V\
+&=
+{M_K(Y-\beta D)}'M_KD\
+&=
+(Y-\beta D)'M_KD.
+\end{aligned}
+]
+
+因此 score equation
+
+[
+\sum_t\widehat Z_t^{\mathrm{eff}}(\widehat\beta)=0
+]
+
+给出
+
+[
+\boxed{
+\widehat\beta_{\mathrm{eff}}
+============================
+
+(D'M_KD)^{-1}D'M_KY.
+}
+]
+
+所以不是另起炉灶。它就是你已有 matched projection construction 在 (w=D) 时的 estimator。
+
+---
+
+# 八、oracle expansion：需要同时近似 (m_0) 和 (g_0)
+
+你现在只近似了
+
+[
+m_0(W)
+======
+
+P_K(W)'c_{m,K}+r_{m,K}.
+]
+
+efficient version 还要近似
+
+[
+g_0(W)=E(D\mid W)
+=================
+
+P_K(W)'c_{g,K}+r_{g,K}.
+]
+
+于是
+
+[
+D
+=
+
+P c_{g,K}+r_g+V,
+]
+
+其中
+
+[
+E(V_t\mid W_t^-)=0.
+]
+
+在真值 (\beta_0) 处，
+
+[
+\widehat u(\beta_0)=M_K(U+r_m),
+]
+
+以及
+
+[
+\widehat V=M_K(V+r_g).
+]
+
+因此
+
+[
+\begin{aligned}
+\frac1{\sqrt T}
+\sum_t\widehat Z_t^{\mathrm{eff}}(\beta_0)
+&=
+\frac1{\sqrt T}
+(U+r_m)'M_K(V+r_g)\
+&=
+\frac1{\sqrt T}U'V
++
+R_{1T}+R_{2T}+R_{3T}+R_{4T},
+\end{aligned}
+]
+
+其中
+
+[
+R_{1T}
+======
+
+-\frac1{\sqrt T}U'\Pi_KV,
+]
+
+[
+R_{2T}
+======
+
+\frac1{\sqrt T}U'M_Kr_g,
+]
+
+[
+R_{3T}
+======
+
+\frac1{\sqrt T}r_m'M_KV,
+]
+
+[
+R_{4T}
+======
+
+\frac1{\sqrt T}r_m'M_Kr_g.
+]
+
+逐项看。
+
+---
+
+## 8.1 Projection leakage
+
+在你现在的 Gram 和 increasing-dimensional score bounds 下，
+
+[
+R_{1T}
+======
+
+O_p(K/\sqrt T).
+]
+
+所以仍然需要
+
+[
+\boxed{
+K/\sqrt T\to0.
+}
+]
+
+这与现有 paper 相同。
+
+---
+
+## 8.2 (g_0) 的 approximation error
+
+因为 (M_Kr_g) 是 (W)-measurable，而 (U_t) 是 martingale difference，
+
+[
+R_{2T}=O_p(a_{g,K}),
+]
+
+其中
+
+[
+|r_g|*T=O_p(a*{g,K}).
+]
+
+所以只需
+
+[
+a_{g,K}\to0.
+]
+
+---
+
+## 8.3 (m_0) 的 approximation error
+
+因为
+
+[
+E(V_t\mid W_t^-)=0,
+]
+
+(r_m(W_t^-)V_t) 是条件中心化的，因此
+
+[
+R_{3T}=O_p(a_{m,K}),
+]
+
+而不是 crude bound
+
+[
+O_p(\sqrt T,a_{m,K}).
+]
+
+所以这里只需
+
+[
+a_{m,K}\to0.
+]
+
+---
+
+## 8.4 两个 approximation errors 的乘积
+
+利用 projection contraction，
+
+[
+\begin{aligned}
+|R_{4T}|
+&\le
+\frac1{\sqrt T}
+|r_m||r_g|\
+&=
+\sqrt T,
+|r_m|*T
+|r_g|*T\
+&=
+O_p(\sqrt T,a*{m,K}a*{g,K}).
+\end{aligned}
+]
+
+因此需要
+
+[
+\boxed{
+\sqrt T,a_{m,K}a_{g,K}\to0.
+}
+]
+
+综上，一个自然的 sufficient rate set 是
+
+[
+\boxed{
+K/\sqrt T\to0,
+\qquad
+a_{m,K}\to0,
+\qquad
+a_{g,K}\to0,
+\qquad
+\sqrt T,a_{m,K}a_{g,K}\to0.
+}
+]
+
+这比你现有的
+
+[
+\sqrt T,a_{m,K}\to0
+]
+
+明显更弱。你现稿目前确实使用了较强的 (\sqrt T a_K\to0) 条件。
+
+这是 efficiency/orthogonalization 路线可能带来的一个真正理论提升：
+
+> 不是只给旧定理换一个 efficiency 标签，而是利用对 (X) 的 partialling-out，把 nuisance bias 从 first-order rate 降到 product rate。
+
+---
+
+# 九、smoothness window 也会改善
+
+假设
+
+[
+a_{m,K}\asymp K^{-s_m/d},
+\qquad
+a_{g,K}\asymp K^{-s_g/d}.
+]
+
+product-rate 条件变成
+
+[
+\sqrt T
+K^{-(s_m+s_g)/d}
+\to0.
+]
+
+即
+
+[
+K
+\gg
+T^{d/{2(s_m+s_g)}}.
+]
+
+若二者 smoothness 相同：
+
+[
+s_m=s_g=s,
+]
+
+则
+
+[
+K\gg T^{d/(4s)}.
+]
+
+结合
+
+[
+K\ll T^{1/2},
+]
+
+rate window 非空只要求
+
+[
+\boxed{s>d/2.}
+]
+
+而你现有 crude rate
+
+[
+\sqrt TK^{-s/d}\to0
+]
+
+与 (K\ll T^{1/2}) 结合，需要
+
+[
+s>d.
+]
+
+所以潜在改进是：
+
+[
+\boxed{
+s>d
+\quad\longrightarrow\quad
+s>d/2.
+}
+]
+
+完整证明仍需把你现有 mixing、maximal row 和 projection bounds 对 (V_t) 与 (r_g) 再做一遍，但核心 decomposition 是清楚的。
+
+---
+
+# 十、asymptotic linearity 和 efficiency theorem
+
+令
+
+[
+Q:=E(V_t^2)>0.
+]
+
+分母满足
+
+[
+\frac1T D'M_KD
+==============
+
+\frac1T\sum_{t=1}^TV_t^2+o_p(1)
+\to_p Q.
+]
+
+由上面的 numerator expansion，
+
+[
+\frac1{\sqrt T}
+D'M_K(Y-\beta_0D)
+=================
+
+\frac1{\sqrt T}\sum_{t=1}^TV_tU_t+o_p(1).
+]
+
+因此
+
+[
+\boxed{
+\sqrt T(\widehat\beta_{\mathrm{eff}}-\beta_0)
+=============================================
+
+Q^{-1}
+\frac1{\sqrt T}
+\sum_{t=1}^TV_tU_t
++o_p(1).
+}
+]
+
+在 homoskedastic 条件下，
+
+[
+E(V_t^2U_t^2)
+=============
+
+# \sigma^2E(V_t^2)
+
+\sigma^2Q.
+]
+
+因此
+
+[
+\sqrt T(\widehat\beta_{\mathrm{eff}}-\beta_0)
+\Rightarrow
+N\left(0,\frac{\sigma^2}{Q}\right).
+]
+
+而前面推导出的 semiparametric bound 正是
+
+[
+\mathcal I_{\mathrm{eff}}^{-1}
+==============================
+
+\frac{\sigma^2}{Q}.
+]
+
+所以：
+
+[
+\boxed{
+\widehat\beta_{\mathrm{eff}}
+\text{ attains the conditional-mean semiparametric efficiency bound.}
+}
+]
+
+---
+
+# 十一、EL Wilks theorem 怎么接
+
+定义 efficient Sieve-EL：
+
+[
+L_T^{\mathrm{eff}}(\beta)
+=========================
+
+\sup
+\left{
+\prod_{t=1}^T(T\pi_t):
+\sum_t\pi_t=1,\quad
+\sum_t\pi_t\widehat Z_t^{\mathrm{eff}}(\beta)=0
+\right}.
+]
+
+相应 log-EL ratio 为
+
+[
+\ell_T^{\mathrm{eff}}(\beta)
+============================
+
+2\sum_{t=1}^T
+\log{
+1+\widehat\lambda_{\mathrm{eff}}(\beta)
+\widehat Z_t^{\mathrm{eff}}(\beta)
+}.
+]
+
+如果证明
+
+[
+\frac1{\sqrt T}
+\sum_t
+\widehat Z_t^{\mathrm{eff}}(\beta_0)
+====================================
+
+\frac1{\sqrt T}
+\sum_tU_tV_t+o_p(1),
+]
+
+[
+\frac1T
+\sum_t
+{\widehat Z_t^{\mathrm{eff}}(\beta_0)}^2
+========================================
+
+\frac1T
+\sum_tU_t^2V_t^2+o_p(1),
+]
+
+以及
+
+[
+\max_t
+|\widehat Z_t^{\mathrm{eff}}(\beta_0)|
+=o_p(\sqrt T),
+]
+
+那么你现有从 self-normalized statistic 到 EL ratio 的 Taylor expansion 可以逐行复用；你现在的 Wilks proof 正是基于这三个性质。
+
+于是：
+
+[
+\boxed{
+\ell_T^{\mathrm{eff}}(\beta_0)
+\Rightarrow
+\chi_1^2.
+}
+]
+
+---
+
+# 十二、local alternatives：效率直接表现成最大 local power
+
+考虑
+
+[
+\beta_T=\beta_0+\frac{h}{\sqrt T}.
+]
+
+在 (\beta_0) 处计算 score：
+
+[
+Y_t-m_0(W_t^-)-\beta_0D_t
+=========================
+
+U_t+\frac{h}{\sqrt T}D_t.
+]
+
+于是
+
+[
+\begin{aligned}
+\frac1{\sqrt T}\sum_t
+V_t
+\left(
+U_t+\frac{h}{\sqrt T}D_t
+\right)
+&=
+\frac1{\sqrt T}\sum_tV_tU_t
++
+h\frac1T\sum_tV_tD_t\
+&\Rightarrow
+N(hQ,\sigma^2Q),
+\end{aligned}
+]
+
+因为
+
+[
+E(V_tD_t)
+=========
+
+# E{V_t(V_t+g_0(W_t^-))}
+
+E(V_t^2)
+=Q.
+]
+
+因此
+
+[
+\boxed{
+\ell_T^{\mathrm{eff}}(\beta_0)
+\Rightarrow
+\chi_1^2
+\left(
+h^2\frac{Q}{\sigma^2}
+\right).
+}
+]
+
+而
+
+[
+\frac{Q}{\sigma^2}
+==================
+
+\mathcal I_{\mathrm{eff}}.
+]
+
+所以 noncentrality parameter 为
+
+[
+h^2\mathcal I_{\mathrm{eff}},
+]
+
+达到 semiparametric local-power envelope。
+
+这比只证明 estimator variance 更适合你的 EL paper，因为你的主对象本来就是 test。
+
+---
+
+# 十三、一般 heteroskedasticity：需要 weighted matched projection
+
+若
+
+[
+\omega_t
+========
+
+E(U_t^2\mid D_t,W_t^-)
+]
+
+不是常数，普通 (M_KD) 一般不 efficient。
+
+令
+
+[
+\Omega
+======
+
+\operatorname{diag}(\omega_1,\ldots,\omega_T).
+]
+
+定义 weighted projection
+
+[
+\Pi_{K,\omega}
+==============
+
+P(P'\Omega^{-1}P)^{-1}P'\Omega^{-1},
+]
+
+以及
+
+[
+M_{K,\omega}
+============
+
+I-\Pi_{K,\omega}.
+]
+
+它是 idempotent：
+
+[
+M_{K,\omega}^2=M_{K,\omega},
+]
+
+但通常不是普通 Euclidean symmetric。它满足 weighted symmetry：
+
+[
+M_{K,\omega}'\Omega^{-1}
+========================
+
+\Omega^{-1}M_{K,\omega}.
+]
+
+定义
+
+[
+\widehat u_\omega(\beta)
+========================
+
+M_{K,\omega}(Y-\beta D),
+]
+
+[
+\widehat V_\omega
+=================
+
+M_{K,\omega}D,
+]
+
+以及 efficient instrument
+
+[
+\widehat a_\omega
+=================
+
+\Omega^{-1}\widehat V_\omega.
+]
+
+则
+
+[
+P'\widehat a_\omega
+===================
+
+P'\Omega^{-1}M_{K,\omega}D
+=0.
+]
+
+efficient moment 是
+
+[
+\widehat Z_{t,\omega}^{\mathrm{eff}}(\beta)
+===========================================
+
+\widehat u_{\omega,t}(\beta)
+\widehat a_{\omega,t}.
+]
+
+其 score sum 满足
+
+[
+\begin{aligned}
+\sum_t\widehat Z_{t,\omega}^{\mathrm{eff}}(\beta)
+&=
+\widehat u_\omega(\beta)'
+\Omega^{-1}M_{K,\omega}D\
+&=
+(Y-\beta D)'
+M_{K,\omega}'\Omega^{-1}M_{K,\omega}D\
+&=
+(Y-\beta D)'
+\Omega^{-1}M_{K,\omega}D.
+\end{aligned}
+]
+
+这就是你当前
+
+[
+M_K'M_K=M_K
+]
+
+代数的 weighted analogue。
+
+所以 heteroskedastic efficiency 也不需要放弃 matched projection，只需把 ordinary projection 升级为 weighted projection。
+
+对应 estimator 是
+
+[
+\boxed{
+\widehat\beta_{\omega}
+======================
+
+\frac{
+D'\Omega^{-1}M_{K,\omega}Y
+}{
+D'\Omega^{-1}M_{K,\omega}D
+}.
+}
+]
+
+若 (\Omega) 未知，则用 (\widehat\Omega) 替代；但这会新增一个 conditional variance nuisance，证明中还要控制
+
+[
+\widehat\Omega^{-1}-\Omega^{-1}.
+]
+
+最干净的 WP 路线是先证明：
+
+1. homoskedastic efficient theorem；
+2. oracle heteroskedastic theorem；
+3. feasible heteroskedasticity 作为 extension。
+
+---
+
+# 十四、你当前 assumption 必须如何变化
+
+你目前假设类似
+
+[
+E[
+R_K(W_t^-)
+{w(D_t)-Ew(D_t)}
+]=0.
+]
+
+这意味着
+
+[
+E{w(D_t)\mid W_t^-}
+\approx
+Ew(D_t),
+]
+
+所以非恒定的 (W)-projection 在 population 中基本为零。你的现有 lemma 因而证明
+
+[
+M_Kw
+====
+
+\widetilde w+o_p(1),
+]
+
+并把 oracle 保持为 bounded-score 的 centered weight。
+
+但 semiparametric efficiency 想解决的恰恰是：
+
+[
+D_t
+\text{ 与 }
+W_t^-
+\text{ 可以相关。}
+]
+
+因此 efficient branch 不能继续假设
+
+[
+E(D_t\mid W_t^-)=ED_t.
+]
+
+它必须显式定义
+
+[
+g_0(W)=E(D\mid W)
+]
+
+并让
+
+[
+M_KD
+]
+
+逼近
+
+[
+D-g_0(W).
+]
+
+所以最准确的说法是：
+
+[
+\boxed{
+\text{现有 projection algebra 保留；现有 projection-negligible lemma 要推广。}
+}
+]
+
+旧 lemma：
+
+[
+M_Kw-\widetilde w=o_p(1).
+]
+
+新 lemma：
+
+[
+M_Kw-
+\left[
+w(D)-E{w(D)\mid W}
+\right]
+=o_p(1).
+]
+
+旧 assumption 只是新框架的特殊情形：
+
+[
+E{w(D)\mid W}=Ew(D).
+]
+
+---
+
+# 十五、一个很自然的中间 theorem
+
+你不必立刻从 bounded (w) 跳到 raw (D)。
+
+可以先定义
+
+[
+g_w(W)
+======
+
+E{w(D)\mid W},
+]
+
+[
+v_{w,t}
+=======
+
+w(D_t)-g_w(W_t^-).
+]
+
+若 (w) 是 bounded saturated bounded-score weight，那么 (v_w) 仍然 bounded，并且
+
+[
+E(v_w\mid W)=0.
+]
+
+样本中继续用
+
+[
+w^c=M_Kw.
+]
+
+只是 oracle 改为
+
+[
+U_tv_{w,t},
+]
+
+而不是
+
+[
+U_t\widetilde w_t.
+]
+
+这样你可以先证明：
+
+[
+\frac1{\sqrt T}
+\sum_t\widehat Z_t(\beta_0)
+===========================
+
+\frac1{\sqrt T}
+\sum_tU_tv_{w,t}+o_p(1).
+]
+
+这个 theorem 有两个优点：
+
+1. 允许 (X) 与 (W) 相关，spurious-predictability story 变成真的；
+2. 仍然保留 bounded weight，所以可能继续覆盖 bounded-score persistence classes。
+
+然后 stationary homoskedastic special case 取
+
+[
+w(D)=D,
+]
+
+得到
+
+[
+v_w=D-E(D\mid W),
+]
+
+即 efficient score。
+
+于是整篇 paper 形成很自然的层次：
+
+[
+\boxed{
+\text{bounded residualized score}
+\quad\supset\quad
+\text{efficient residualized score as a special case}.
+}
+]
+
+---
+
+# 十六、为什么不能马上说“across all persistence regimes efficient”
+
+这里必须谨慎。
+
+你当前 bounded-score theorem 使用 bounded saturated weight，是因为在 integrated 或 mildly explosive regimes 下，(D_t) 自身可能发散，而 bounded (w(D_t)) 仍然保持 score 可控。
+
+但 full efficient score 在 homoskedastic情形是
+
+[
+U_t{D_t-E(D_t\mid W_t^-)}.
+]
+
+它通常不 bounded。
+
+因此存在一个真实的 trade-off：
+
+[
+\boxed{
+\text{uniform persistence robustness}
+\quad\text{vs.}\quad
+\text{full information efficiency}.
+}
+]
+
+在 stationary regime 中，(\beta) 是标准 root-(T) regular parameter，上面的 semiparametric bound 是清楚的。
+
+但在 local-to-unity、unit-root、mildly explosive triangular arrays 中：
+
+* (\beta) 的自然 local rate 可能不是 (T^{-1/2})；
+* information 可能依赖 persistence class；
+* limit experiment 可能是 mixed-normal/LAMN；
+* efficient information 甚至可能是随机的；
+* raw (D_t) score 与 bounded bounded-score score 不再渐近等价。
+
+因此当前最严谨的 claim 应当是：
+
+> semiparametrically efficient in the regular stationary submodel;
+
+而不是：
+
+> semiparametrically efficient uniformly across all persistence regimes.
+
+后者是一个更大的后续 theorem，而不是简单 corollary。
+
+---
+
+# 十七、现有工作到底保留多少
+
+最准确的拆分如下。
+
+| 现有部分                                             | 状态                                   |
+| ------------------------------------------------ | ------------------------------------ |
+| 模型 (Y=m(W)+\beta X+U)                            | 完全保留                                 |
+| sieve basis (P_K(W))                             | 完全保留                                 |
+| profile residual (M_K(Y-\beta X))                | 完全保留                                 |
+| matched projection (M_Kw)                        | 完全保留                                 |
+| exact identity (P'M_Kw=0)                        | 完全保留                                 |
+| numerator 的 algebraic elimination                | 完全保留                                 |
+| scalar EL 定义和 multiplier expansion               | 完全保留                                 |
+| self-normalized statistic (\Rightarrow) EL Wilks | 完全保留                                 |
+| 当前 bounded bounded-score theorem                          | 作为 robustness theorem 保留             |
+| 当前 oracle (U\widetilde w)                        | 保留在旧 theorem 中                       |
+| projection-negligible lemma                      | 在 efficiency branch 中要推广             |
+| 只近似 (m_0)                                        | 新增对 (g_0=E(X\mid W)) 的近似             |
+| (\sqrt T a_m\to0)                                | efficiency branch 可望弱化为 product rate |
+| cocoa/weather application                        | 不受影响                                 |
+
+所以不是把旧 paper 改没了。
+
+更精确地说：
+
+[
+\boxed{
+\text{旧 paper 变成 general validity layer，}
+\quad
+\text{新推导增加 optimality layer。}
+}
+]
+
+---
+
+# 十八、我建议的最终 theorem hierarchy
+
+论文可以按这个顺序搭。
+
+## Theorem 1：Persistence-robust orthogonal Wilks
+
+保留当前 theorem：
+
+[
+\ell_T^{\mathrm{rob}}(\beta_0)
+\Rightarrow\chi_1^2
+]
+
+使用 bounded saturated (w(D))。
+
+---
+
+## Theorem 2：Residualized bounded-score Wilks
+
+放松当前 (X)-(W) orthogonality，令
+
+[
+v_w=w(D)-E{w(D)\mid W}.
+]
+
+证明
+
+[
+\widehat Z_t
+\sim
+U_tv_{w,t},
+]
+
+仍有
+
+[
+\ell_T(\beta_0)\Rightarrow\chi_1^2.
+]
+
+这个 theorem 支撑 spurious predictability。
+
+---
+
+## Theorem 3：Semiparametric efficiency
+
+在 stationary homoskedastic submodel 中取
+
+[
+w(D)=D,
+]
+
+证明
+
+[
+\sqrt T(\widehat\beta-\beta_0)
+==============================
+
+E(V^2)^{-1}
+\frac1{\sqrt T}\sum_tV_tU_t
++o_p(1),
+]
+
+达到
+
+[
+\frac{\sigma^2}{E(V^2)}
+]
+
+的 efficiency bound。
+
+---
+
+## Corollary：Efficient local power
+
+在
+
+[
+\beta_T=\beta_0+h/\sqrt T
+]
+
+下，
+
+[
+\ell_T(\beta_0)
+\Rightarrow
+\chi_1^2
+\left(
+h^2\frac{E(V^2)}{\sigma^2}
+\right).
+]
+
+---
+
+## Optional Theorem 4：Heteroskedastic weighted efficiency
+
+用
+
+[
+M_{K,\omega},
+\qquad
+\Omega^{-1}M_{K,\omega}D
+]
+
+构造 efficient EL。
+
+---
+
+# 最终判断
+
+蔡给你的这个方向是有东西的，而且不是让你放弃现有工作。
+
+真正升级后的核心是：
+
+[
+\boxed{
+\text{同一个 matched projection 同时完成三件事：}
+}
+]
+
+[
+\boxed{
+\begin{aligned}
+&\text{1. profile out }m_0(W),\
+&\text{2. construct an instrument orthogonal to the nuisance tangent space},\
+&\text{3. with the optimal instrument, attain the semiparametric bound.}
+\end{aligned}
+}
+]
+
+你原来的定理证明的是：
+
+> estimated nuisance does not destroy Wilks.
+
+新增加的定理证明的是：
+
+> among all nuisance-orthogonal moments, a particular matched and variance-weighted projection contains the maximum information about (\beta).
+
+这不是换题，而是把 paper 从
+
+[
+\text{valid EL after sieve fitting}
+]
+
+推到
+
+[
+\boxed{
+\text{persistence-robust validity plus semiparametric optimality}.
+}
+]
+
+最值得马上动手的不是 heteroskedasticity，而是先写出 homoskedastic stationary efficiency theorem，并把当前的 projection-negligible lemma 推广为 conditional residualization lemma。这样旧 theorem 一行不删，新 theorem 又真正提高了理论层级。
+
+
+最直接的判断：
+
+[
+\boxed{\text{真正做出 persistent 环境下的 semiparametric efficiency，主目标是 Econometric Theory。}}
+]
+
+**Journal of Econometrics 是冲刺，Statistica Sinica / The Econometrics Journal 是有条件的强目标。**
+
+### 按不同完成度分档
+
+**现稿 + efficient-score interpretation**，但没有效率界、没有达到界的定理：
+更现实是 **Journal of Time Series Analysis、Econometrics and Statistics、Journal of Nonparametric Statistics**。你现在的 Wilks theorem 主要仍是“bounded-score oracle theorem + feasible–oracle equivalence”，编辑可能把它理解成一个精巧但较窄的 transfer result。JTSA 本身就聚焦时间序列的数学统计，因此题目契合。([维基百科][1])
+
+**加入真正的 semiparametric efficiency theorem**：
+最自然的是 **Econometric Theory**。你需要正式定义模型的 nuisance tangent space 或局部实验，导出 efficient score / information bound，再证明你的 sieve-orthogonalized EL 达到该界。ET 明确强调推进计量理论基础以及建模、预测和推断的概率统计基础，与你的方向高度一致。([Cambridge University Press & Assessment][2])
+
+同一完成度下，**Statistica Sinica** 也很合理，前提是把结果写成一般统计问题，而不是仅限于金融预测回归。该刊覆盖统计与数据科学中的理论、方法和应用。([www3.stat.sinica.edu.tw][3])
+
+**The Econometrics Journal** 更要求方法具有直接或潜在应用价值。因此需要把 simulation 和 cocoa/weather 应用做得足够有说服力，明确展示 naive inference 的 size distortion 或 spurious predictability，以及你的方法如何修正。([OUP Academic][4])
+
+**Journal of Econometrics** 可以冲，但必须满足：
+
+[
+\text{efficiency under persistence}
+\neq
+\text{standard partially linear efficiency 的简单附录}.
+]
+
+最好能做到以下至少三项：
+
+1. 在 local-to-unity / persistent triangular-array 环境中建立新的 semiparametric information bound 或 power envelope；
+2. 允许 (X) 与 (W) 实质相关，而不是依赖当前的 population orthogonality；
+3. 处理 conditional heteroskedasticity，并推导 optimal instrument；
+4. 证明 feasible EL 达到效率界；
+5. 给出 local alternatives 和最优局部功效；
+6. 结果不限于某一个 bounded-score weight，而覆盖一个较一般的模型类。
+
+JoE 覆盖计量估计与统计推断方法，但以你当前 note 的增量还不够；只有完成上述非正则效率理论后，才是合理冲刺。([维基百科][5])
+
+### 我建议的投稿梯度
+
+[
+\boxed{
+\text{JoE（冲刺）}
+\rightarrow
+\text{Econometric Theory（主目标）}
+\rightarrow
+\text{Statistica Sinica / EctJ}
+\rightarrow
+\text{JTSA / Econometrics and Statistics}
+}
+]
+
+最重要的是：**按 ET 的标准写这篇 WP。** 你现有的 (M_K)、orthogonalized weight、feasible–oracle equivalence 和 Wilks theorem全部保留，但会从“最终贡献”降为基础定理；真正的主定理变成：
+
+[
+\widehat\beta
+\text{ 或相应 EL test attains the semiparametric efficiency bound/power envelope.}
+]
+
+做成这一版后，我认为 **Econometric Theory 是可信目标，不是幻想；JoE 是有理由尝试的上限。**
+
+[1]: https://en.wikipedia.org/wiki/Journal_of_Time_Series_Analysis?utm_source=chatgpt.com "Journal of Time Series Analysis"
+[2]: https://www.cambridge.org/core/journals/econometric-theory/information/about-this-journal "About this journal"
+[3]: https://www3.stat.sinica.edu.tw/statistica/aims.html "Aims & Scope"
+[4]: https://academic.oup.com/ectj/pages/About "About | The Econometrics Journal | Oxford Academic"
+[5]: https://en.wikipedia.org/wiki/Journal_of_Econometrics?utm_source=chatgpt.com "Journal of Econometrics"
+
+
+我按你现有的 [TeX 稿件](sandbox:/mnt/data/profile_sieve_paper.tex) 推了一遍。结论是：
+
+[
+\boxed{\text{可以做；现有方法完整保留，但 efficient theorem 要换一个 oracle score。}}
+]
+
+最干净的 claim 应该是：
+
+> **semiparametric efficiency in the conditional-mean model**
+
+而不是对 (X_t) 联合动态模型的无条件全局效率。
+
+## 1. Oracle efficient score
+
+你的模型是
+
+[
+Y_t=m_0(W_{t-1})+\beta_0X_{t-1}+U_t,
+\qquad
+E(U_t\mid\mathcal H_{t-1})=0.
+]
+
+令
+
+[
+\Omega_t
+========
+
+E(U_t^2\mid\mathcal H_{t-1}),
+]
+
+先考虑平稳的 regular benchmark。取任意 predictable instrument (q_t=q(X_{t-1},W_{t-1}))，moment 为
+
+[
+\psi_t(\beta,m;q)
+=================
+
+q_t{Y_t-m(W_{t-1})-\beta X_{t-1}}.
+]
+
+对于 nuisance path
+
+[
+m_\tau(w)=m_0(w)+\tau a(w),
+]
+
+其 Gateaux derivative 是
+
+[
+\left.
+\frac{\partial}{\partial\tau}
+E{\psi_t(\beta_0,m_\tau;q)}
+\right|_{\tau=0}
+================
+
+-E{q_ta(W_{t-1})}.
+]
+
+因此 score 对未知 (m) 正交，当且仅当
+
+[
+E(q_t\mid W_{t-1})=0.
+\tag{1}
+]
+
+对于满足 (1) 的 instrument，moment estimator 的一阶方差为
+
+[
+\operatorname{AV}(q)
+====================
+
+\frac{E(\Omega_tq_t^2)}
+{{E(X_{t-1}q_t)}^2}.
+\tag{2}
+]
+
+现在定义加权投影
+
+[
+h_0
+===
+
+\arg\min_{h}
+E\left[
+\frac{{X_{t-1}-h(W_{t-1})}^2}{\Omega_t}
+\right].
+]
+
+它满足 normal equation
+
+[
+E\left[
+\left.
+\frac{X_{t-1}-h_0(W_{t-1})}{\Omega_t}
+\right|W_{t-1}
+\right]=0,
+]
+
+所以
+
+[
+h_0(w)
+======
+
+\frac{
+E{X_{t-1}/\Omega_t\mid W_{t-1}=w}
+}{
+E{1/\Omega_t\mid W_{t-1}=w}
+}.
+\tag{3}
+]
+
+令
+
+[
+d_t
+===
+
+X_{t-1}-h_0(W_{t-1}),
+\qquad
+q_t^{\mathrm{eff}}
+==================
+
+\frac{d_t}{\Omega_t}.
+\tag{4}
+]
+
+由 (3)，
+
+[
+E(q_t^{\mathrm{eff}}\mid W_{t-1})=0,
+]
+
+所以它确实对 nuisance (m) 正交。
+
+再对任意满足 (1) 的 (q_t)，有
+
+[
+E(X_{t-1}q_t)
+=============
+
+E(d_tq_t),
+]
+
+因为 (h_0(W)) 与 (q_t) 正交。Cauchy–Schwarz 给出
+
+[
+{E(d_tq_t)}^2
+\le
+E(\Omega_tq_t^2)
+E\left(\frac{d_t^2}{\Omega_t}\right).
+]
+
+代入 (2)：
+
+[
+\operatorname{AV}(q)
+\ge
+\left[
+E\left(\frac{d_t^2}{\Omega_t}\right)
+\right]^{-1}.
+\tag{5}
+]
+
+等号当且仅当
+
+[
+q_t
+\propto
+\frac{d_t}{\Omega_t}.
+]
+
+因此条件均值模型中的 efficient score 是
+
+[
+\boxed{
+S_t^{\mathrm{eff}}
+==================
+
+U_t
+\frac{
+X_{t-1}-h_0(W_{t-1})
+}{
+\Omega_t
+}
+}
+\tag{6}
+]
+
+有效信息为
+
+[
+\boxed{
+\mathcal I_{\mathrm{eff}}
+=========================
+
+E\left[
+\frac{
+{X_{t-1}-h_0(W_{t-1})}^2
+}{
+\Omega_t
+}
+\right].
+}
+\tag{7}
+]
+
+对应 efficient influence function 是
+
+[
+\phi_t^{\mathrm{eff}}
+=====================
+
+\mathcal I_{\mathrm{eff}}^{-1}
+S_t^{\mathrm{eff}}.
+]
+
+若同方差 (\Omega_t=\sigma^2)，则简化为
+
+[
+h_0(W)=E(X_{t-1}\mid W),
+]
+
+以及
+
+[
+S_t^{\mathrm{eff}}
+==================
+
+\frac{U_t}{\sigma^2}
+\left{
+X_{t-1}-E(X_{t-1}\mid W_{t-1})
+\right}.
+\tag{8}
+]
+
+这就是你要追的 oracle。
+
+---
+
+## 2. 它和你现有 (M_K) 构造几乎完全一致
+
+令
+
+[
+D_T
+===
+
+\operatorname{diag}
+\left(
+\Omega_1^{-1},\ldots,\Omega_T^{-1}
+\right),
+]
+
+定义 weighted sieve projector
+
+[
+\Pi_{K,D}
+=========
+
+P(P^\top D_TP)^{-1}P^\top D_T,
+\qquad
+M_{K,D}=I-\Pi_{K,D}.
+\tag{9}
+]
+
+它不是普通对称矩阵，但满足
+
+[
+M_{K,D}^\top D_T
+================
+
+D_TM_{K,D},
+\qquad
+M_{K,D}^2=M_{K,D}.
+]
+
+定义 residualized regressor
+
+[
+\widehat d
+==========
+
+M_{K,D}X,
+]
+
+以及 efficient instrument
+
+[
+\widehat q
+==========
+
+D_T\widehat d.
+\tag{10}
+]
+
+它满足精确样本正交性
+
+[
+P^\top\widehat q
+================
+
+# P^\top D_TM_{K,D}X
+
+0.
+
+\tag{11}
+]
+
+与此同时，仍然用同一个空间 profile (m)：
+
+[
+\widehat u(\beta)
+=================
+
+M_{K,D}(Y-\beta X).
+\tag{12}
+]
+
+新的 efficient EL score contribution 是
+
+[
+\boxed{
+\widehat Z_t^{\mathrm{eff}}(\beta)
+==================================
+
+\widehat u_t(\beta)\widehat q_t.
+}
+\tag{13}
+]
+
+而 aggregate score 满足
+
+[
+\begin{aligned}
+\sum_{t=1}^T
+\widehat Z_t^{\mathrm{eff}}(\beta)
+&=
+\widehat u(\beta)^\top
+D_TM_{K,D}X\
+&=
+(Y-\beta X)^\top
+D_TM_{K,D}X.
+\end{aligned}
+\tag{14}
+]
+
+这正是 profile quasi-score。换言之，你现在的“同一个 sieve 空间 profile (m) 并 residualize score”的思想，原封不动地保留了。
+
+Series partially linear estimators在同方差下达到半参数效率、在异方差下通过加权构造恢复效率，是已有严格理论支持的路线。([arXiv][1])
+
+### 同方差时尤其干净
+
+若
+
+[
+\Omega_t=\sigma^2,
+]
+
+则 (D_T) 只是常数倍单位矩阵，因而
+
+[
+M_{K,D}=M_K.
+]
+
+常数倍不影响 scalar EL constraint，所以新 score 就是
+
+[
+\boxed{
+\widehat Z_t^{\mathrm{eff}}(\beta)
+==================================
+
+{M_K(Y-\beta X)}_t
+{M_KX}_t.
+}
+\tag{15}
+]
+
+这就是你现有定义
+
+[
+\widehat Z_t(\beta)
+===================
+
+\widehat u_t(\beta)w_t^c
+]
+
+中特取
+
+[
+w_t=X_{t-1},
+\qquad
+w^c=M_KX.
+]
+
+因此，**profile sieve、matched projection、EL、Wilks expansion，全都没有被放弃。**
+
+---
+
+## 3. 你目前的 bounded bounded-score weight 为什么不自动 efficient
+
+你当前使用
+
+[
+q_t^{C}
+\approx
+w(X_{t-1})-E{w(X_{t-1})\mid W_{t-1}},
+]
+
+而 full efficient instrument 是
+
+[
+q_t^{\mathrm{eff}}
+==================
+
+\frac{X_{t-1}-h_0(W_{t-1})}{\Omega_t}.
+]
+
+当前 score 达到效率界，当且仅当存在非零常数 (c)，使得
+
+[
+w(X_{t-1})
+----------
+
+# E{w(X_{t-1})\mid W_{t-1}}
+
+c,
+\frac{
+X_{t-1}-h_0(W_{t-1})
+}{
+\Omega_t
+}.
+\tag{16}
+]
+
+一般来说不成立。特别是在同方差且 (X\perp W) 的简单情形，有效 instrument 是
+
+[
+X_{t-1}-EX_{t-1},
+]
+
+而你现在的 instrument 是
+
+[
+w(X_{t-1})-Ew(X_{t-1}).
+]
+
+一个 bounded saturated (w) 通常不可能与 unbounded centered (X) 成比例。
+
+所以最准确的结论是：
+
+[
+\boxed{
+\text{现有 bounded-score score：valid and persistence-robust；}
+\quad
+\text{residualized }X/\Omega\text{ score：efficient candidate。}
+}
+]
+
+这不是谁替代谁，而是 robustness–efficiency 的两层结果。
+
+---
+
+## 4. 你当前一个 assumption 在 efficient branch 里必须换掉
+
+你现在假设
+
+[
+E\left[
+R_K(W_{t-1})
+{w(X_{t-1})-Ew(X_{t-1})}
+\right]=0,
+]
+
+并据此证明
+
+[
+M_Kw
+====
+
+\widetilde w+o_p(1).
+]
+
+这意味着 (W)-projection 对 (w) 渐近上几乎没有作用。
+
+但 efficient score 恰恰需要让
+
+[
+M_KX
+]
+
+去估计非平凡的
+
+[
+X-E(X\mid W).
+]
+
+所以 efficient theorem 不能继续要求“projection negligible”。它应改为：
+
+[
+h_0(W)
+\approx
+P_K(W)^\top\gamma_K,
+]
+
+并要求
+
+[
+\inf_{\gamma}
+\left|
+h_0-P_K^\top\gamma
+\right|_{L_2(\Omega^{-1})}
+\to0,
+]
+
+再加 identification：
+
+[
+\mathcal I_{\mathrm{eff}}>0.
+]
+
+但原来的 assumption 和 lemma 不需要删除。它们继续服务于 bounded bounded-score theorem。
+
+---
+
+## 5. Persistent 情形怎样写 efficiency
+
+由于 (X_{t-1}) 是 triangular-array persistent process，不能直接把 (7) 当成固定常数。
+
+定义 sequence Hilbert inner product
+
+[
+\langle a,b\rangle_T
+====================
+
+\sum_{t=1}^T
+E\left(
+\frac{a_tb_t}{\Omega_{t,T}}
+\right).
+]
+
+令 (\mathcal A_T) 是所有
+
+[
+{a(W_{t-1})}_{t=1}^T
+]
+
+构成的 nuisance space，并令
+
+[
+h_T^\star
+=========
+
+\arg\min_h
+\sum_{t=1}^T
+E\left[
+\frac{
+{X_{t-1,T}-h(W_{t-1})}^2
+}{
+\Omega_{t,T}
+}
+\right].
+]
+
+定义
+
+[
+d_{t,T}
+=======
+
+X_{t-1,T}-h_T^\star(W_{t-1}),
+\qquad
+q_{t,T}^\star
+=============
+
+\frac{d_{t,T}}{\Omega_{t,T}},
+]
+
+以及 sequence information
+
+[
+\mathcal I_T
+============
+
+\sum_{t=1}^T
+E\left(
+\frac{d_{t,T}^2}{\Omega_{t,T}}
+\right).
+\tag{17}
+]
+
+对于任何满足 aggregate nuisance orthogonality
+
+[
+\sum_{t=1}^T
+E{q_{t,T}a(W_{t-1})}=0
+\quad
+\text{for all }a
+]
+
+的 instrument sequence，同样有
+
+[
+\boxed{
+\frac{
+\left{\sum_tE(X_{t-1,T}q_{t,T})\right}^2
+}{
+\sum_tE(\Omega_{t,T}q_{t,T}^2)
+}
+\le
+\mathcal I_T.
+}
+\tag{18}
+]
+
+证明仍然只是 Hilbert-space projection 加 Cauchy–Schwarz。
+
+因此即使 (X) persistent，**optimal-instrument 结论本身没有坏掉**。真正需要新证明的是：这个 optimality bound 是否对应一个 LAMN/semiparametric lower bound，以及 feasible EL 是否达到它。
+
+---
+
+## 6. 你的 Wilks proof 应该怎样升级
+
+现有证明使用
+
+[
+T^{-1/2}\sum_t\widehat Z_t
+==========================
+
+T^{-1/2}\sum_tU_t\widetilde w_t+o_p(1),
+]
+
+以及有限极限
+
+[
+T^{-1}\sum_t\widehat Z_t^2
+\to_p\eta^2.
+]
+
+对于 unbounded efficient score，不应强求方差除以 (T) 后收敛到有限常数。改用 self-normalized 形式。
+
+定义 oracle efficient score
+
+[
+Z_{t,T}^\star
+=============
+
+U_tq_{t,T}^\star,
+\qquad
+J_T
+===
+
+\sum_{t=1}^T(Z_{t,T}^\star)^2.
+]
+
+目标 oracle theorem 是
+
+[
+\frac{
+\sum_tZ_{t,T}^\star
+}{
+\sqrt{J_T}
+}
+\Rightarrow N(0,1),
+\tag{19}
+]
+
+以及
+
+[
+\frac{
+\max_t|Z_{t,T}^\star|
+}{
+\sqrt{J_T}
+}
+\to_p0.
+\tag{20}
+]
+
+feasible-oracle equivalence 应写成相对误差：
+
+[
+\frac{
+\sum_t{\widehat Z_t^{\mathrm{eff}}-Z_{t,T}^\star}
+}{
+\sqrt{J_T}
+}
+=o_p(1),
+\tag{21}
+]
+
+以及
+
+[
+\frac{
+\sum_t(\widehat Z_t^{\mathrm{eff}})^2-J_T
+}{
+J_T
+}
+=o_p(1).
+\tag{22}
+]
+
+然后你现有的 scalar EL expansion 原样给出
+
+[
+\ell_T^{\mathrm{eff}}(\beta_0)
+==============================
+
+\frac{
+\left{\sum_t\widehat Z_t^{\mathrm{eff}}(\beta_0)\right}^2
+}{
+\sum_t{\widehat Z_t^{\mathrm{eff}}(\beta_0)}^2
+}
++o_p(1)
+\Rightarrow\chi_1^2.
+\tag{23}
+]
+
+所以 proof architecture 仍然是：
+
+[
+\text{oracle CLT}
++
+\text{feasible-oracle equivalence}
++
+\text{EL quadratic expansion}.
+]
+
+只是 normalization 从 (T^{-1/2}) 和 (T^{-1}) 攦成由 (J_T) 自适应决定。
+
+广义的 optimally weighted sieve conditional-moment inference同样可以产生标准 chi-square 型结论，但现有结果并不自动覆盖你的 persistent triangular-array setting；这一部分正是需要你新证明的地方。([arXiv][2])
+
+---
+
+## 7. 这篇 paper 最合理的两层 theorem
+
+### Theorem 1：保留你现有结果
+
+> 对任意满足 bounded-score bounded/saturation 条件的 (w)，matched sieve projection 产生 valid EL，并有
+> [
+> \ell_T^C(\beta_0)\Rightarrow\chi_1^2.
+> ]
+
+它强调：
+
+* robustness across persistence classes；
+* bounded score；
+* standard Wilks；
+* 不需要估计 conditional variance。
+
+### Theorem 2：新增 efficiency result
+
+> 取 weighted residualized regressor
+> [
+> q_t^\star=
+> \frac{X_{t-1}-h_0(W_{t-1})}{\Omega_t},
+> ]
+> 并用 weighted sieve 估计 (h_0,\Omega)。则 efficient EL 保持 Wilks，并达到 conditional-moment semiparametric bound。
+
+再加 local alternatives：
+
+若
+
+[
+\frac{\mathcal I_T}{r_T^2}\Rightarrow\mathcal I,
+\qquad
+\beta_T=\beta_0+\frac{c}{r_T},
+]
+
+目标结论是
+
+[
+\ell_T^{\mathrm{eff}}(\beta_0)
+\Rightarrow
+\chi_1^2(c^2\mathcal I),
+]
+
+若 (\mathcal I) 随机，则是 mixed noncentral chi-square。对于任何其他 admissible (q)，其 noncentrality 不超过 efficient score，由 (18) 保证。
+
+这才是“semip efficient”真正给 paper 增加的理论深度：不只是方差更小，而是 **最大化 local power**。
+
+---
+
+## 最终判断
+
+现有工作不会被放弃，但需要诚实地区分：
+
+[
+\boxed{
+\begin{aligned}
+&\text{现有 bounded bounded-score theorem}
+&&\longrightarrow
+&&\text{robust Wilks branch};\
+&\text{新增 residualized-}X/\Omega\text{ score}
+&&\longrightarrow
+&&\text{efficient branch}.
+\end{aligned}
+}
+]
+
+完全保留的有：
+
+[
+m(W)+\beta X,\quad
+P_K,\quad
+\text{profile nuisance},\quad
+\text{matched projection},\quad
+\text{EL construction},\quad
+\text{quadratic Wilks expansion}.
+]
+
+真正新增的是：
+
+[
+h_0(W),\quad
+\Omega_t,\quad
+q_t^{\mathrm{eff}},\quad
+\text{information-normalized oracle theorem},\quad
+\text{local-power bound}.
+]
+
+而你当前的“projection is negligible” lemma 不会成为废稿；它留在 robust theorem。efficient theorem 中，projection 不再是要消灭的误差，而是最核心的有效信息提取步骤。
+
+[1]: https://arxiv.org/abs/math/0504510 "[math/0504510] Efficient estimation of a semiparametric partially linear varying coefficient model"
+[2]: https://arxiv.org/abs/1411.1144 "Sieve Wald and QLR Inferences on Semi/nonparametric Conditional Moment Models"

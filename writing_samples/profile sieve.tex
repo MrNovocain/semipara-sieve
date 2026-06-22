@@ -22,9 +22,10 @@
 
 We consider the problem of testing return predictability in the presence of
 highly persistent predictors and stationary exogenous covariates. The
-exogenous covariate may be a macroeconomic, environmental, or other
-predetermined state variable whose effect on returns is not well described by
-a constant intercept. The data-generating process (DGP) is specified by the
+exogenous covariate may be a scalar or $d$-dimensional vector of
+macroeconomic, environmental, or other predetermined state variables whose
+effect on returns is not well described by a constant intercept. The
+data-generating process (DGP) is specified by the
 following system of equations:
 
 \begin{enumerate}
@@ -41,19 +42,21 @@ following system of equations:
         U_t = \phi \varepsilon_t + z_t \quad \text{with } E[z_t \mid \varepsilon_t] = 0
     \end{equation}
 \end{enumerate}
-where $Y_t$ represents asset returns, $W_{t-1}$ is a stationary exogenous
-covariate, and $X_{t-1}$ is a persistent financial predictor. The function
+where $Y_t$ represents asset returns, $W_{t-1} \in \mathbb{R}^d$ is a
+stationary exogenous covariate vector, and $X_{t-1}$ is a persistent financial
+predictor. The function
 $m(W_{t-1})$ is an unknown nonparametric nuisance component: it can be viewed
 as a flexible intercept or exogenous-control term that absorbs the direct
 effect of $W_{t-1}$ on returns. The key timing restriction is contemporaneous
-sieve orthogonality between the exogenous covariate and the persistent
+sieve orthogonality between the exogenous covariate vector and the persistent
 predictor weight at the sampling frequency used for inference. This
 restriction does not rule out effects of $W_{t-1}$ on returns through
 $m(W_{t-1})$, nor does it rule out adjustment in future values of $X_t$.
 
 Throughout the theoretical development, $W_{t-1}$ should be read as a generic
-stationary exogenous covariate. The weather-shock interpretation used below is
-one empirical application of this more general setup.
+stationary exogenous covariate vector and is not restricted to be univariate;
+the scalar case corresponds to $d=1$. The weather-shock interpretation used
+below is one empirical application of this more general setup.
 
 Motivated by Perron (1989), our goal is to investigate return predictability while avoiding size distortions or false inferences caused by near unit roots in the predictor dynamics (i.e., $\rho \approx 1$). This is achieved by testing the null hypothesis of no predictability:
 \begin{equation} 
@@ -63,13 +66,13 @@ Motivated by Perron (1989), our goal is to investigate return predictability whi
 \end{aligned}
 \end{equation}
 
-By extending the empirical likelihood (EL) framework of Cai et al. (2026), we propose a two-stage Orthogonalized Sieve-EL framework that achieves a standard $\chi^2_1$ limiting distribution under the null.
+We propose a sieve-orthogonalized empirical likelihood (EL) framework that achieves a standard $\chi^2_1$ limiting distribution under the null under high-level persistent-predictor score conditions.
 
 \section{Empirical Interpretation: Weather Shocks and Cocoa Futures}
 
 The framework can be applied to agricultural commodity markets by interpreting
-$W_{t-1}$ as a local weather variable, such as precipitation or average
-temperature, and $Y_t$ as excess returns on cocoa futures. The 2023--2024
+$W_{t-1}$ as one or more local weather variables, such as precipitation,
+temperature, or humidity, and $Y_t$ as excess returns on cocoa futures. The 2023--2024
 cocoa market provides a useful example: severe weather conditions in West
 Africa contributed to supply deficits and large price movements, while lagged
 prices and related financial predictors remained highly persistent.
@@ -85,14 +88,14 @@ highly persistent, so inference on $\beta$ must remain valid across
 near-unit-root persistence regimes.
 
 Thus, in the cocoa application, the generic nuisance component $m(W_{t-1})$
-has the interpretation of a nonlinear weather-response curve. The econometric
+has the interpretation of a nonlinear weather-response surface. The econometric
 method itself, however, does not depend on weather specifically; it only
-requires a stationary exogenous covariate satisfying the orthogonality and
-regularity conditions stated below.
+requires a stationary exogenous covariate vector satisfying the orthogonality
+and regularity conditions stated below.
 
 \section{The Orthogonalized Sieve-EL Framework}
 
-We handle the unknown nonparametric nuisance component $m(W_{t-1})$ by approximating it using a sieve basis of dimension $K$ (e.g., polynomials or splines). Let $\bm{P}_K(W_{t-1}) = (p_1(W_{t-1}), \dots, p_K(W_{t-1}))'$ be the $K \times 1$ vector of these basis functions.
+We handle the unknown nonparametric nuisance component $m(W_{t-1})$ by approximating it using a sieve basis of dimension $K$ (e.g., polynomials or splines). Let $\bm{P}_K(W_{t-1}) = (p_1(W_{t-1}), \dots, p_K(W_{t-1}))'$ be the $K \times 1$ vector of these basis functions; when $d>1$, the $p_j$ are multivariate basis functions.
 
 \subsection{The Step-by-Step Algorithm}
 
@@ -140,12 +143,12 @@ Because the moment condition is orthogonal to the fitted nuisance space, the sam
     \ell_T(\beta_0) = 2 \sum_{t=1}^T \log(1 + \widehat{\lambda} \widehat{Z}_t(\beta_0)) \xrightarrow{d} \chi^2_1
 \end{equation}
 
-\subsection{Comparison with Cai et al. (2026)}
+\subsection{Relation to Fixed-Intercept Predictive EL}
 
-Our framework differs from the approach of Cai et al. (2026) in two fundamental aspects:
+The framework differs from fixed-intercept predictive EL in two fundamental aspects:
 \begin{itemize}
-    \item \textbf{Nuisance Dimensionality}: Cai et al. (2026) handle a fixed scalar intercept $\alpha$, whereas our model contains an infinite-dimensional nuisance function $m(W_{t-1})$, which requires a sieve approximation of dimension $K \to \infty$.
-    \item \textbf{Orthogonalization Space}: The true generalization is that the demeaning against a constant $1$ is replaced by residualizing against the sieve basis $\bm{P}_K(W)$. In Cai et al. (2026), the weight centering $w^c(x) = w(x) - \frac{1}{T}\sum w(X_s)$ represents a projection onto the constant subspace $\text{span}\{\bm{1}\}$. In contrast, our orthogonalized weight $\bm{w}^c$ is projected onto the $K$-dimensional sieve space $\text{span}\{\bm{P}_K(W_{t-1})\}$. We keep the AR(1) equation as the persistence DGP, but we do not use AR(1) OLS residuals in the EL statistic.
+    \item \textbf{Nuisance Dimensionality}: A fixed scalar intercept $\alpha$ is replaced by an infinite-dimensional nuisance function $m(W_{t-1})$, which requires a sieve approximation of dimension $K \to \infty$.
+    \item \textbf{Orthogonalization Space}: The demeaning against a constant $1$ is replaced by residualizing against the sieve basis $\bm{P}_K(W)$. The orthogonalized weight $\bm{w}^c$ is projected onto the $K$-dimensional sieve space $\text{span}\{\bm{P}_K(W_{t-1})\}$. We keep the AR(1) equation as the persistence DGP, but we do not use AR(1) OLS residuals in the EL statistic.
 \end{itemize}
 
 \section{The Growth Rate of the Sieve Dimension $K$}
@@ -153,9 +156,9 @@ Our framework differs from the approach of Cai et al. (2026) in two fundamental 
 To establish the asymptotic validity of our test statistic, we must place bounds on the growth rate of the tuning parameter $K$ relative to the sample size $T$.
 
 \subsection{Lower Bound (Bias Elimination)}
-Assume the true nuisance function $m(W)$ has smoothness $s$ (i.e., is $s$ times continuously differentiable). Sieve theory implies that the approximation error $r_t$ satisfies $\sup |r_t| = O_p(K^{-s})$. To ensure that the approximation bias does not distort the asymptotic distribution, we require $T^{-1/2} \sum_{t=1}^T r_t w^c_t = o_p(1)$, which translates to:
+Assume the true nuisance function $m(W)$ has smoothness $s$ and that $W$ is $d$-dimensional. Sieve theory implies that the approximation error $r_t$ satisfies $\sup |r_t| = O_p(K^{-s/d})$. To ensure that the approximation bias does not distort the asymptotic distribution, we require $T^{-1/2} \sum_{t=1}^T r_t w^c_t = o_p(1)$, which translates to:
 \begin{equation}
-    \sqrt{T} K^{-s} \to 0 \quad \implies \quad K \gg T^{\frac{1}{2s}}
+    \sqrt{T} K^{-s/d} \to 0 \quad \implies \quad K \gg T^{\frac{d}{2s}}
 \end{equation}
 
 \subsection{Upper Bound (Variance Control and Leakage Mitigation)}
@@ -167,500 +170,517 @@ Estimating $K$ nuisance parameters introduces in-sample variance inflation and p
 \subsection{Growth rate of K}
 Combining these bounds yields the formal asymptotic growth condition:
 \begin{equation}
-    T^{\frac{1}{2s}} \ll K \ll T^{\frac{1}{2}}
+    T^{\frac{d}{2s}} \ll K \ll T^{\frac{1}{2}}
 \end{equation}
-If we assume $m(W)$ is twice-differentiable ($s=2$), the condition becomes $T^{1/4} \ll K \ll T^{1/2}$. In practice, setting $K \approx T^{1/3}$ satisfies these bounds, ensuring that both approximation bias and variance inflation vanish asymptotically.
+This rate window is nonempty when $s > d$.
 
-\section{Formal Orthogonality Assumptions}
+% \section{Formal Orthogonality Assumptions}
 
-To ensure the algebraic orthogonalization rigorously eliminates the fitted
-nonparametric nuisance component, we must state the relationship between the
-persistent financial predictor and the stationary exogenous covariate. We
-impose the following two conditions on $W_{t-1}$:
+% To ensure the algebraic orthogonalization rigorously eliminates the fitted
+% nonparametric nuisance component, we must state the relationship between the
+% persistent financial predictor and the stationary exogenous covariate vector. We
+% impose the following two conditions on $W_{t-1}$:
 
-\paragraph*{Assumption 5.1 (Strict Exogeneity to the Market Innovation)} \textit{The exogenous covariate $W_{t-1}$ is strictly exogenous to the financial market innovation $U_t$. Mathematically:}
-\begin{equation}
-    \mathbb{E}[U_t \mid \mathcal{F}_{t-1}, W_{t-1}] = 0.
-\end{equation}
+% \paragraph*{Assumption 5.1 (Strict Exogeneity to the Market Innovation)} \textit{The exogenous covariate vector $W_{t-1}$ is strictly exogenous to the financial market innovation $U_t$. Mathematically:}
+% \begin{equation}
+%     \mathbb{E}[U_t \mid \mathcal{F}_{t-1}, W_{t-1}] = 0.
+% \end{equation}
 
-\noindent \textbf{Remark.} This condition says the exogenous covariate is not a proxy for the residual market innovation $U_t$ after conditioning on predetermined market information. It still allows $W_{t-1}$ to affect returns through the structural component $m(W_{t-1})$ and to be incorporated into future predictor dynamics.
+% \noindent \textbf{Remark.} This condition says the exogenous covariate vector is not a proxy for the residual market innovation $U_t$ after conditioning on predetermined market information. It still allows $W_{t-1}$ to affect returns through the structural component $m(W_{t-1})$ and to be incorporated into future predictor dynamics.
 
-\paragraph*{Assumption 5.2 (Contemporaneous Sieve Orthogonality)} \textit{At the sampling frequency used for inference, the exogenous covariate is contemporaneously orthogonal to the predetermined persistent predictor in the sieve directions used for profiling. For the EL weight $w(X_{t-1})$,}
-\begin{equation}
-    \mathbb{E}[w(X_{t-1}) \mid W_{t-1}] = \mathbb{E}[w(X_{t-1})].
-\end{equation}
-\textit{Equivalently, for any centered nonconstant sieve vector $\bm R_K(W_{t-1})$,}
-\begin{equation}
-    \mathbb{E}\left[\bm R_K(W_{t-1})\{w(X_{t-1})-\mathbb{E}w(X_{t-1})\}\right]=\bm0.
-\end{equation}
-\textit{This is a contemporaneous timing restriction, not a dynamic exclusion: $W_{t-1}$ may affect $Y_t$ through $m(W_{t-1})$ and may affect subsequent returns and future predictor values.}
+% \paragraph*{Assumption 5.2 (Contemporaneous Sieve Orthogonality)} \textit{At the sampling frequency used for inference, the exogenous covariate vector is contemporaneously orthogonal to the predetermined persistent predictor in the sieve directions used for profiling. For the EL weight $w(X_{t-1})$,}
+% \begin{equation}
+%     \mathbb{E}[w(X_{t-1}) \mid W_{t-1}] = \mathbb{E}[w(X_{t-1})].
+% \end{equation}
+% \textit{Equivalently, for any centered nonconstant sieve vector $\bm R_K(W_{t-1})$,}
+% \begin{equation}
+%     \mathbb{E}\left[\bm R_K(W_{t-1})\{w(X_{t-1})-\mathbb{E}w(X_{t-1})\}\right]=\bm0.
+% \end{equation}
+% \textit{This is a contemporaneous timing restriction, not a dynamic exclusion: $W_{t-1}$ may affect $Y_t$ through $m(W_{t-1})$ and may affect subsequent returns and future predictor values.}
 
-\noindent \textbf{Remark.} This assumption is the population version of the sample orthogonality condition used in the proof, $\|T^{-1}\bm R'\widetilde{\bm w}\|=O_p(\sqrt{K/T})$. It preserves the persistent predictor signal at the moment used for inference while allowing the exogenous covariate to enter later market adjustment.
+% \noindent \textbf{Remark.} This assumption is the population version of the sample orthogonality condition used in the proof, $\|T^{-1}\bm R'\widetilde{\bm w}\|=O_p(\sqrt{K/T})$. It preserves the persistent predictor signal at the moment used for inference while allowing the exogenous covariate to enter later market adjustment.
 
-\section{Wilks' Theorem for Mean Predictability}
-\label{sec:mean-wilks}
+% \section{Wilks' Theorem for Mean Predictability}
+% \label{sec:mean-wilks}
 
-This section gives a formal Wilks theorem for the mean-predictability test.  It is
-useful to write the nuisance step in null-imposed profile form.  Let
-\[
-    \bm Y=(Y_1,\ldots,Y_T)',\qquad
-    \bm X_{lag}=(X_0,\ldots,X_{T-1})',
-\]
-and let \(\bm P\) be the \(T\times K\) matrix whose \(t\)-th row is
-\(\bm P_K(W_{t-1})'\).  Define
-\[
-    \bm\Pi_K=\bm P(\bm P'\bm P)^{-1}\bm P',
-    \qquad
-    \bm M_K=\bm I_T-\bm\Pi_K.
-\]
-For each candidate value \(\beta\), define the null-imposed profile sieve
-coefficient and the corresponding residual by
-\begin{equation}
-    \widehat{\bm c}_K(\beta)
-    =(\bm P'\bm P)^{-1}\bm P'(\bm Y-\beta\bm X_{lag}),
-    \qquad
-    \widehat{\bm u}(\beta)
-    =\bm M_K(\bm Y-\beta\bm X_{lag}).
-    \label{eq:profile-sieve}
-\end{equation}
-Let \(w_t=w(X_{t-1})\), \(\bm w=(w_1,\ldots,w_T)'\), and define the
-sieve-orthogonalized weight
-\begin{equation}
-    \bm w^c=\bm M_K\bm w,
-    \qquad
-    w_t^c=(\bm w^c)_t.
-    \label{eq:sieve-weight}
-\end{equation}
-The scalar estimating equation is
-\begin{equation}
-    \widehat Z_t(\beta)
-    =\widehat u_t(\beta)w_t^c.
-    \label{eq:profile-score}
-\end{equation}
-The empirical likelihood and its log-likelihood ratio are
-\begin{align}
-    L_T(\beta)
-    &=\sup\left\{
-       \prod_{t=1}^T(T\pi_t):
-       \pi_t\geq0,\quad
-       \sum_{t=1}^T\pi_t=1,\quad
-       \sum_{t=1}^T\pi_t\widehat Z_t(\beta)=0
-       \right\},                                                    \label{eq:profile-el}\\
-    \ell_T(\beta)
-    &=-2\log L_T(\beta)
-      =2\sum_{t=1}^T\log\{1+\widehat\lambda(\beta)
-          \widehat Z_t(\beta)\},                                    \label{eq:profile-elr}
-\end{align}
-where \(\widehat\lambda(\beta)\) solves
-\begin{equation}
-    \sum_{t=1}^T
-       \frac{\widehat Z_t(\beta)}
-            {1+\widehat\lambda(\beta)\widehat Z_t(\beta)}=0.
-    \label{eq:lambda-equation}
-\end{equation}
+% This section gives a formal Wilks theorem for the mean-predictability test.  It is
+% useful to write the nuisance step in null-imposed profile form.  Let
+% \[
+%     \bm Y=(Y_1,\ldots,Y_T)',\qquad
+%     \bm X_{lag}=(X_0,\ldots,X_{T-1})',
+% \]
+% and let \(\bm P\) be the \(T\times K\) matrix whose \(t\)-th row is
+% \(\bm P_K(W_{t-1})'\).  Define
+% \[
+%     \bm\Pi_K=\bm P(\bm P'\bm P)^{-1}\bm P',
+%     \qquad
+%     \bm M_K=\bm I_T-\bm\Pi_K.
+% \]
+% For each candidate value \(\beta\), define the null-imposed profile sieve
+% coefficient and the corresponding residual by
+% \begin{equation}
+%     \widehat{\bm c}_K(\beta)
+%     =(\bm P'\bm P)^{-1}\bm P'(\bm Y-\beta\bm X_{lag}),
+%     \qquad
+%     \widehat{\bm u}(\beta)
+%     =\bm M_K(\bm Y-\beta\bm X_{lag}).
+%     \label{eq:profile-sieve}
+% \end{equation}
+% Let \(w_t=w(X_{t-1})\), \(\bm w=(w_1,\ldots,w_T)'\), and define the
+% sieve-orthogonalized weight
+% \begin{equation}
+%     \bm w^c=\bm M_K\bm w,
+%     \qquad
+%     w_t^c=(\bm w^c)_t.
+%     \label{eq:sieve-weight}
+% \end{equation}
+% The scalar estimating equation is
+% \begin{equation}
+%     \widehat Z_t(\beta)
+%     =\widehat u_t(\beta)w_t^c.
+%     \label{eq:profile-score}
+% \end{equation}
+% The empirical likelihood and its log-likelihood ratio are
+% \begin{align}
+%     L_T(\beta)
+%     &=\sup\left\{
+%        \prod_{t=1}^T(T\pi_t):
+%        \pi_t\geq0,\quad
+%        \sum_{t=1}^T\pi_t=1,\quad
+%        \sum_{t=1}^T\pi_t\widehat Z_t(\beta)=0
+%        \right\},                                                    \label{eq:profile-el}\\
+%     \ell_T(\beta)
+%     &=-2\log L_T(\beta)
+%       =2\sum_{t=1}^T\log\{1+\widehat\lambda(\beta)
+%           \widehat Z_t(\beta)\},                                    \label{eq:profile-elr}
+% \end{align}
+% where \(\widehat\lambda(\beta)\) solves
+% \begin{equation}
+%     \sum_{t=1}^T
+%        \frac{\widehat Z_t(\beta)}
+%             {1+\widehat\lambda(\beta)\widehat Z_t(\beta)}=0.
+%     \label{eq:lambda-equation}
+% \end{equation}
 
-For a vector \(\bm a=(a_1,\ldots,a_T)'\), write
-\(\|\bm a\|_T^2=T^{-1}\sum_{t=1}^T a_t^2\).  Also write
-\[
-    \overline w_T=T^{-1}\sum_{t=1}^T w_t,
-    \qquad
-    \widetilde w_t=w_t-\overline w_T.
-\]
+% For a vector \(\bm a=(a_1,\ldots,a_T)'\), write
+% \(\|\bm a\|_T^2=T^{-1}\sum_{t=1}^T a_t^2\).  Also write
+% \[
+%     \overline w_T=T^{-1}\sum_{t=1}^T w_t,
+%     \qquad
+%     \widetilde w_t=w_t-\overline w_T.
+% \]
 
-\begin{assumption}[CCHT mean-score conditions]
-\label{ass:ccht-core}
-The predictor satisfies
-\(X_t=\theta+\rho_T X_{t-1}+\varepsilon_t\), where \(\rho_T\) belongs to
-one of the persistence classes considered by Cai, Chen, Hong, and Tsvetanov
-(CCHT), including the stationary, mildly integrated, local-to-unity,
-integrated, and mildly explosive cases.  With respect to the filtration
-\[
-    \mathcal H_t
-    =\sigma\{(z_s,\varepsilon_s):s\leq t\}
-       \vee\sigma\{W_s:s\leq t\},
-\]
-\(E(U_t\mid\mathcal H_{t-1})=0\),
-\(\sup_tE|U_t|^{2+\delta}<\infty\) for some \(\delta>0\), and the
-conditional-variance and weight conditions used for the CCHT mean theorem
-hold.  In particular, for
-\[
-    A_T=\frac1{\sqrt T}\sum_{t=1}^T U_t\widetilde w_t,
-    \qquad
-    V_T=\frac1T\sum_{t=1}^T U_t^2\widetilde w_t^2,
-\]
-there exists an a.s. positive, possibly random, variable \(\eta^2\) such that
-\begin{equation}
-    A_T\ \xrightarrow{\mathrm{st}}\ MN(0,\eta^2),
-    \qquad
-    V_T\ \xrightarrow{p}\ \eta^2,
-    \qquad
-    \max_{1\leq t\leq T}|U_t\widetilde w_t|=o_p(\sqrt T).
-    \label{eq:ccht-core}
-\end{equation}
-The raw weight is uniformly bounded and satisfies the CCHT saturation
-condition.
-\end{assumption}
+% \begin{assumption}[Persistent-predictor score conditions]
+% \label{ass:score-core}
+% The predictor satisfies
+% \(X_t=\theta+\rho_T X_{t-1}+\varepsilon_t\), where \(\rho_T\) belongs to
+% one of the admissible persistence classes
+% including the stationary, mildly integrated, local-to-unity,
+% integrated, and mildly explosive cases.  With respect to the filtration
+% \[
+%     \mathcal H_t
+%     =\sigma\{(z_s,\varepsilon_s):s\leq t\}
+%        \vee\sigma\{W_s:s\leq t\},
+% \]
+% \(E(U_t\mid\mathcal H_{t-1})=0\),
+% \(\sup_tE|U_t|^{2+\delta}<\infty\) for some \(\delta>0\), and the
+% conditional-variance and weight conditions needed for the oracle score limit
+% hold.  In particular, for
+% \[
+%     A_T=\frac1{\sqrt T}\sum_{t=1}^T U_t\widetilde w_t,
+%     \qquad
+%     V_T=\frac1T\sum_{t=1}^T U_t^2\widetilde w_t^2,
+% \]
+% there exists an a.s. positive, possibly random, variable \(\eta^2\) such that
+% \begin{equation}
+%     A_T\ \xrightarrow{\mathrm{st}}\ MN(0,\eta^2),
+%     \qquad
+%     V_T\ \xrightarrow{p}\ \eta^2,
+%     \qquad
+%     \max_{1\leq t\leq T}|U_t\widetilde w_t|=o_p(\sqrt T).
+%     \label{eq:score-core}
+% \end{equation}
+% The raw weight is uniformly bounded and satisfies the stated saturation
+% condition.
+% \end{assumption}
 
-\begin{assumption}[Exogenous-covariate sieve orthogonality and projection]
-\label{ass:sieve-projection}
-The first component of \(\bm P_K(W)\) is one.  After centering the remaining
-basis functions in sample, write the corresponding \(T\times(K-1)\) matrix
-as \(\bm R\), so that \(\bm 1_T'\bm R=\bm0\) and
-\(\operatorname{span}(\bm P)=\operatorname{span}(\bm1_T,\bm R)\).  The
-primitive timing restriction is contemporaneous sieve orthogonality:
-\[
-    \mathbb E\left[\bm R_K(W_{t-1})
-    \{w(X_{t-1})-\mathbb E w(X_{t-1})\}\right]=\bm0,
-\]
-where \(\bm R_K(W_{t-1})\) denotes the population counterpart of the centered
-nonconstant sieve vector.  This condition allows \(W_{t-1}\) to affect
-\(Y_t\) and future values of \(X\); it only rules out contemporaneous
-projection of the predictor weight onto the exogenous-covariate sieve.  The
-strict-exogeneity condition in Assumption~\ref{ass:ccht-core} holds with
-contemporaneous exogenous-covariate information included in the conditioning set.
+% \begin{assumption}[Exogenous-covariate sieve orthogonality and projection]
+% \label{ass:sieve-projection}
+% The first component of \(\bm P_K(W)\) is one.  After centering the remaining
+% basis functions in sample, write the corresponding \(T\times(K-1)\) matrix
+% as \(\bm R\), so that \(\bm 1_T'\bm R=\bm0\) and
+% \(\operatorname{span}(\bm P)=\operatorname{span}(\bm1_T,\bm R)\).  The
+% primitive timing restriction is contemporaneous sieve orthogonality:
+% \[
+%     \mathbb E\left[\bm R_K(W_{t-1})
+%     \{w(X_{t-1})-\mathbb E w(X_{t-1})\}\right]=\bm0,
+% \]
+% where \(\bm R_K(W_{t-1})\) denotes the population counterpart of the centered
+% nonconstant sieve vector.  This condition allows \(W_{t-1}\) to affect
+% \(Y_t\) and future values of \(X\); it only rules out contemporaneous
+% projection of the predictor weight onto the exogenous-covariate sieve.  The
+% strict-exogeneity condition in Assumption~\ref{ass:score-core} holds with
+% contemporaneous exogenous-covariate information included in the conditioning set.
 
-There are constants \(0<c<C<\infty\) such that, with probability tending to
-one,
-\[
-    c\leq\lambda_{\min}(T^{-1}\bm R'\bm R)
-      \leq\lambda_{\max}(T^{-1}\bm R'\bm R)\leq C.
-\]
-Let \(\zeta_K=\max_{t\leq T}\|\bm R_t\|\), where \(\bm R_t'\) is row \(t\)
-of \(\bm R\).  The sample analogue of the population orthogonality and the
-remaining increasing-dimensional score bounds are:
-\begin{align}
-    \left\|T^{-1}\bm R'\widetilde{\bm w}\right\|
-        &=O_p\!\left(\sqrt{K/T}\right),                                  \label{eq:rate-Rw}\\
-    \left\|T^{-1/2}\bm R'\bm U\right\|&=O_p(\sqrt K),                    \label{eq:rate-RU}\\
-    \left\|T^{-1}\bm P'\bm U\right\|
-        &=O_p\!\left(\sqrt{K/T}\right),                                  \label{eq:rate-PU}
-\end{align}
-where \(\widetilde{\bm w}=(\widetilde w_1,\ldots,\widetilde w_T)'\) and
-\(\bm U=(U_1,\ldots,U_T)'\).  These bounds follow under the stated sieve
-orthogonality, exponential mixing of \(W_t\), uniformly bounded basis moments,
-and the martingale moment condition in Assumption~\ref{ass:ccht-core}.
-\end{assumption}
+% There are constants \(0<c<C<\infty\) such that, with probability tending to
+% one,
+% \[
+%     c\leq\lambda_{\min}(T^{-1}\bm R'\bm R)
+%       \leq\lambda_{\max}(T^{-1}\bm R'\bm R)\leq C.
+% \]
+% Let \(\zeta_K=\max_{t\leq T}\|\bm R_t\|\), where \(\bm R_t'\) is row \(t\)
+% of \(\bm R\).  The sample analogue of the population orthogonality and the
+% remaining increasing-dimensional score bounds are:
+% \begin{align}
+%     \left\|T^{-1}\bm R'\widetilde{\bm w}\right\|
+%         &=O_p\!\left(\sqrt{K/T}\right),                                  \label{eq:rate-Rw}\\
+%     \left\|T^{-1/2}\bm R'\bm U\right\|&=O_p(\sqrt K),                    \label{eq:rate-RU}\\
+%     \left\|T^{-1}\bm P'\bm U\right\|
+%         &=O_p\!\left(\sqrt{K/T}\right),                                  \label{eq:rate-PU}
+% \end{align}
+% where \(\widetilde{\bm w}=(\widetilde w_1,\ldots,\widetilde w_T)'\) and
+% \(\bm U=(U_1,\ldots,U_T)'\).  These bounds follow under the stated sieve
+% orthogonality, exponential mixing of \(W_t\), uniformly bounded basis moments,
+% and the martingale moment condition in Assumption~\ref{ass:score-core}.
+% \end{assumption}
 
-\begin{assumption}[Approximation and growth rates]
-\label{ass:approximation}
-For some \(\bm c_K\),
-\[
-    m(W_{t-1})=\bm P_K(W_{t-1})'\bm c_K+r_{K,t},
-\]
-where
-\[
-    \|\bm r_K\|_T=O(a_K),\qquad
-    \|\bm r_K\|_\infty=O(a_K),\qquad
-    \sqrt T\,a_K\longrightarrow0.
-\]
-The sieve projector is stable in sup norm on the approximation residual, so
-that \(\|\bm M_K\bm r_K\|_\infty=O(a_K)\).  Moreover,
-\begin{equation}
-    K/\sqrt T\longrightarrow0,
-    \qquad
-    \zeta_K\sqrt{K/T}\longrightarrow0.
-    \label{eq:K-rates}
-\end{equation}
-For normalized spline bases, for which typically \(\zeta_K\asymp\sqrt K\),
-the second condition in \eqref{eq:K-rates} is implied by
-\(K/\sqrt T\to0\).  If \(a_K\asymp K^{-s/d}\), a sufficient rate window is
-\(T^{d/(2s)}\ll K\ll T^{1/2}\), which is nonempty when \(s>d\).
-\end{assumption}
+% \begin{assumption}[Approximation and growth rates]
+% \label{ass:approximation}
+% For some \(\bm c_K\),
+% \[
+%     m(W_{t-1})=\bm P_K(W_{t-1})'\bm c_K+r_{K,t},
+% \]
+% where
+% \[
+%     \|\bm r_K\|_T=O(a_K),\qquad
+%     \|\bm r_K\|_\infty=O(a_K),\qquad
+%     \sqrt T\,a_K\longrightarrow0.
+% \]
+% The sieve projector is stable in sup norm on the approximation residual, so
+% that \(\|\bm M_K\bm r_K\|_\infty=O(a_K)\).  Moreover,
+% \begin{equation}
+%     K/\sqrt T\longrightarrow0,
+%     \qquad
+%     \zeta_K\sqrt{K/T}\longrightarrow0.
+%     \label{eq:K-rates}
+% \end{equation}
+% For normalized spline bases, for which typically \(\zeta_K\asymp\sqrt K\),
+% the second condition in \eqref{eq:K-rates} is implied by
+% \(K/\sqrt T\to0\).  If \(a_K\asymp K^{-s/d}\), a sufficient rate window is
+% \(T^{d/(2s)}\ll K\ll T^{1/2}\), which is nonempty when \(s>d\).
+% \end{assumption}
 
-\begin{assumption}[Nondegeneracy and convex hull]
-\label{ass:convex-hull}
-There exists \(\underline\eta>0\) such that
-\(P(\eta^2\geq\underline\eta^2)=1\).  In addition,
-\[
-    P\left\{
-      \min_{1\leq t\leq T}\widehat Z_t(\beta_0)<0<
-      \max_{1\leq t\leq T}\widehat Z_t(\beta_0)
-    \right\}\longrightarrow1.
-\]
-\end{assumption}
+% \begin{assumption}[Nondegeneracy and convex hull]
+% \label{ass:convex-hull}
+% There exists \(\underline\eta>0\) such that
+% \(P(\eta^2\geq\underline\eta^2)=1\).  In addition,
+% \[
+%     P\left\{
+%       \min_{1\leq t\leq T}\widehat Z_t(\beta_0)<0<
+%       \max_{1\leq t\leq T}\widehat Z_t(\beta_0)
+%     \right\}\longrightarrow1.
+% \]
+% \end{assumption}
 
-\begin{lemma}[Negligibility of the growing sieve projection]
-\label{lem:projection-negligible}
-Under Assumptions~\ref{ass:sieve-projection}--\ref{ass:approximation},
-\begin{align}
-    \|\bm w^c-\widetilde{\bm w}\|_T
-       &=O_p\!\left(\sqrt{K/T}\right),                                   \label{eq:weight-L2}\\
-    \max_{t\leq T}|w_t^c-\widetilde w_t|
-       &=O_p\!\left(\zeta_K\sqrt{K/T}\right)=o_p(1),                    \label{eq:weight-max}\\
-    \frac1{\sqrt T}\sum_{t=1}^T
-       U_t(w_t^c-\widetilde w_t)
-       &=O_p(K/\sqrt T)=o_p(1),                                           \label{eq:weight-score}\\
-    \|\bm\Pi_K\bm U\|_T
-       &=O_p\!\left(\sqrt{K/T}\right),                                  \label{eq:U-proj-L2}\\
-    \max_{t\leq T}|(\bm\Pi_K\bm U)_t|
-       &=O_p\!\left(\zeta_K\sqrt{K/T}\right)=o_p(1).                   \label{eq:U-proj-max}
-\end{align}
-\end{lemma}
+% \begin{lemma}[Negligibility of the growing sieve projection]
+% \label{lem:projection-negligible}
+% Under Assumptions~\ref{ass:sieve-projection}--\ref{ass:approximation},
+% \begin{align}
+%     \|\bm w^c-\widetilde{\bm w}\|_T
+%        &=O_p\!\left(\sqrt{K/T}\right),                                   \label{eq:weight-L2}\\
+%     \max_{t\leq T}|w_t^c-\widetilde w_t|
+%        &=O_p\!\left(\zeta_K\sqrt{K/T}\right)=o_p(1),                    \label{eq:weight-max}\\
+%     \frac1{\sqrt T}\sum_{t=1}^T
+%        U_t(w_t^c-\widetilde w_t)
+%        &=O_p(K/\sqrt T)=o_p(1),                                           \label{eq:weight-score}\\
+%     \|\bm\Pi_K\bm U\|_T
+%        &=O_p\!\left(\sqrt{K/T}\right),                                  \label{eq:U-proj-L2}\\
+%     \max_{t\leq T}|(\bm\Pi_K\bm U)_t|
+%        &=O_p\!\left(\zeta_K\sqrt{K/T}\right)=o_p(1).                   \label{eq:U-proj-max}
+% \end{align}
+% \end{lemma}
 
-\begin{proof}
-Because the sieve contains a constant and \(\bm1_T'\bm R=\bm0\), residualizing
-\(\bm w\) on \(\bm P\) is equivalent to residualizing
-\(\widetilde{\bm w}\) on \(\bm R\).  Hence
-\[
-    \bm w^c=\widetilde{\bm w}-\bm R\widehat{\bm\delta}_K,
-    \qquad
-    \widehat{\bm\delta}_K
-       =(\bm R'\bm R)^{-1}\bm R'\widetilde{\bm w}.
-\]
-The Gram-matrix condition and \eqref{eq:rate-Rw} imply
-\(\|\widehat{\bm\delta}_K\|=O_p(\sqrt{K/T})\).  Therefore,
-\[
-    \|\bm R\widehat{\bm\delta}_K\|_T^2
-       =\widehat{\bm\delta}_K'
-          (T^{-1}\bm R'\bm R)\widehat{\bm\delta}_K
-       =O_p(K/T),
-\]
-which proves \eqref{eq:weight-L2}; and
-\[
-    \max_t|\bm R_t'\widehat{\bm\delta}_K|
-       \leq\zeta_K\|\widehat{\bm\delta}_K\|
-       =O_p\!\left(\zeta_K\sqrt{K/T}\right),
-\]
-which proves \eqref{eq:weight-max}.  Moreover,
-\[
-    \frac1{\sqrt T}\bm U'(\bm w^c-\widetilde{\bm w})
-      =-\left(T^{-1/2}\bm R'\bm U\right)'
-          \widehat{\bm\delta}_K
-      =O_p(\sqrt K)O_p\!\left(\sqrt{K/T}\right)
-      =O_p(K/\sqrt T),
-\]
-giving \eqref{eq:weight-score}.
+% \begin{proof}
+% Because the sieve contains a constant and \(\bm1_T'\bm R=\bm0\), residualizing
+% \(\bm w\) on \(\bm P\) is equivalent to residualizing
+% \(\widetilde{\bm w}\) on \(\bm R\).  Hence
+% \[
+%     \bm w^c=\widetilde{\bm w}-\bm R\widehat{\bm\delta}_K,
+%     \qquad
+%     \widehat{\bm\delta}_K
+%        =(\bm R'\bm R)^{-1}\bm R'\widetilde{\bm w}.
+% \]
+% The Gram-matrix condition and \eqref{eq:rate-Rw} imply
+% \(\|\widehat{\bm\delta}_K\|=O_p(\sqrt{K/T})\).  Therefore,
+% \[
+%     \|\bm R\widehat{\bm\delta}_K\|_T^2
+%        =\widehat{\bm\delta}_K'
+%           (T^{-1}\bm R'\bm R)\widehat{\bm\delta}_K
+%        =O_p(K/T),
+% \]
+% which proves \eqref{eq:weight-L2}; and
+% \[
+%     \max_t|\bm R_t'\widehat{\bm\delta}_K|
+%        \leq\zeta_K\|\widehat{\bm\delta}_K\|
+%        =O_p\!\left(\zeta_K\sqrt{K/T}\right),
+% \]
+% which proves \eqref{eq:weight-max}.  Moreover,
+% \[
+%     \frac1{\sqrt T}\bm U'(\bm w^c-\widetilde{\bm w})
+%       =-\left(T^{-1/2}\bm R'\bm U\right)'
+%           \widehat{\bm\delta}_K
+%       =O_p(\sqrt K)O_p\!\left(\sqrt{K/T}\right)
+%       =O_p(K/\sqrt T),
+% \]
+% giving \eqref{eq:weight-score}.
 
-Finally, let
-\(\widehat{\bm a}_U=(\bm P'\bm P)^{-1}\bm P'\bm U\).  The Gram condition
-and \eqref{eq:rate-PU} imply
-\(\|\widehat{\bm a}_U\|=O_p(\sqrt{K/T})\).  The same quadratic-form and
-maximum-row arguments give \eqref{eq:U-proj-L2} and
-\eqref{eq:U-proj-max}.
-\end{proof}
+% Finally, let
+% \(\widehat{\bm a}_U=(\bm P'\bm P)^{-1}\bm P'\bm U\).  The Gram condition
+% and \eqref{eq:rate-PU} imply
+% \(\|\widehat{\bm a}_U\|=O_p(\sqrt{K/T})\).  The same quadratic-form and
+% maximum-row arguments give \eqref{eq:U-proj-L2} and
+% \eqref{eq:U-proj-max}.
+% \end{proof}
 
-\begin{lemma}[Asymptotic equivalence of the feasible and oracle scores]
-\label{lem:score-equivalence}
-Under Assumptions~\ref{ass:ccht-core}--\ref{ass:approximation}, under
-\(H_0:\beta=\beta_0\),
-\begin{align}
-    S_T
-      :=\frac1{\sqrt T}\sum_{t=1}^T\widehat Z_t(\beta_0)
-      &=\frac1{\sqrt T}\sum_{t=1}^T U_t\widetilde w_t+o_p(1),             \label{eq:numerator-equivalence}\\
-    \widehat V_T
-      :=\frac1T\sum_{t=1}^T\widehat Z_t(\beta_0)^2
-      &=\frac1T\sum_{t=1}^T U_t^2\widetilde w_t^2+o_p(1),                \label{eq:variance-equivalence}\\
-    \max_{t\leq T}|\widehat Z_t(\beta_0)|&=o_p(\sqrt T).                \label{eq:max-score}
-\end{align}
-\end{lemma}
+% \begin{lemma}[Asymptotic equivalence of the feasible and oracle scores]
+% \label{lem:score-equivalence}
+% Under Assumptions~\ref{ass:score-core}--\ref{ass:approximation}, under
+% \(H_0:\beta=\beta_0\),
+% \begin{align}
+%     S_T
+%       :=\frac1{\sqrt T}\sum_{t=1}^T\widehat Z_t(\beta_0)
+%       &=\frac1{\sqrt T}\sum_{t=1}^T U_t\widetilde w_t+o_p(1),             \label{eq:numerator-equivalence}\\
+%     \widehat V_T
+%       :=\frac1T\sum_{t=1}^T\widehat Z_t(\beta_0)^2
+%       &=\frac1T\sum_{t=1}^T U_t^2\widetilde w_t^2+o_p(1),                \label{eq:variance-equivalence}\\
+%     \max_{t\leq T}|\widehat Z_t(\beta_0)|&=o_p(\sqrt T).                \label{eq:max-score}
+% \end{align}
+% Consequently, \(\widehat V_T\xrightarrow{p}\eta^2\).
+% \end{lemma}
 
-\begin{proof}
-Under the null,
-\[
-    \bm Y-\beta_0\bm X_{lag}
-       =\bm P\bm c_K+\bm r_K+\bm U,
-    \qquad
-    \widehat{\bm u}(\beta_0)
-       =\bm M_K(\bm U+\bm r_K).
-\]
-Because \(\bm M_K\) is symmetric and idempotent and
-\(\bm w^c=\bm M_K\bm w\),
-\begin{align*}
-    S_T
-      &=T^{-1/2}\widehat{\bm u}(\beta_0)'\bm w^c\\
-      &=T^{-1/2}(\bm U+\bm r_K)'\bm M_K^2\bm w\\
-      &=T^{-1/2}(\bm U+\bm r_K)'\bm w^c.
-\end{align*}
-Lemma~\ref{lem:projection-negligible} gives
-\(T^{-1/2}\bm U'\bm w^c
-  =T^{-1/2}\bm U'\widetilde{\bm w}+o_p(1)\).  Also, by Cauchy--Schwarz and
-the contraction property of an orthogonal projection,
-\[
-    \left|T^{-1/2}\bm r_K'\bm w^c\right|
-       \leq\sqrt T\,\|\bm r_K\|_T\|\bm w^c\|_T
-       \leq\sqrt T\,\|\bm r_K\|_T\|\bm w\|_T
-       =o_p(1).
-\]
-This proves \eqref{eq:numerator-equivalence}.
+% \begin{proof}
+% Under the null,
+% \[
+%     \bm Y-\beta_0\bm X_{lag}
+%        =\bm P\bm c_K+\bm r_K+\bm U,
+%     \qquad
+%     \widehat{\bm u}(\beta_0)
+%        =\bm M_K(\bm U+\bm r_K).
+% \]
+% Because \(\bm M_K\) is symmetric and idempotent and
+% \(\bm w^c=\bm M_K\bm w\),
+% \begin{align*}
+%     S_T
+%       &=T^{-1/2}\widehat{\bm u}(\beta_0)'\bm w^c\\
+%       &=T^{-1/2}(\bm U+\bm r_K)'\bm M_K^2\bm w\\
+%       &=T^{-1/2}(\bm U+\bm r_K)'\bm w^c.
+% \end{align*}
+% Lemma~\ref{lem:projection-negligible} gives
+% \(T^{-1/2}\bm U'\bm w^c
+%   =T^{-1/2}\bm U'\widetilde{\bm w}+o_p(1)\).  Also, by Cauchy--Schwarz and
+% the contraction property of an orthogonal projection,
+% \[
+%     \left|T^{-1/2}\bm r_K'\bm w^c\right|
+%        \leq\sqrt T\,\|\bm r_K\|_T\|\bm w^c\|_T
+%        \leq\sqrt T\,\|\bm r_K\|_T\|\bm w\|_T
+%        =o_p(1).
+% \]
+% This proves \eqref{eq:numerator-equivalence}.
 
-For the second-moment result, define
-\[
-    e_{u,t}=\widehat u_t(\beta_0)-U_t,
-    \qquad
-    e_{w,t}=w_t^c-\widetilde w_t.
-\]
-Then
-\[
-    \bm e_u=-\bm\Pi_K\bm U+\bm M_K\bm r_K,
-\]
-so that, by Lemma~\ref{lem:projection-negligible} and projection contraction,
-\[
-    \|\bm e_u\|_T
-       =O_p\!\left(\sqrt{K/T}+a_K\right)=o_p(1).
-\]
-Moreover, \(\max_t|e_{w,t}|=o_p(1)\),
-\(\max_t|w_t^c|=O_p(1)\), and \(T^{-1}\sum_tU_t^2=O_p(1)\).  Since
-\[
-    \widehat Z_t(\beta_0)-U_t\widetilde w_t
-       =e_{u,t}w_t^c+U_te_{w,t},
-\]
-it follows that
-\begin{align*}
-    \frac1T\sum_{t=1}^T
-       \{\widehat Z_t(\beta_0)-U_t\widetilde w_t\}^2
-    &\leq
-       2\max_t|w_t^c|^2\|\bm e_u\|_T^2
-       +2\max_t|e_{w,t}|^2\frac1T\sum_{t=1}^TU_t^2\\
-    &=o_p(1).
-\end{align*}
-Equation \eqref{eq:variance-equivalence} now follows from Cauchy--Schwarz.
+% For the denominator result, define the feasible-oracle residuals
+% \[
+%     \Delta_{u,t}=\widehat u_t(\beta_0)-U_t,
+%     \qquad
+%     \Delta_{w,t}=w_t^c-\widetilde w_t,
+%     \qquad
+%     \Delta_{Z,t}=\widehat Z_t(\beta_0)-U_t\widetilde w_t.
+% \]
+% Then
+% \[
+%     \bm\Delta_u=-\bm\Pi_K\bm U+\bm M_K\bm r_K,
+% \]
+% so that, by Lemma~\ref{lem:projection-negligible} and projection contraction,
+% \[
+%     \|\bm\Delta_u\|_T
+%        =O_p\!\left(\sqrt{K/T}+a_K\right)=o_p(1).
+% \]
+% Moreover, \(\max_t|\Delta_{w,t}|=o_p(1)\),
+% \(\max_t|w_t^c|=O_p(1)\), and \(T^{-1}\sum_tU_t^2=O_p(1)\).  Since
+% \[
+%     \Delta_{Z,t}
+%        =\Delta_{u,t}w_t^c+U_t\Delta_{w,t},
+% \]
+% it follows that
+% \begin{align*}
+%     \|\bm\Delta_Z\|_T^2
+%     &\leq
+%        2\max_t|w_t^c|^2\|\bm\Delta_u\|_T^2
+%        +2\max_t|\Delta_{w,t}|^2\frac1T\sum_{t=1}^TU_t^2\\
+%     &=o_p(1).
+% \end{align*}
+% Let \(V_T=T^{-1}\sum_{t=1}^TU_t^2\widetilde w_t^2\).  Then
+% \[
+%     \widehat V_T-V_T
+%       =\frac2T\sum_{t=1}^T U_t\widetilde w_t\Delta_{Z,t}
+%         +\|\bm\Delta_Z\|_T^2.
+% \]
+% By Cauchy--Schwarz,
+% \[
+%     |\widehat V_T-V_T|
+%       \leq 2V_T^{1/2}\|\bm\Delta_Z\|_T+\|\bm\Delta_Z\|_T^2
+%       =o_p(1),
+% \]
+% because \(V_T=O_p(1)\) by Assumption~\ref{ass:score-core}.  This proves
+% \eqref{eq:variance-equivalence}; the displayed convergence of
+% \(\widehat V_T\) follows from \(V_T\xrightarrow{p}\eta^2\) in
+% Assumption~\ref{ass:score-core}.
 
-Finally, \(\max_t|U_t|=o_p(\sqrt T)\) follows from the uniform
-\((2+\delta)\)-moment bound.  Together with
-\eqref{eq:U-proj-max}, the sup-norm stability of \(\bm M_K\bm r_K\), and
-\(\max_t|w_t^c|=O_p(1)\), this proves \eqref{eq:max-score}.
-\end{proof}
+% Finally, \(\max_t|U_t|=o_p(\sqrt T)\) follows from the uniform
+% \((2+\delta)\)-moment bound.  Together with
+% \eqref{eq:U-proj-max}, the sup-norm stability of \(\bm M_K\bm r_K\), and
+% \(\max_t|w_t^c|=O_p(1)\), this proves \eqref{eq:max-score}.
+% \end{proof}
 
-\begin{theorem}[Wilks phenomenon for sieve-orthogonalized mean EL]
-\label{thm:sieve-wilks}
-Suppose Assumptions~\ref{ass:ccht-core}--\ref{ass:convex-hull} hold.  Then,
-under \(H_0:\beta=\beta_0\),
-\begin{equation}
-    \ell_T(\beta_0)\ \xrightarrow{d}\ \chi_1^2.
-    \label{eq:wilks-result}
-\end{equation}
-The conclusion holds for each predictor-persistence class covered by the CCHT
-mean theorem.
-\end{theorem}
+% \begin{theorem}[Wilks phenomenon for sieve-orthogonalized mean EL]
+% \label{thm:sieve-wilks}
+% Suppose Assumptions~\ref{ass:score-core}--\ref{ass:convex-hull} hold.  Then,
+% under \(H_0:\beta=\beta_0\),
+% \begin{equation}
+%     \ell_T(\beta_0)\ \xrightarrow{d}\ \chi_1^2.
+%     \label{eq:wilks-result}
+% \end{equation}
+% The conclusion holds for each predictor-persistence class covered by the high-level
+% mean theorem.
+% \end{theorem}
 
-\begin{proof}
-By Lemma~\ref{lem:score-equivalence} and
-Assumption~\ref{ass:ccht-core},
-\[
-    S_T\ \xrightarrow{\mathrm{st}}\ MN(0,\eta^2),
-    \qquad
-    \widehat V_T\ \xrightarrow{p}\eta^2.
-\]
-Consequently,
-\begin{equation}
-    \frac{S_T}{\sqrt{\widehat V_T}}
-       \ \xrightarrow{\mathrm{st}}\ N(0,1),
-    \qquad
-    \frac{S_T^2}{\widehat V_T}
-       \ \xrightarrow{d}\chi_1^2.
-    \label{eq:self-normalized-limit}
-\end{equation}
+% \begin{proof}
+% By Lemma~\ref{lem:score-equivalence} and
+% Assumption~\ref{ass:score-core},
+% \[
+%     S_T\ \xrightarrow{\mathrm{st}}\ MN(0,\eta^2),
+%     \qquad
+%     \widehat V_T\ \xrightarrow{p}\eta^2.
+% \]
+% Consequently,
+% \begin{equation}
+%     \frac{S_T}{\sqrt{\widehat V_T}}
+%        \ \xrightarrow{\mathrm{st}}\ N(0,1),
+%     \qquad
+%     \frac{S_T^2}{\widehat V_T}
+%        \ \xrightarrow{d}\chi_1^2.
+%     \label{eq:self-normalized-limit}
+% \end{equation}
 
-It remains to connect the self-normalized statistic to empirical likelihood.
-Write \(\widehat Z_t=\widehat Z_t(\beta_0)\) and
-\(\widehat\lambda=\widehat\lambda(\beta_0)\).  The convex-hull condition,
-\(S_T=O_p(1)\), \(\widehat V_T\to_p\eta^2>0\), and
-\(\max_t|\widehat Z_t|=o_p(\sqrt T)\) imply the standard scalar-EL bounds
-\[
-    \widehat\lambda=O_p(T^{-1/2}),
-    \qquad
-    \max_{t\leq T}|\widehat\lambda\widehat Z_t|=o_p(1).
-\]
-Expanding the multiplier equation \eqref{eq:lambda-equation} gives
-\[
-    0=\sum_{t=1}^T\widehat Z_t
-      -\widehat\lambda\sum_{t=1}^T\widehat Z_t^2
-      +o_p(\sqrt T),
-\]
-and hence
-\begin{equation}
-    \widehat\lambda
-       =\frac{\sum_{t=1}^T\widehat Z_t}
-              {\sum_{t=1}^T\widehat Z_t^2}
-        +o_p(T^{-1/2}).
-    \label{eq:lambda-expansion}
-\end{equation}
-A second-order expansion of \eqref{eq:profile-elr}, together with
-\(\max_t|\widehat\lambda\widehat Z_t|=o_p(1)\), yields
-\begin{align*}
-    \ell_T(\beta_0)
-      &=2\widehat\lambda\sum_{t=1}^T\widehat Z_t
-        -\widehat\lambda^2\sum_{t=1}^T\widehat Z_t^2+o_p(1)\\
-      &=\frac{\left(T^{-1/2}\sum_{t=1}^T\widehat Z_t\right)^2}
-              {T^{-1}\sum_{t=1}^T\widehat Z_t^2}
-        +o_p(1)\\
-      &=\frac{S_T^2}{\widehat V_T}+o_p(1).
-\end{align*}
-The result follows from \eqref{eq:self-normalized-limit} and Slutsky's
-theorem.
-\end{proof}
+% It remains to connect the self-normalized statistic to empirical likelihood.
+% Write \(\widehat Z_t=\widehat Z_t(\beta_0)\) and
+% \(\widehat\lambda=\widehat\lambda(\beta_0)\).  The convex-hull condition,
+% \(S_T=O_p(1)\), \(\widehat V_T\to_p\eta^2>0\), and
+% \(\max_t|\widehat Z_t|=o_p(\sqrt T)\) imply the standard scalar-EL bounds
+% \[
+%     \widehat\lambda=O_p(T^{-1/2}),
+%     \qquad
+%     \max_{t\leq T}|\widehat\lambda\widehat Z_t|=o_p(1).
+% \]
+% Expanding the multiplier equation \eqref{eq:lambda-equation} gives
+% \[
+%     0=\sum_{t=1}^T\widehat Z_t
+%       -\widehat\lambda\sum_{t=1}^T\widehat Z_t^2
+%       +o_p(\sqrt T),
+% \]
+% and hence
+% \begin{equation}
+%     \widehat\lambda
+%        =\frac{\sum_{t=1}^T\widehat Z_t}
+%               {\sum_{t=1}^T\widehat Z_t^2}
+%         +o_p(T^{-1/2}).
+%     \label{eq:lambda-expansion}
+% \end{equation}
+% A second-order expansion of \eqref{eq:profile-elr}, together with
+% \(\max_t|\widehat\lambda\widehat Z_t|=o_p(1)\), yields
+% \begin{align*}
+%     \ell_T(\beta_0)
+%       &=2\widehat\lambda\sum_{t=1}^T\widehat Z_t
+%         -\widehat\lambda^2\sum_{t=1}^T\widehat Z_t^2+o_p(1)\\
+%       &=\frac{\left(T^{-1/2}\sum_{t=1}^T\widehat Z_t\right)^2}
+%               {T^{-1}\sum_{t=1}^T\widehat Z_t^2}
+%         +o_p(1)\\
+%       &=\frac{S_T^2}{\widehat V_T}+o_p(1).
+% \end{align*}
+% The result follows from \eqref{eq:self-normalized-limit} and Slutsky's
+% theorem.
+% \end{proof}
 
-\begin{corollary}[Test of no mean predictability]
-\label{cor:mean-test}
-For \(H_0:\beta=0\), reject at asymptotic level \(\alpha\) whenever
-\[
-    \ell_T(0)>\chi^2_{1,1-\alpha}.
-\]
-Equivalently, the asymptotic \(p\)-value is
-\(1-F_{\chi_1^2}\{\ell_T(0)\}\).  A confidence set for \(\beta\) is obtained
-by inversion:
-\[
-    \mathcal C_{1-\alpha}
-      =\{\beta:\ell_T(\beta)\leq\chi^2_{1,1-\alpha}\}.
-\]
-\end{corollary}
+% \begin{corollary}[Test of no mean predictability]
+% \label{cor:mean-test}
+% For \(H_0:\beta=0\), reject at asymptotic level \(\alpha\) whenever
+% \[
+%     \ell_T(0)>\chi^2_{1,1-\alpha}.
+% \]
+% Equivalently, the asymptotic \(p\)-value is
+% \(1-F_{\chi_1^2}\{\ell_T(0)\}\).  A confidence set for \(\beta\) is obtained
+% by inversion:
+% \[
+%     \mathcal C_{1-\alpha}
+%       =\{\beta:\ell_T(\beta)\leq\chi^2_{1,1-\alpha}\}.
+% \]
+% \end{corollary}
 
-\begin{remark}[Relation to the unrestricted two-stage estimator]
-\label{rem:unrestricted-chat}
-The profile construction \eqref{eq:profile-sieve} is the cleanest route to
-Theorem~\ref{thm:sieve-wilks}: at \(\beta_0\), the fitted nuisance error is
-exactly \(\bm\Pi_K(\bm U+\bm r_K)\), whose prediction norm is
-\(O_p(\sqrt{K/T}+a_K)\).  If one instead retains a separately estimated
-unrestricted coefficient \(\widehat{\bm c}\), the same theorem continues to
-hold provided one proves the additional generated-nuisance condition
-\[
-    \frac1T\sum_{t=1}^T
-       \left\{\bm P_K(W_{t-1})'
-              (\widehat{\bm c}-\bm c_K)\right\}^2(w_t^c)^2=o_p(1)
-\]
-and the corresponding maximum-term bound.  Those statements do not follow
-from the algebraic identity \(\bm P'\bm w^c=\bm0\) alone.
-\end{remark}
+% \begin{remark}[Relation to the unrestricted two-stage estimator]
+% \label{rem:unrestricted-chat}
+% The profile construction \eqref{eq:profile-sieve} is the cleanest route to
+% Theorem~\ref{thm:sieve-wilks}: at \(\beta_0\), the fitted nuisance error is
+% exactly \(\bm\Pi_K(\bm U+\bm r_K)\), whose prediction norm is
+% \(O_p(\sqrt{K/T}+a_K)\).  If one instead retains a separately estimated
+% unrestricted coefficient \(\widehat{\bm c}\), the same theorem continues to
+% hold provided one proves the additional generated-nuisance condition
+% \[
+%     \frac1T\sum_{t=1}^T
+%        \left\{\bm P_K(W_{t-1})'
+%               (\widehat{\bm c}-\bm c_K)\right\}^2(w_t^c)^2=o_p(1)
+% \]
+% and the corresponding maximum-term bound.  Those statements do not follow
+% from the algebraic identity \(\bm P'\bm w^c=\bm0\) alone.
+% \end{remark}
 
-\begin{remark}[Why the same argument is not immediately a quantile theorem]
-\label{rem:quantile}
-For a quantile score \(\psi_\tau(u)=\tau-\mathbf1\{u<0\}\), the nuisance error
-enters nonlinearly:
-\[
-  \psi_\tau\!\left(U_{t,\tau}+r_{K,t}
-       -\bm P_K(W_{t-1})'(\widehat{\bm c}_\tau-\bm c_{K,\tau})\right).
-\]
-Therefore \(\bm P'\bm w^c=\bm0\) does not algebraically cancel the first-stage
-error.  A first-order expansion instead produces a density-weighted term of
-the form
-\[
-  \sum_{t=1}^T f_{t,\tau}(0)
-       \bm P_K(W_{t-1})w_t^c,
-\]
-which is not generally zero.  A quantile extension would require either a
-restrictive condition making \(f_{t,\tau}(0)\) constant with respect to the
-predictor, or a new density-weighted orthogonalization and additional
-nonparametric-rate arguments.  Thus Theorem~\ref{thm:sieve-wilks} is a
-complete and natural endpoint for the mean paper, whereas a general quantile
-extension is a separate methodological problem.
-\end{remark}
+% \begin{remark}[Why the same argument is not immediately a quantile theorem]
+% \label{rem:quantile}
+% For a quantile score \(\psi_\tau(u)=\tau-\mathbf1\{u<0\}\), the nuisance error
+% enters nonlinearly:
+% \[
+%   \psi_\tau\!\left(U_{t,\tau}+r_{K,t}
+%        -\bm P_K(W_{t-1})'(\widehat{\bm c}_\tau-\bm c_{K,\tau})\right).
+% \]
+% Therefore \(\bm P'\bm w^c=\bm0\) does not algebraically cancel the first-stage
+% error.  A first-order expansion instead produces a density-weighted term of
+% the form
+% \[
+%   \sum_{t=1}^T f_{t,\tau}(0)
+%        \bm P_K(W_{t-1})w_t^c,
+% \]
+% which is not generally zero.  A quantile extension would require either a
+% restrictive condition making \(f_{t,\tau}(0)\) constant with respect to the
+% predictor, or a new density-weighted orthogonalization and additional
+% nonparametric-rate arguments.  Thus Theorem~\ref{thm:sieve-wilks} is a
+% complete and natural endpoint for the mean paper, whereas a general quantile
+% extension is a separate methodological problem.
+% \end{remark}
 
-\section{Conclusion}
+% \section{Conclusion}
 
-Standard predictive regressions often absorb nonlinear exogenous state
-variables into a fixed intercept or the regression error. That simplification
-can leave important nuisance variation in the residual and can interact poorly
-with highly persistent predictors. This paper instead treats the intercept
-component as an unknown function $m(W)$, profiles it out under each candidate
-$\beta$, and residualizes the EL weight against the same sieve space.
+% Standard predictive regressions often absorb nonlinear exogenous state
+% variables into a fixed intercept or the regression error. That simplification
+% can leave important nuisance variation in the residual and can interact poorly
+% with highly persistent predictors. This paper instead treats the intercept
+% component as an unknown function $m(W)$, profiles it out under each candidate
+% $\beta$, and residualizes the EL weight against the same sieve space.
 
-The AR(1) specification is used only to describe the persistence class of the
-predictor. The empirical likelihood statistic itself does not estimate or
-include AR residuals. The resulting orthogonalized Sieve-EL statistic provides
-standard inference on mean predictability while allowing a flexible
-exogenous-control component. Weather shocks in commodity markets are one
-motivating application, but the theory applies more generally to stationary
-exogenous covariates satisfying the stated orthogonality and regularity
-conditions.
+% The AR(1) specification is used only to describe the persistence class of the
+% predictor. The empirical likelihood statistic itself does not estimate or
+% include AR residuals. The resulting orthogonalized Sieve-EL statistic provides
+% standard inference on mean predictability while allowing a flexible
+% exogenous-control component. Weather shocks in commodity markets are one
+% motivating application, but the theory applies more generally to stationary
+% exogenous covariates satisfying the stated orthogonality and regularity
+% conditions.
 
 \end{document}

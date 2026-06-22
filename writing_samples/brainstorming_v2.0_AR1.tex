@@ -46,7 +46,7 @@ Motivated by Perron (1989), our goal is to investigate return predictability whi
 \end{aligned}
 \end{equation}
 
-By extending the empirical likelihood (EL) framework of Cai et al. (2026), we propose a two-stage Orthogonalized Sieve-EL framework that achieves a standard $\chi^2_1$ limiting distribution under the null.
+We propose a two-stage Orthogonalized Sieve-EL framework that achieves a standard $\chi^2_1$ limiting distribution under the null under high-level persistent-predictor score conditions.
 
 \section{Empirical Motivation: Weather Shocks and Cocoa Futures}
 
@@ -73,7 +73,7 @@ We handle the unknown nonparametric curve $m(W_{t-1})$ by approximating it using
 The estimation and inference procedure is implemented sequentially via the following five steps, detailing the explicit matrix algebra that guarantees robustness.
 
 \subsubsection*{Step 1: The First-Stage AR(1) (Purging the Predictor)}
-Following the methodology of Cai \& Wang (2014), we first isolate the true innovations of the highly persistent predictor $X_t$. We estimate a first-order autoregression via OLS:
+We first isolate the innovations of the highly persistent predictor $X_t$ by estimating a first-order autoregression via OLS:
 \begin{equation}
     X_t = \theta + \rho X_{t-1} + \varepsilon_t, \quad t=1,\dots,T
 \end{equation}
@@ -86,7 +86,7 @@ We then compute and save the estimated residuals, which act as our proxy for the
     \widehat{\varepsilon}_t = X_t - \widehat{\theta} - \widehat{\rho} X_{t-1}
 \end{equation}
 
-\subsubsection*{Step 2: The Joint Sieve-Cai-Wang Estimation (Purging the Weather Curve)}
+\subsubsection*{Step 2: The Joint Sieve-AR(1) Estimation (Purging the Weather Curve)}
 To estimate the nonparametric weather curve $m(W_{t-1})$ without absorbing any endogenous financial shocks, we set up a joint OLS regression. The return shock is decomposed as $U_t = \phi \varepsilon_t + z_t$. Substituting this into the return equation yields the full regression model:
 \begin{equation}
     Y_t = \bm{P}_K(W_{t-1})' \bm{c} + \beta X_{t-1} + \phi \widehat{\varepsilon}_t + \text{error}_t
@@ -149,13 +149,13 @@ Because the condition is structurally stripped of estimation variance, the sampl
     \ell_T(\beta_0) = 2 \sum_{t=1}^T \log(1 + \widehat{\lambda} Z_t(\beta_0)) \xrightarrow{d} \chi^2_1
 \end{equation}
 
-\subsection{Comparison with Cai et al. (2026)}
+\subsection{Relation to Fixed-Intercept Predictive EL}
 
-Our framework differs from the two-stage approach of Cai et al. (2026) in three fundamental aspects:
+The framework differs from fixed-intercept predictive EL in three fundamental aspects:
 \begin{itemize}
-    \item \textbf{Nuisance Dimensionality}: Cai et al. (2026) handle a fixed scalar intercept $\alpha$, whereas our model contains an infinite-dimensional nuisance function $m(W_{t-1})$, which requires a sieve approximation of dimension $K \to \infty$.
-    \item \textbf{Orthogonalization Space}: In Cai et al. (2026), the weight centering $w^c(x) = w(x) - \frac{1}{T}\sum w(X_s)$ represents a projection onto the constant subspace $\text{span}\{\bm{1}\}$. In contrast, our orthogonalized weight $w^c_t$ is projected onto the $K$-dimensional sieve space $\text{span}\{\bm{P}_K(W_{t-1})\}$.
-    \item \textbf{Purging and Exogeneity}: By jointly estimating the sieve basis alongside $X_{t-1}$ and $\widehat{\varepsilon}_t$, we ensure the nonparametric components are fully immune to both omitted variable bias and Stambaugh endogeneity bias, mirroring the core philosophy of CCHT.
+    \item \textbf{Nuisance Dimensionality}: A fixed scalar intercept $\alpha$ is replaced by an infinite-dimensional nuisance function $m(W_{t-1})$, which requires a sieve approximation of dimension $K \to \infty$.
+    \item \textbf{Orthogonalization Space}: Simple weight demeaning against the constant subspace $\text{span}\{\bm{1}\}$ is replaced by projection onto the $K$-dimensional sieve space $\text{span}\{\bm{P}_K(W_{t-1})\}$.
+    \item \textbf{Purging and Exogeneity}: By jointly estimating the sieve basis alongside $X_{t-1}$ and $\widehat{\varepsilon}_t$, the nonparametric component is protected against omitted predictor signal and predictor-innovation endogeneity.
 \end{itemize}
 
 \section{The Growth Rate of the Sieve Dimension $K$}
@@ -270,12 +270,12 @@ For a vector \(\bm a=(a_1,\ldots,a_T)'\), write
     \widetilde w_t=w_t-\overline w_T.
 \]
 
-\begin{assumption}[CCHT mean-score conditions]
-\label{ass:ccht-core}
+\begin{assumption}[Persistent-predictor score conditions]
+\label{ass:score-core}
 The predictor satisfies
 \(X_t=\theta+\rho_T X_{t-1}+\varepsilon_t\), where \(\rho_T\) belongs to
-one of the persistence classes considered by Cai, Chen, Hong, and Tsvetanov
-(CCHT), including the stationary, mildly integrated, local-to-unity,
+one of the admissible persistence classes
+including the stationary, mildly integrated, local-to-unity,
 integrated, and mildly explosive cases.  With respect to the filtration
 \[
     \mathcal H_t
@@ -284,7 +284,7 @@ integrated, and mildly explosive cases.  With respect to the filtration
 \]
 \(E(U_t\mid\mathcal H_{t-1})=0\),
 \(\sup_tE|U_t|^{2+\delta}<\infty\) for some \(\delta>0\), and the
-conditional-variance and weight conditions used for the CCHT mean theorem
+conditional-variance and weight conditions needed for the oracle score limit
 hold.  In particular, for
 \[
     A_T=\frac1{\sqrt T}\sum_{t=1}^T U_t\widetilde w_t,
@@ -298,9 +298,9 @@ there exists an a.s. positive, possibly random, variable \(\eta^2\) such that
     V_T\ \xrightarrow{p}\ \eta^2,
     \qquad
     \max_{1\leq t\leq T}|U_t\widetilde w_t|=o_p(\sqrt T).
-    \label{eq:ccht-core}
+    \label{eq:score-core}
 \end{equation}
-The raw weight is uniformly bounded and satisfies the CCHT saturation
+The raw weight is uniformly bounded and satisfies the stated saturation
 condition.
 \end{assumption}
 
@@ -308,7 +308,7 @@ condition.
 \label{ass:sieve-projection}
 The entire weather process is independent of
 \(\{X_0,z_t,\varepsilon_t:t\geq1\}\), and the strict-exogeneity condition in
-Assumption~\ref{ass:ccht-core} holds after enlarging the filtration by the
+Assumption~\ref{ass:score-core} holds after enlarging the filtration by the
 entire weather path.  The first component of \(\bm P_K(W)\) is one.  After
 centering the remaining basis functions in sample, write the corresponding
 \(T\times(K-1)\) matrix as \(\bm R\), so that
@@ -333,7 +333,7 @@ where \(\widetilde{\bm w}=(\widetilde w_1,\ldots,\widetilde w_T)'\) and
 \(\bm U=(U_1,\ldots,U_T)'\).  These bounds are implied, for example, by
 process independence, exponential mixing of \(W_t\), uniformly bounded basis
 moments, and the martingale moment condition in
-Assumption~\ref{ass:ccht-core}.
+Assumption~\ref{ass:score-core}.
 \end{assumption}
 
 \begin{assumption}[Approximation and growth rates]
@@ -436,7 +436,7 @@ maximum-row arguments give \eqref{eq:U-proj-L2} and
 
 \begin{lemma}[Asymptotic equivalence of the feasible and oracle scores]
 \label{lem:score-equivalence}
-Under Assumptions~\ref{ass:ccht-core}--\ref{ass:approximation}, under
+Under Assumptions~\ref{ass:score-core}--\ref{ass:approximation}, under
 \(H_0:\beta=\beta_0\),
 \begin{align}
     S_T
@@ -518,19 +518,19 @@ Finally, \(\max_t|U_t|=o_p(\sqrt T)\) follows from the uniform
 
 \begin{theorem}[Wilks phenomenon for sieve-orthogonalized mean EL]
 \label{thm:sieve-wilks}
-Suppose Assumptions~\ref{ass:ccht-core}--\ref{ass:convex-hull} hold.  Then,
+Suppose Assumptions~\ref{ass:score-core}--\ref{ass:convex-hull} hold.  Then,
 under \(H_0:\beta=\beta_0\),
 \begin{equation}
     \ell_T(\beta_0)\ \xrightarrow{d}\ \chi_1^2.
     \label{eq:wilks-result}
 \end{equation}
-The conclusion holds for each predictor-persistence class covered by the CCHT
-mean theorem.
+The conclusion holds for each predictor-persistence class covered by the high-level
+score condition.
 \end{theorem}
 
 \begin{proof}
 By Lemma~\ref{lem:score-equivalence} and
-Assumption~\ref{ass:ccht-core},
+Assumption~\ref{ass:score-core},
 \[
     S_T\ \xrightarrow{\mathrm{st}}\ MN(0,\eta^2),
     \qquad
@@ -642,6 +642,6 @@ extension is a separate methodological problem.
 
 \section{Conclusion}
 
-When researchers use standard predictive regressions, they are often forced to assume a constant intercept to maintain mathematical tractability. Consequently, all other exogenous macro-environmental factors are relegated to the error term. While this preserves the null hypothesis, it artificially inflates the residual variance, mathematically obliterating the test's power to detect true financial predictability. Our Orthogonalized Sieve-EL estimator, augmented with the CCHT first-stage AR(1) purging step, allows researchers to surgically remove arbitrary, non-linear environmental noise without violating the stringent requirements of Empirical Likelihood or suffering from Stambaugh bias. By doing so, the framework fully recovers the lost signal of the persistent predictor, offering a powerful tool for complex, real-world scenarios such as commodity pricing.
+When researchers use standard predictive regressions, they are often forced to assume a constant intercept to maintain mathematical tractability. Consequently, other exogenous macro-environmental factors are relegated to the error term. While this preserves the null hypothesis, it can inflate residual variance and weaken the test's power to detect financial predictability. The Orthogonalized Sieve-EL estimator removes nonlinear environmental noise through sieve profiling and protects the persistent-predictor signal through weight orthogonalization, while retaining standard empirical-likelihood calibration under the stated score conditions.
 
 \end{document}

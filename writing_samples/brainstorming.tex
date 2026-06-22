@@ -39,7 +39,7 @@ Motivated by Perron (1989), our goal is to investigate return predictability whi
 \end{aligned}
 \end{equation}
 
-By extending the empirical likelihood (EL) framework of Cai et al. (2026), we propose a two-stage Orthogonalized Sieve-EL framework that achieves a standard $\chi^2_1$ limiting distribution under the null.
+We propose a two-stage Orthogonalized Sieve-EL framework that achieves a standard $\chi^2_1$ limiting distribution under the null under high-level persistent-predictor score conditions.
 
 \section{Motivating Empirical Example: El Ni\~no and Cocoa Futures Returns}
 
@@ -119,12 +119,12 @@ Therefore, the third term vaporizes algebraically:
 \end{equation}
 This indicates that the first-stage estimation error $\widehat{\bm{c}} - \bm{c}$ is completely eliminated in-sample.
 
-\subsection{Comparison with Cai et al. (2026)}
+\subsection{Relation to Fixed-Intercept Predictive EL}
 
-Our framework differs from the two-stage approach of Cai et al. (2026) in three fundamental aspects:
+The framework differs from fixed-intercept predictive EL in three fundamental aspects:
 \begin{itemize}
-    \item \textbf{Nuisance Dimensionality}: Cai et al. (2026) handle a fixed scalar intercept $\alpha$, whereas our model contains an infinite-dimensional nuisance function $m(W_{t-1})$, which requires a sieve approximation of dimension $K \to \infty$.
-    \item \textbf{Orthogonalization Space}: In Cai et al. (2026), the weight centering $w^c(x) = w(x) - \frac{1}{T}\sum w(X_s)$ represents a projection onto the constant subspace $\text{span}\{\bm{1}\}$. In contrast, our orthogonalized weight $w^c_t$ is projected onto the $K$-dimensional sieve space $\text{span}\{\bm{P}_K(W_{t-1})\}$.
+    \item \textbf{Nuisance Dimensionality}: A fixed scalar intercept $\alpha$ is replaced by an infinite-dimensional nuisance function $m(W_{t-1})$, which requires a sieve approximation of dimension $K \to \infty$.
+    \item \textbf{Orthogonalization Space}: Simple weight demeaning against the constant subspace $\text{span}\{\bm{1}\}$ is replaced by projection onto the $K$-dimensional sieve space $\text{span}\{\bm{P}_K(W_{t-1})\}$.
     \item \textbf{Purging and Exogeneity}: Because our weather covariate $W_t$ is strictly exogenous and independent of the predictor $X_t$, the OLS estimator in Step 1 is consistent without requiring the addition of predictor innovations $\widehat{v}_t$ to the regression.
 \end{itemize}
 
@@ -154,7 +154,7 @@ If $W$ is scalar and $m(W)$ is twice-differentiable ($d=1$, $s=2$), the conditio
 
 \section{The Formal Independence Assumption}
 
-To ensure the algebraic orthogonalization rigorously eliminates the nonparametric estimation bias without requiring complex residual-augmented matrices (as in Cai et al., 2026), we must formally state the economic relationship between the financial market predictor and the exogenous weather shock. We impose the following two independence conditions on $W_{t-1}$:
+To ensure the algebraic orthogonalization rigorously eliminates the nonparametric estimation bias, we must formally state the economic relationship between the financial market predictor and the exogenous weather shock. We impose the following two independence conditions on $W_{t-1}$:
 
 \paragraph*{Assumption 5.1 (Strict Exogeneity to the Market Shock)} \textit{The weather variable $W_{t-1}$ is strictly exogenous to the financial market innovation $U_t$. Mathematically:}
 \begin{equation}
