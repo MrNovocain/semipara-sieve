@@ -1,0 +1,5 @@
+﻿method: oracle_bounded
+weight:
+  name: tanh
+  params:
+    b: 1.0

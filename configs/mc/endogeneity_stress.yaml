@@ -1,0 +1,56 @@
+experiment:
+  name: endogeneity_stress
+  task: stress
+  n_replications: 1000
+  global_seed: 20260704
+  beta0: 0.0
+  alpha: 0.05
+
+dgp:
+  name: predictive_ar1
+  params:
+    T_values: [250]
+    rho_designs:
+      - {label: stationary_high, formula: fixed, value: 0.95}
+      - {label: local_to_unity, formula: local, c: 5}
+      - {label: unit_root, formula: fixed, value: 1.0}
+    beta: 0.0
+    a_w: 0.5
+    kappa: 0.5
+    xi: 0.3
+    burnin: 300
+    x_initialization: zero_at_sample_start
+    m:
+      name: sinus_quad
+      params:
+        a1: 0.5
+        a2: 0.3
+
+sieve:
+  basis: polynomial
+  include_intercept: true
+  standardize_w: true
+  K_values: [6]
+
+weights:
+  bounded_main:
+    name: tanh
+    params:
+      b: 8.0
+
+methods:
+  - oracle_bounded
+  - profile_bounded
+  - profile_efficient
+
+el:
+  solver:
+    tolerance: 1.0e-10
+    max_iter: 100
+    infeasible_value: .inf
+
+outputs:
+  root: results
+  save_raw: true
+  save_diagnostics: true
+  overwrite: false

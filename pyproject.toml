@@ -12,6 +12,8 @@ dependencies = [
     "numpy",
     "pandas",
     "scipy",
+    "PyYAML",
+    "pyarrow",
 ]
 
 [tool.setuptools.packages.find]

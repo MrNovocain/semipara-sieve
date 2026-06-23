@@ -1,0 +1,317 @@
+\documentclass[10pt]{book}
+\usepackage[sectionbib]{natbib}
+\usepackage{array,epsfig,fancyheadings,rotating}
+\usepackage{hyperref}
+\usepackage{xr-hyper}
+\externaldocument{profile_sieve_geometric_paper}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{amsthm}
+\usepackage{bm}
+\usepackage{graphicx}
+\graphicspath{{writing_samples/figures/}{figures/}}
+
+\textwidth=31.9pc
+\textheight=46.5pc
+\oddsidemargin=1pc
+\evensidemargin=1pc
+\headsep=15pt
+\headheight=28pt
+\topmargin=.6cm
+\parindent=1.7pc
+\parskip=0pt
+
+\numberwithin{equation}{section}
+\setcounter{page}{1}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+\newtheorem{proposition}{Proposition}
+\newtheorem{assumption}{Assumption}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{example}{Example}
+\newtheorem{remark}{Remark}
+
+\pagestyle{fancy}
+\def\n{\noindent}
+\lhead[\fancyplain{} \leftmark]{}
+\chead[]{}
+\rhead[]{\fancyplain{}\rightmark}
+\cfoot{\thepage}
+
+\begin{document}
+
+\renewcommand{\baselinestretch}{2}
+
+\markright{ \hbox{\footnotesize\rm Statistica Sinica: Supplement
+%{\footnotesize\bf 24} (201?), 000-000
+}\hfill\\[-13pt]
+\hbox{\footnotesize\rm
+%\href{http://dx.doi.org/10.5705/ss.20??.???}{doi:http://dx.doi.org/10.5705/ss.20??.???}
+}\hfill }
+
+\markboth{\hfill{\footnotesize\rm SIYAN DONG} \hfill}
+{\hfill {\footnotesize\rm PROFILE SIEVE EMPIRICAL LIKELIHOOD} \hfill}
+
+\renewcommand{\thefootnote}{}
+$\ $\par \fontsize{12}{14pt plus.8pt minus .6pt}\selectfont
+
+\centerline{\large\bf PERSISTENCE-ROBUST PROFILE SIEVE}
+\vspace{2pt}
+\centerline{\large\bf EMPIRICAL LIKELIHOOD}
+\vspace{2pt}
+\centerline{\large\bf ORACLE EQUIVALENCE AND EFFICIENCY TRADEOFFS}
+\vspace{.25cm}
+\centerline{Siyan Dong}
+\vspace{.4cm}
+\centerline{\it KU}
+\vspace{.55cm}
+\centerline{\bf Supplementary Material}
+\vspace{.55cm}
+\fontsize{9}{11.5pt plus.8pt minus .6pt}\selectfont
+\noindent
+This supplement contains complete technical details for the main manuscript. Section S1 proves the projection identities, feasible--oracle equivalence, scalar empirical-likelihood expansion, and the Wilks theorem. Section S2 derives the conditional-moment efficiency benchmark and squared-angle representation. Section S3 records additional Monte Carlo design and reproducibility details.
+\par
+
+\setcounter{section}{0}
+\setcounter{equation}{0}
+\renewcommand{\thesection}{S\arabic{section}}
+\renewcommand{\theequation}{\thesection.\arabic{equation}}
+\renewcommand{\thelemma}{S\arabic{lemma}}
+\renewcommand{\theproposition}{S\arabic{proposition}}
+\renewcommand{\thecorollary}{S\arabic{corollary}}
+\renewcommand{\thetheorem}{S\arabic{theorem}}
+\renewcommand{\theremark}{S\arabic{remark}}
+
+\fontsize{12}{14pt plus.8pt minus .6pt}\selectfont
+\section{Technical Lemmas and Proof of Theorem}
+Throughout the appendix, all notation is as defined in the main text. Under \(H_0:\beta=\beta_0\), write
+\[
+    \bm Y-\beta_0\bm X_{lag}=\bm P\bm c_K+\bm r_K+\bm U,
+    \qquad
+    \widehat{\bm u}(\beta_0)=\bm M_K(\bm U+\bm r_K).
+\]
+The equalities involving \(\bm M_K\) are projection equalities in the empirical Hilbert space \((\mathbb R^T,\langle\cdot,\cdot\rangle_T)\).
+
+\begin{lemma}[Matched projection identities]
+\label{lem:geo-projection}
+Under Assumptions~\ref*{ass:geo-projection}--\ref*{ass:geo-approx},
+\[
+    \bm P'\bm w^c=\bm0,
+    \qquad
+    \|\bm\Pi_K\bm U\|_T=O_p(\sqrt{K/T}),
+    \qquad
+    \max_{t\leq T}|(\bm\Pi_K\bm U)_t|=o_p(1).
+\]
+\end{lemma}
+
+\begin{proof}
+The first equality is exact because \(\bm w^c=\bm M_K\bm w\) and \(\bm M_K\) is the orthogonal projector onto \(\operatorname{span}(\bm P)^\perp\). The two bounds for \(\bm\Pi_K\bm U\) are the sample projection bounds imposed in Assumption~\ref*{ass:geo-projection}. In standard compact-support or truncated stationary alpha-mixing designs, they follow from the stable Gram matrix and the empirical-process rate for \(T^{-1}\bm P'\bm U\).
+\end{proof}
+
+\begin{lemma}[Feasible-oracle score and variance equivalence]
+\label{lem:geo-score}
+Under Assumptions~\ref*{ass:geo-score}--\ref*{ass:geo-approx}, under \(H_0:\beta=\beta_0\),
+\begin{align}
+    S_T:=T^{-1/2}\sum_{t=1}^T\widehat Z_t(\beta_0)
+      &=T^{-1/2}\sum_{t=1}^TU_tw_t^c+o_p(1),
+      \label{eq:geo-num-eq}\\
+    \widehat V_T:=T^{-1}\sum_{t=1}^T\widehat Z_t(\beta_0)^2
+      &=T^{-1}\sum_{t=1}^TU_t^2(w_t^c)^2+o_p(1),
+      \label{eq:geo-var-eq}\\
+    \max_{t\leq T}|\widehat Z_t(\beta_0)|&=o_p(\sqrt T).
+      \label{eq:geo-max-eq}
+\end{align}
+Consequently, \(\widehat V_T\xrightarrow{p}\eta_K^2\).
+\end{lemma}
+
+\begin{proof}
+Because \(\bm M_K\) is symmetric idempotent and \(\bm w^c=\bm M_K\bm w\),
+\[
+    S_T=T^{-1/2}\{\bm M_K(\bm U+\bm r_K)\}'\bm w^c
+        =T^{-1/2}(\bm U+\bm r_K)'\bm w^c.
+\]
+The approximation residual satisfies
+\[
+    |T^{-1/2}\bm r_K'\bm w^c|
+      \leq \sqrt T\|\bm r_K\|_T\|\bm w^c\|_T
+      \leq \sqrt T\|\bm r_K\|_T\|\bm w\|_T=o_p(1),
+\]
+where the second inequality uses the contraction property of orthogonal projection. This proves \eqref{eq:geo-num-eq}.
+
+For the denominator, define the feasible-oracle distance
+\[
+    \Delta_{u,t}=\widehat u_t(\beta_0)-U_t,
+    \qquad
+    \Delta_{Z,t}=\widehat Z_t(\beta_0)-U_tw_t^c=\Delta_{u,t}w_t^c.
+\]
+Here
+\[
+    \bm\Delta_u=-\bm\Pi_K\bm U+\bm M_K\bm r_K.
+\]
+Assumptions~\ref*{ass:geo-projection}--\ref*{ass:geo-approx} give
+\[
+    \|\bm\Delta_u\|_T=O_p(\sqrt{K/T}+a_K)=o_p(1).
+\]
+Since \(\max_t|w_t^c|=O_p(1)\),
+\[
+    \|\bm\Delta_Z\|_T^2
+    \leq \max_t|w_t^c|^2\|\bm\Delta_u\|_T^2=o_p(1).
+\]
+Thus the feasible score vector and the matched-projection oracle vector \((U_tw_t^c)_{t=1}^T\) are \(o_p(1)\) apart in empirical distance. If \(V_T^K=T^{-1}\sum_tU_t^2(w_t^c)^2\), then
+\[
+    \widehat V_T-V_T^K
+      =\frac2T\sum_{t=1}^TU_tw_t^c\Delta_{Z,t}
+       +\|\bm\Delta_Z\|_T^2.
+\]
+Cauchy--Schwarz gives
+\[
+    |\widehat V_T-V_T^K|
+      \leq 2(V_T^K)^{1/2}\|\bm\Delta_Z\|_T+\|\bm\Delta_Z\|_T^2=o_p(1),
+\]
+because \(V_T^K=O_p(1)\) by Assumption~\ref*{ass:geo-score}. This proves \eqref{eq:geo-var-eq}, and \(\widehat V_T\to_p\eta_K^2\) follows from (\ref*{eq:geo-oracle}).
+
+Finally, Assumption~\ref*{ass:geo-score} gives the oracle maximum-score condition. Combining that condition with \(\max_t|w_t^c|=O_p(1)\), (\ref*{eq:geo-u-proj-max}), and the sup-norm stability of \(\bm M_K\bm r_K\) proves \eqref{eq:geo-max-eq}.
+\end{proof}
+
+\begin{lemma}[Scalar empirical-likelihood expansion]
+\label{lem:geo-el-expansion}
+Let \(Z_{t,T}\) be scalar scores and define
+\[
+    S_T^Z=T^{-1/2}\sum_{t=1}^TZ_{t,T},
+    \qquad
+    \widehat V_T^Z=T^{-1}\sum_{t=1}^TZ_{t,T}^2.
+\]
+Let \(\ell_T^Z=2\sum_{t=1}^T\log(1+\widehat\lambda Z_{t,T})\), where \(\widehat\lambda\) solves the scalar EL multiplier equation. Suppose the EL convex-hull condition holds, \(S_T^Z=O_p(1)\), \(\widehat V_T^Z\to_p\eta^2\) with \(P(\eta^2\geq\underline\eta^2)=1\) for some \(\underline\eta>0\), and \(\max_{t\leq T}|Z_{t,T}|=o_p(\sqrt T)\). Then
+\[
+    \widehat\lambda
+      =\frac{\sum_{t=1}^TZ_{t,T}}
+             {\sum_{t=1}^TZ_{t,T}^2}
+       +o_p(T^{-1/2}),
+    \qquad
+    \ell_T^Z=\frac{(S_T^Z)^2}{\widehat V_T^Z}+o_p(1).
+\]
+\end{lemma}
+
+\begin{proof}
+The convex-hull condition gives existence of the scalar EL multiplier with probability tending to one. Since \(S_T^Z=O_p(1)\) and \(\widehat V_T^Z\) is bounded away from zero with probability tending to one, the multiplier equation implies \(\widehat\lambda=O_p(T^{-1/2})\). The maximum-score condition then gives \(\max_t|\widehat\lambda Z_{t,T}|=o_p(1)\). Expanding
+\[
+    0=\sum_{t=1}^T\frac{Z_{t,T}}{1+\widehat\lambda Z_{t,T}}
+\]
+around zero gives
+\[
+    0=\sum_{t=1}^TZ_{t,T}
+      -\widehat\lambda\sum_{t=1}^TZ_{t,T}^2
+      +o_p(\sqrt T),
+\]
+where the remainder is controlled by
+\(\widehat\lambda^2\sum_t |Z_{t,T}|^3
+ \,\leq\,\widehat\lambda^2\max_t|Z_{t,T}|\sum_t Z_{t,T}^2=o_p(\sqrt T)\).
+This proves the displayed expansion for \(\widehat\lambda\). A second-order expansion of the log likelihood gives
+\[
+    \ell_T^Z
+      =2\widehat\lambda\sum_{t=1}^TZ_{t,T}
+       -\widehat\lambda^2\sum_{t=1}^TZ_{t,T}^2
+       +o_p(1),
+\]
+with remainder bounded by
+\(|\widehat\lambda|^3\max_t|Z_{t,T}|\sum_tZ_{t,T}^2=o_p(1)\). Substituting the multiplier expansion yields \(\ell_T^Z=(S_T^Z)^2/\widehat V_T^Z+o_p(1)\).
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref*{thm:geo-wilks}]
+By Assumption~\ref*{ass:geo-score} and Lemma~\ref{lem:geo-score},
+\[
+    S_T\xrightarrow{\mathrm{st}}MN(0,\eta_K^2),
+    \qquad
+    \widehat V_T\xrightarrow{p}\eta_K^2.
+\]
+Thus \(S_T=O_p(1)\), and self-normalization gives \(S_T^2/\widehat V_T\xrightarrow{d}\chi_1^2\). Applying Lemma~\ref{lem:geo-el-expansion} to \(Z_{t,T}=\widehat Z_t(\beta_0)\) gives
+\[
+    \ell_T(\beta_0)=\frac{S_T^2}{\widehat V_T}+o_p(1).
+\]
+The result follows by Slutsky's theorem.
+\end{proof}
+
+\section{Efficiency Benchmark Derivations}
+\label{sec:supp-efficiency}
+
+\begin{proof}[Derivation of Proposition~\ref*{prop:geo-eff-direction}]
+Suppress the time subscript. The conditional-mean score direction for \(\beta\) is \(qXU\). A nuisance perturbation \(m_\eta(W)=m(W)+\eta h(W)\) has score direction \(qh(W)U\). The least favorable projection therefore chooses \(\mu_q(W)\) so that
+\[
+    E\left[\{qXU-q\mu_q(W)U\}qh(W)U\right]
+    =E\left[q\{X-\mu_q(W)\}h(W)\right]
+    =0
+\]
+for every square-integrable \(h(W)\). This normal equation gives
+\[
+    \mu_q(W)=\frac{E(qX\mid W)}{E(q\mid W)}.
+\]
+The residual score direction is \(q\{X-\mu_q(W)\}U=qVU\). Its variance is
+\[
+    E\{(qVU)^2\}=E(q^2V^2U^2)=E(qV^2),
+\]
+which is the conditional-mean efficient information. The efficient influence function is the inverse information times the efficient score.
+\end{proof}
+
+\begin{proof}[Derivation of Proposition~\ref*{prop:geo-eff-angle}]
+The sample moment based on \(g\) has derivative \(-E(gX)\) with respect to \(\beta\) and long-run one-period variance \(E(g^2U^2)=E(\sigma^2g^2)\) under the maintained martingale-difference setup. Because \(g\) is orthogonal to every function of \(W\),
+\[
+    E(gX)=E\{g[X-\mu_q(W)]\}=E(gV).
+\]
+Thus
+\[
+    \operatorname{AVAR}(g)
+    =\frac{E(\sigma^2g^2)}{\{E(gV)\}^2}.
+\]
+With \(g^\star=qV\) and \(\langle a,b\rangle_{\sigma^2}=E(\sigma^2ab)\),
+\[
+    \langle g,g^\star\rangle_{\sigma^2}=E(gV),
+    \qquad
+    \|g^\star\|_{\sigma^2}^2=E(V^2/\sigma^2)=\mathcal I_{\mathrm{eff}}.
+\]
+Therefore
+\[
+    \operatorname{RE}(g)
+    =\frac{\langle g,g^\star\rangle_{\sigma^2}^2}
+           {\|g\|_{\sigma^2}^2\|g^\star\|_{\sigma^2}^2}
+    =\cos_{\sigma^2}^2\angle(g,g^\star)
+    \leq1.
+\]
+The equality condition in Cauchy--Schwarz is exact collinearity, so equality holds if and only if \(g\propto g^\star=qV\).
+\end{proof}
+
+\begin{proof}[Derivation of Proposition~\ref*{prop:geo-eff-attain}]
+The first statement is the equality case of Proposition~\ref*{prop:geo-eff-angle}: using \(g_t^\star=q_tV_t\) makes the weighted angle with the efficient direction equal to zero, so \(\operatorname{RE}(g^\star)=1\). In the homoskedastic submodel, \(q_t\) is a common constant and can be dropped from a scalar EL moment. The efficient instrument is therefore \(X_{t-1}-E(X_{t-1}\mid W_{t-1})\), and the sieve analogue is \(\bm M_K\bm X_{lag}\). The displayed formula for \(\widehat\beta_{\mathrm{eff}}\) is the root of the corresponding residualized sample moment.
+
+For the persistent triangular-array statement, write the oracle efficient score as \(\xi_{t,T}=q_tV_{t,T}U_t\). If the scaled oracle CLT, denominator consistency, maximum-score condition, and feasible--oracle replacement hold at the information scale \(r_T\), then Lemma~\ref{lem:geo-el-expansion} applies to the normalized score \((\sqrt T/r_T)\xi_{t,T}\). Multiplying all EL moments by the common nonzero factor \(\sqrt T/r_T\) leaves the EL constraint and likelihood ratio unchanged, so the normalization only records the proof scale. The resulting efficient-weight statistic therefore attains the conditional-moment information bound associated with \(J\).
+\end{proof}
+\section{Monte Carlo Design and Reproducibility Details}
+
+The headline simulation design uses
+\[
+    Y_t=m(W_{t-1})+\beta X_{t-1}+U_t,
+    \qquad
+    X_t=\rho_T X_{t-1}+V_t,
+    \qquad
+    W_t=a_WW_{t-1}+\eta_t,
+\]
+with \(a_W=0.5\), \(W_t\) initialized from its stationary Gaussian distribution, and
+\[
+    \begin{pmatrix}U_t\\ V_t\\ \eta_t\end{pmatrix}
+    \sim N\left(0,
+    \begin{pmatrix}
+    1&\kappa&0\\
+    \kappa&1&\xi\\
+    0&\xi&1
+    \end{pmatrix}\right).
+\]
+The headline Wilks design sets \(\kappa=0\), \(\xi=0.3\),
+\(m(w)=0.5\sin(w)+0.3(w^2-1)\), \(K=6\), and initializes the persistent predictor from \(X_0=0\) at the sample start. The nuisance process receives a burn-in; the unit-root predictor is not given a random-walk burn-in because such a burn-in is not a stationary initialization device.
+
+The main bounded weight is \(w_b(x)=\tanh(x/b)\) with \(b=8\), which keeps the matched-projection unit-root score nondegenerate in the \(T=250\) design. The frontier experiment uses \(b\in\{0.25,0.5,1,2,4,8\}\). The headline size table in the main paper is generated by \texttt{configs/mc/size\_main.yaml}, and the frontier figure is generated by \texttt{configs/mc/frontier\_main.yaml}. Each run writes the raw replication file, config hash, manifest, environment record, deterministic summary tables, and figures.
+
+A stress design with \(\kappa=0.5\) is kept separate from the headline Wilks design. At \(T=250\) and \(b=8\), the unit-root oracle and profile rejection frequencies are both 0.113 in the current simulation output. This stress result is used only to show that the high-level oracle Wilks conditions are substantive under contemporaneous endogeneity and unit-root persistence; it is not a sieve-profiling failure because the feasible statistic continues to track its matched-projection oracle counterpart.
+
+\end{document}

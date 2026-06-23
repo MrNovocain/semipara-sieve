@@ -1,0 +1,18 @@
+﻿name: baseline
+params:
+  T_values: [100, 250, 500]
+  rho_designs:
+    - {label: stationary_low, formula: fixed, value: 0.5}
+    - {label: stationary_high, formula: fixed, value: 0.95}
+    - {label: local_to_unity, formula: local, c: 5}
+    - {label: unit_root, formula: fixed, value: 1.0}
+  beta: 0.0
+  a_w: 0.5
+  kappa: 0.5
+  xi: 0.3
+  burnin: 300
+  m:
+    name: sinus_quad
+    params:
+      a1: 0.5
+      a2: 0.3

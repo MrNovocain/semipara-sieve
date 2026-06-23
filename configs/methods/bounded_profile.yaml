@@ -1,0 +1,9 @@
+﻿method: profile_bounded
+weight:
+  name: tanh
+  params:
+    b: 1.0
+basis:
+  basis: polynomial
+  include_intercept: true
+  standardize_w: true

@@ -7,7 +7,7 @@
 
 ## Hard Constraints
 - Do not modify `writing_samples/profile sieve.tex`.
-- Keep Monte Carlo outputs in `result/`, preferably in timestamped folders or timestamped filenames.
+- Keep Monte Carlo outputs in `results/<run_id>/` through the config-driven runner.
 - Prefer reproducible scripts over one-off notebook or shell-only experiments.
 - Keep personal application materials outside the paper workflow.
 - Keep local background PDFs in [knowledge](knowledge/), which is intentionally gitignored.
@@ -18,8 +18,8 @@
 
 ## Replicable Modular Structure
 - Put raw inputs under `data/raw/` and cleaned analysis inputs under `data/processed/`.
-- Put generated tables, figures, and simulation summaries under `result/`; do not put generated plots in the repository root.
-- Keep reusable implementation logic in `src/profile_sieve/` and command-line workflows in `scripts/` rather than notebook-only cells.
+- Put generated tables, figures, and simulation summaries under `results/<run_id>/`; do not put generated plots in the repository root.
+- Keep reusable implementation logic in `src/pseel/` and command-line workflows in `python -m pseel.run`, `scripts/make_tables.py`, and `scripts/make_figures.py` rather than notebook-only cells.
 - Keep paper-facing writing in `writing_samples/`; do not mix CV, transcript, advisor-selection, or admissions material into paper directories.
 - Keep each computational claim auditable from source code plus saved CSV or figure output.
 
