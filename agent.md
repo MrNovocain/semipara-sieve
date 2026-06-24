@@ -32,7 +32,7 @@
   - What direction leads to a good result.
   - What direction does not lead to a good result.
   - Any adjustment needed in the current workflow.
-
+  - You should double check everything again from begnining everytime you have modified ANYTHING.
 ## Monte Carlo Visual Workflow
 - Iterate until the generated graphs are visually usable and statistically interpretable.
 - Preserve theory-facing diagnostics separately from stress-test diagnostics.

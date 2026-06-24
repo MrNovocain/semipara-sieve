@@ -1,6 +1,6 @@
 \documentclass[12pt]{article} %***
 \usepackage[sectionbib]{natbib}
-\usepackage{array,epsfig,fancyheadings,rotating}
+\usepackage{array,epsfig,fancyhdr,rotating}
 \usepackage{sectsty,secdot}
 \usepackage{amsmath}
 \usepackage{amssymb}
@@ -38,6 +38,9 @@
 \newtheorem{example}{Example}
 \newtheorem{remark}{Remark}
 
+\newcommand{\ind}{\mathbf 1}
+\newcommand{\R}{\mathbb R}
+
 \pagestyle{fancy}
 \def\n{\noindent}
 \lhead[\fancyplain{} \leftmark]{}
@@ -53,21 +56,20 @@
 %{\footnotesize\bf 24} (201?), 000-000
 }\hfill\\[-13pt]
 \hbox{\footnotesize\rm
-%\href{http://dx.doi.org/10.5705/ss.20??.???}{doi:http://dx.doi.org/10.5705/ss.20??.???}
 }\hfill }
 
 \markboth{\hfill{\footnotesize\rm SIYAN DONG} \hfill}
-{\hfill {\footnotesize\rm PROFILE SIEVE EMPIRICAL LIKELIHOOD} \hfill}
+{\hfill {\footnotesize\rm MULTIPLE NUISANCE BREAKS AND PREDICTABILITY} \hfill}
 
 \renewcommand{\thefootnote}{}
 $\ $\par
 
 \fontsize{12}{14pt plus.8pt minus .6pt}\selectfont \vspace{0.8pc}
-\centerline{\large\bf PERSISTENCE-ROBUST PROFILE SIEVE}
+\centerline{\large\bf MULTIPLE NUISANCE BREAKS AND}
 \vspace{2pt}
-\centerline{\large\bf EMPIRICAL LIKELIHOOD}
+\centerline{\large\bf SPURIOUS PREDICTABILITY UNDER}
 \vspace{2pt}
-\centerline{\large\bf ORACLE EQUIVALENCE AND EFFICIENCY TRADEOFFS}
+\centerline{\large\bf PERSISTENT REGRESSORS}
 \vspace{.4cm}
 \centerline{Siyan Dong}
 \vspace{.4cm}
@@ -76,11 +78,11 @@ $\ $\par
 
 \begin{quotation}
 \noindent {\it Abstract:}
-We study empirical-likelihood inference for the predictive regression model \(Y_t=m(W_{t-1})+\beta X_{t-1}+U_t\), where the predictor may exhibit varying degrees of persistence and the nuisance component \(m\) is unknown. We construct a profile-sieve score by simultaneously residualizing the regression equation and a bounded saturated instrument against the nuisance sieve space. The feasible score is first-order equivalent to its oracle counterpart, thereby preserving the persistence-robust Wilks phenomenon and yielding a common chi-square calibration across persistence regimes. We further derive the conditional-moment efficient score under the maintained conditional-mean model and show that the relative efficiency of any nuisance-orthogonal weighted score is determined by its squared weighted angle with the efficient direction. This characterization reveals an explicit tradeoff between conditional-moment efficiency and persistence-robust pivotality and provides conditions under which the efficiency bound is attainable. Monte Carlo evidence confirms that the feasible statistic tracks the oracle bounded statistic across stationary, local-to-unity, and unit-root designs, while the saturation scale traces a visible robustness--efficiency frontier.
+We study inference on a stable predictive coefficient in a semiparametric predictive regression where the predictor may be highly persistent and the nonparametric nuisance component may undergo finitely many structural breaks at unknown dates. Imposing a stable nuisance function leaves a break-induced component in the orthogonalized empirical-likelihood score. When this component is aligned with the residualized persistent weight, a standard stable-nuisance procedure can report spurious evidence of predictability even when the predictive coefficient is zero. We propose a break-adaptive profile-sieve empirical likelihood. For each null value of the predictive coefficient, the procedure profiles a regime-specific sieve partition, residualizes both the outcome and the score weight against the resulting block sieve space, and forms a scalar empirical likelihood from the resulting orthogonalized score. The sieve formulation is used not because kernel methods are impossible, but because the block projection gives exact finite-sample cancellation of regime-specific nuisance components. Under finite-break, spacing, detectability, sieve-growth, and estimated-partition conditions, the empirical likelihood ratio evaluated at the estimated partition has a standard chi-square limit. The paper separates break-induced score drift from genuine predictive drift, reports Monte Carlo evidence on the persistence-break interaction, and gives an empirical commodity-weather application.
 
 \vspace{9pt}
 \noindent {\it Key words and phrases:}
-Empirical likelihood, profile sieve, predictive regression, persistence, nuisance orthogonality, conditional-moment efficiency.
+Empirical likelihood, nonparametric structural breaks, persistence, predictive regression, profile sieve, spurious predictability.
 \par
 \end{quotation}\par
 
@@ -92,413 +94,655 @@ Empirical likelihood, profile sieve, predictive regression, persistence, nuisanc
 
 \section{Introduction}
 
-Predictive regressions often include persistent predictors, such as lagged asset prices or valuation ratios, together with other predetermined state variables. Existing persistence-robust EL methods use bounded saturated weights to obtain a common Wilks calibration across stationary, near-unit-root, and unit-root regimes, but they typically leave only a low-dimensional nuisance component such as an intercept. This paper asks what score should be used when the same predictive regression also contains an unknown nonparametric nuisance function.
+Persistent predictors make predictive-regression inference fragile. In standard predictive regressions, least-squares limits vary with the persistence and tail behavior of the predictor. Weighted score empirical likelihood (EL) was introduced partly to avoid asking the researcher to classify the predictor's persistence before testing predictability; see, for example, \citet{ZhuCaiPeng2014}. This paper asks what happens when the same predictive regression also contains a flexible nonparametric control whose relation with the outcome is not stable over the sample.
 
-The maintained model is
-\begin{equation}
-    Y_t=m(W_{t-1})+\beta X_{t-1}+U_t,
-    \qquad
-    X_t=\theta+\rho_T X_{t-1}+\varepsilon_t,
-    \label{eq:geo-intro-dgp}
-\end{equation}
-where \(Y_t\) is the return, \(X_{t-1}\) is a persistent predictor, and \(W_{t-1}\in\mathbb R^d\) is a stationary exogenous covariate vector. Throughout, the persistence restriction applies to \(X_t\), while the nuisance driver \(W_t\) is maintained as strictly stationary and alpha-mixing. The function \(m(\cdot)\) is unrestricted up to sieve smoothness conditions. The null hypothesis is \(H_0:\beta=\beta_0\), with \(\beta_0=0\) giving the usual test of no mean predictability.
-
-The question is not only whether the EL statistic remains \(\chi^2\). The score must simultaneously handle nuisance orthogonality, predictor persistence, and statistical efficiency. We therefore formulate the problem as score construction: build a profile residual times a nuisance-orthogonal persistence-robust instrument, then measure its distance from the conditional-moment efficient direction.
-
-The geometric convention is fixed from the start: each random variable used below is an element of \(L^2(P)\), identified up to a.s. equality, with inner product
+The existing semiparametric profile-sieve construction treats the nuisance function as stable:
 \[
-    \langle A,B\rangle_P=E_P[AB],
-    \qquad
-    \|A\|_{2,P}=\langle A,A\rangle_P^{1/2}.
+    Y_t=\beta_0X_{t-1}+m(W_{t-1})+U_t.
 \]
-Thus residuals are not merely algebraic errors. They are orthogonal projection residuals. A nuisance estimate is a projection onto a finite-dimensional sieve space, and a feasible score is useful because it lives asymptotically in the orthogonal complement of that nuisance space.
+This is a natural first step. It removes a nonlinear stationary control while preserving a weighted score for the persistent predictor. In long macroeconomic or financial samples, however, the response surface linking the control \(W_{t-1}\) to the outcome need not be stable. Weather exposures, policy regimes, measurement protocols, sector composition, or market microstructure can change the nuisance surface without changing the scientific question of interest: is the predictive coefficient \(\beta_0\) stable and different from zero after allowing for such nuisance instability?
 
-The main construction is a sieve-orthogonalized empirical likelihood (EL) score. The nuisance function \(m\) is profiled out under each candidate \(\beta\). The EL weight is then projected off the same sieve basis. This makes the fitted nuisance component geometrically orthogonal to the estimating equation, while the remaining approximation and projection errors vanish under a transparent growth window for the sieve dimension \(K\). In short, the score is a profile residual multiplied by a nuisance-orthogonal persistence-robust instrument.
+We therefore study
+\begin{equation}
+    Y_t
+    =
+    \beta_0X_{t-1}
+    +
+    \sum_{j=0}^{q_0}
+    m_j(W_{t-1})
+    \ind\{k_{j,0}<t\leq k_{j+1,0}\}
+    +
+    U_t,
+    \label{eq:intro-model}
+\end{equation}
+where \(0=k_{0,0}<k_{1,0}<\cdots<k_{q_0,0}<k_{q_0+1,0}=T\). The predictor \(X_t\) may be persistent, the coefficient \(\beta_0\) is stable over the full sample, and all structural instability is placed in the nonparametric nuisance component. Thus the goal is not to estimate regime-specific predictive slopes and not to test whether \(\beta_t\) breaks. The goal is to test predictability after allowing the nuisance response to change at finitely many unknown dates.
 
-This validity result is distinct from conditional-moment efficiency. The feasible sieve-profile score is asymptotically equivalent to the oracle bounded score, so estimating the nuisance function causes no first-order loss relative to the persistence-robust oracle benchmark. Relative to a maintained sequential conditional-mean model, however, the efficient direction is generally different. The paper therefore treats efficiency as a benchmark: the local efficiency of the bounded score is exactly its squared weighted cosine with the conditional-moment efficient direction. Persistence-robust validity is the main contribution; conditional-moment efficiency reveals the robustness--efficiency frontier.
+The first contribution is to isolate the failure mechanism of a stable-nuisance procedure. If the true nuisance has breaks but the statistic projects only on a single global sieve space, the stable score has the exact decomposition
+\[
+    S_T^{\mathrm{st}}(\beta_0)
+    =
+    \frac1{\sqrt T}\bm U'\bm M_{K,0}\bm w
+    +
+    \frac1{\sqrt T}\bm\mu'\bm M_{K,0}\bm w
+\]
+where \(\mu_t=m_{j(t)}(W_{t-1})\) and \(\bm M_{K,0}\) is the global stable-nuisance residual-maker. The second term is not a signal for \(\beta_0\). It is the projection of an omitted low-frequency nuisance break onto the residualized persistent score direction. Persistent predictors do not mechanically create the signal, but they can amplify this alignment. Thus not every nuisance break causes false rejection; the relevant condition is that \(T^{-1/2}\langle \bm M_{K,0}\bm\mu,\bm M_{K,0}\bm w\rangle\) is not negligible. This is a semiparametric analogue of the lesson in \citet{Perron1989}: an unmodeled low-frequency break can be mistaken for a stochastic or predictive feature of the series.
 
-The paper makes five contributions. First, it proposes a profile-sieve, nuisance-orthogonal, bounded weighted EL score. Second, it proves feasible--oracle equivalence, so nonparametric nuisance estimation does not create first-order score distortion. Third, it preserves persistence-robust Wilks inference after profiling out the unknown nonlinear nuisance component. Fourth, it derives the conditional-moment efficiency benchmark, gives the squared-angle relative-efficiency formula, and states conditions under which the efficiency bound is attainable. Fifth, it implements the theory in a reproducible Monte Carlo pipeline that separates Wilks calibration, oracle equivalence, nuisance misspecification, and the robustness--efficiency frontier.
+The second contribution is a break-adaptive score. For a candidate partition \(\Lambda=(k_1,\ldots,k_q)\), define the block sieve matrix
+\[
+    \bm Q_{K,\Lambda}
+    =
+    \left[
+    \bm D_0(\Lambda)\bm P,\,
+    \bm D_1(\Lambda)\bm P,\,
+    \ldots,\,
+    \bm D_q(\Lambda)\bm P
+    \right],
+\]
+where \(\bm P\) is the usual sieve matrix in \(W_{t-1}\), and \(\bm D_j(\Lambda)\) selects the \(j\)-th regime. Let
+\[
+    \bm M_{K,\Lambda}
+    =
+    \bm I_T
+    -
+    \bm Q_{K,\Lambda}
+    (\bm Q_{K,\Lambda}'\bm Q_{K,\Lambda})^{-1}
+    \bm Q_{K,\Lambda}'.
+\]
+The proposed score is
+\[
+    \widehat Z_t(\beta,\Lambda)
+    =
+    \{\bm M_{K,\Lambda}(\bm Y-\beta\bm X_{lag})\}_t
+    \{\bm M_{K,\Lambda}\bm w\}_t.
+\]
+It preserves the same double-residualization geometry as the stable profile-sieve construction, but the nuisance space is enlarged from a single span of \(P_K(W)\) to the regime-specific span generated by \(\ind(t\in I_j)P_K(W)\), \(j=0,\ldots,q\).
 
-The framework is motivated by settings such as agricultural commodity returns, where local weather variables may affect supply and returns nonlinearly while lagged financial predictors remain highly persistent. The theory itself is generic: the formal result only requires a stationary, alpha-mixing exogenous covariate vector satisfying the stated orthogonality and regularity conditions.
+The third contribution is to make the partition part of the null-imposed inference procedure. For each candidate \(\beta\), we estimate the partition by profiling the regime-specific sieve residual sum of squares. This avoids first estimating \(\beta\) and then treating the detected breaks as external preprocessing, which can contaminate the break criterion under persistent \(X_t\). The confidence set is obtained by inversion of the break-adaptive EL ratio.
 
-\section{Model and Sieve-EL Construction}
+The fourth contribution is the asymptotic theory. The stable-nuisance method fails when the omitted-break component is non-negligible. The break-adaptive method has a known-partition Wilks theorem, a high-level partition-consistency condition, and an estimated-partition Wilks theorem. The proof uses the same finite-sample projection identity as the existing geometric manuscript, but with \(\bm P\) and \(\bm M_K\) replaced by \(\bm Q_{K,\Lambda}\) and \(\bm M_{K,\Lambda}\). The former geometric Wilks theorem becomes the known-partition core of the new paper, not the whole contribution.
+
+The paper is related to four literatures. Weighted-score EL for predictive regressions provides persistence-robust inference for a stable low-dimensional predictive relation \citep{ZhuCaiPeng2014}; the scalar likelihood expansion builds on empirical likelihood theory \citep{Owen1988,Owen2001,QinLawless1994}. Series approximations provide the sieve regularization used to remove nonlinear nuisance components \citep{Newey1997}. Multiple-break theory studies unknown structural changes in parametric regressions and related models \citep{Andrews1993,BaiPerron1998}. Recent persistent predictive-regression break tests, such as \citet{AndersenVarneskov2021}, target parameter instability and sup-Wald type diagnostics under persistence. Change-point algorithms such as narrowest-over-threshold and seeded binary segmentation \citep{BaranowskiChenFryzlewicz2019,KovacsLiBuhlmannMunk2023} provide efficient candidate generation. Our object is different: \(\beta_0\) is stable, the breaks occur only in a nonparametric nuisance, and the inferential target is the post-nuisance-break EL statistic for \(\beta_0\).
+
+\section{Model, Identification, and Break-Induced Predictivity}
+\label{sec:model}
 
 Let
 \[
     \bm Y=(Y_1,\ldots,Y_T)',\qquad
-    \bm X_{lag}=(X_0,\ldots,X_{T-1})'.
+    \bm X_{lag}=(X_0,\ldots,X_{T-1})',
 \]
-For the sample problem, use the empirical Hilbert space \(\mathbb R^T\) with inner product and norm
-\[
-    \langle \bm a,\bm b\rangle_T=T^{-1}\bm a'\bm b,
-    \qquad
-    \|\bm a\|_T=\langle \bm a,\bm a\rangle_T^{1/2}.
-\]
-Let \(\bm P\) be the \(T\times K\) sieve matrix whose \(t\)-th row is \(\bm P_K(W_{t-1})'\), where
-\[
-    \bm P_K(W_{t-1})=(p_1(W_{t-1}),\ldots,p_K(W_{t-1}))'.
-\]
-When \(d>1\), the basis functions \(p_j\) are multivariate. The column space
-\[
-    \mathcal W_{K,T}=\operatorname{span}\{\bm P_1,\ldots,\bm P_K\}\subset\mathbb R^T
-\]
-is the empirical version of the population sieve space generated by functions of \(W_{t-1}\). Define the orthogonal projector and residual-maker
-\[
-    \bm\Pi_K=\bm P(\bm P'\bm P)^{-1}\bm P',
-    \qquad
-    \bm M_K=\bm I_T-\bm\Pi_K.
-\]
-Here \(\bm\Pi_K\bm v\) is the closest point in \(\mathcal W_{K,T}\) to \(\bm v\), and \(\bm M_K\bm v\in\mathcal W_{K,T}^{\perp_T}\) is its orthogonal residual.
+and let \(\bm w=(w_1,\ldots,w_T)'\), where \(w_t=w(X_{t-1})\) is a bounded saturated weight. The predictor obeys a persistence framework of the form
+\begin{equation}
+    X_t=\theta+\rho_TX_{t-1}+\varepsilon_t,
+    \label{eq:predictor}
+\end{equation}
+covering stationary, local-to-unity, and unit-root cases through high-level oracle score conditions. The main model does not allow breaks in the predictor equation or in \(\beta_0\). Those alternatives belong to parameter-instability testing; here they are deliberately excluded to keep the target as stable predictability after nuisance adjustment.
 
-For each candidate value \(\beta\), the null-imposed profile sieve coefficient and residual are
-\begin{equation}
-    \widehat{\bm c}_K(\beta)
-    =(\bm P'\bm P)^{-1}\bm P'(\bm Y-\beta\bm X_{lag}),
-    \qquad
-    \widehat{\bm u}(\beta)=\bm M_K(\bm Y-\beta\bm X_{lag}).
-    \label{eq:geo-profile-sieve}
-\end{equation}
-Equivalently,
+For a partition \(\Lambda=(k_1,\ldots,k_q)\), write \(k_0=0\), \(k_{q+1}=T\), and \(I_j(\Lambda)=\{t:k_j<t\leq k_{j+1}\}\). The true partition is \(\Lambda_0=(k_{1,0},\ldots,k_{q_0,0})\). Define \(j_\Lambda(t)=j\) when \(t\in I_j(\Lambda)\). The true nuisance vector is
 \[
-    \bm P\widehat{\bm c}_K(\beta)
-       =\operatorname{op}_T(\bm Y-\beta\bm X_{lag}\mid\mathcal W_{K,T}),
+    \mu_t=m_{j_{\Lambda_0}(t)}(W_{t-1}),
     \qquad
-    \widehat{\bm u}(\beta)\perp_T\mathcal W_{K,T}.
+    \bm\mu=(\mu_1,\ldots,\mu_T)'.
 \]
-The profiled residual is therefore the empirical distance-minimizing residual after removing the fitted nuisance direction.
 
-Let \(w_t=w(X_{t-1})\) be a bounded saturated weight, let \(\bm w=(w_1,\ldots,w_T)'\), and define the sieve-orthogonalized weight
-\begin{equation}
-    \bm w^c=\bm M_K\bm w,
-    \qquad
-    w_t^c=(\bm w^c)_t.
-    \label{eq:geo-weight}
-\end{equation}
-The key identity is geometric:
+\begin{assumption}[Finite nuisance breaks and smooth regimes]
+\label{ass:breaks}
+The number \(q_0\) is fixed. For some \(\epsilon>0\),
 \[
-    \bm w^c\in\mathcal W_{K,T}^{\perp_T},
-    \qquad
-    \langle \bm p,\bm w^c\rangle_T=0
-    \quad\text{for every }\bm p\in\mathcal W_{K,T}.
+    \min_{0\leq j\leq q_0}(k_{j+1,0}-k_{j,0})\geq \epsilon T.
 \]
-In matrix form this is \(\bm P'\bm w^c=\bm0\). Thus \(\bm w^c\) is not an ad hoc transformed instrument. It is the raw weight with its nuisance-space component removed. The feasible scalar score is the product of the profile residual and this nuisance-orthogonal bounded instrument:
+Each \(m_j\) belongs to the same smoothness class \(\mathcal H^s\). If \(q_0\geq1\), the adjacent breaks satisfy a detectability condition
+\[
+    \Delta_T
+    =
+    \min_{0\leq j<q_0}
+    \|m_{j+1}-m_j\|_{L^2(P_W)}
+    >0,
+\]
+with \(T\Delta_T^2\) large enough relative to the block sieve dimension and logarithmic search complexity. A sufficient fixed-break version is \(T\Delta_T^2/(K\log T)\to\infty\). When \(q_0=0\), this condition is void.
+\end{assumption}
+
+\begin{assumption}[Identification after block residualization]
+\label{ass:identification}
+For the true partition,
+\[
+    T^{-1}\bm w'\bm M_{K,\Lambda_0}\bm w
+    \xrightarrow{p} Q_w,
+    \qquad
+    P(Q_w>\underline q)=1
+\]
+for some \(\underline q>0\). Thus the residualized weighted predictive direction is not absorbed by the regime-specific nuisance space.
+\end{assumption}
+
+The stable procedure uses the global projection \(\bm M_{K,0}\), where \(0\) denotes the no-break partition. Its null-imposed score numerator is
+\[
+    S_T^{\mathrm{st}}(\beta_0)
+    =
+    T^{-1/2}
+    (\bm Y-\beta_0\bm X_{lag})'
+    \bm M_{K,0}\bm w.
+\]
+
+\begin{proposition}[Stable-score decomposition]
+\label{prop:stable-decomp}
+Under the model \eqref{eq:intro-model}, the stable-nuisance score satisfies the exact identity
+\[
+    S_T^{\mathrm{st}}(\beta_0)
+    =
+    A_T^{\mathrm{st}}
+    +
+    B_T,
+\]
+where
+\[
+    A_T^{\mathrm{st}}
+    =
+    T^{-1/2}\bm U'\bm M_{K,0}\bm w,
+    \qquad
+    B_T
+    =
+    T^{-1/2}\bm\mu'\bm M_{K,0}\bm w,
+\]
+The term \(B_T\) is the omitted-break component left by imposing the no-break nuisance projection.
+\end{proposition}
+
+Proposition~\ref{prop:stable-decomp} identifies the object that can be misread as predictability. If \(B_T=o_p(1)\), the stable score may remain valid. If \(B_T\) is non-negligible, the stable statistic is centered at the wrong score.
+
+\begin{definition}[Break-induced spurious predictivity]
+The stable nuisance specification generates break-induced spurious predictivity at \(\beta_0\) if
+\[
+    T^{-1/2}
+    \langle \bm M_{K,0}\bm\mu,\bm M_{K,0}\bm w\rangle_{\R^T}
+    =
+    B_T
+    \not=o_p(1).
+\]
+The condition is directional. A nuisance break with little projection on the residualized persistent weight need not distort the test.
+\end{definition}
+
+\begin{theorem}[Omitted-break failure]
+\label{thm:failure}
+Suppose the stable EL statistic admits the standard scalar EL expansion around \(S_T^{\mathrm{st}}(\beta_0)\), with stable denominator \(V_T^{\mathrm{st}}\) bounded away from zero in probability. If
+\[
+    |B_T|/(V_T^{\mathrm{st}})^{1/2}\xrightarrow{p}\infty,
+\]
+then for every fixed chi-square critical value \(c_\alpha\),
+\[
+    P\{\ell_T^{\mathrm{st}}(\beta_0)>c_\alpha\}\to1.
+\]
+If instead
+\[
+    A_T^{\mathrm{st}}/(V_T^{\mathrm{st}})^{1/2}\Rightarrow N(0,1),
+    \qquad
+    B_T/(V_T^{\mathrm{st}})^{1/2}\Rightarrow B,
+    \qquad
+    P(B\neq0)>0,
+\]
+then the stable EL statistic has a noncentral, or random-noncentral, chi-square limit rather than a central \(\chi_1^2\) limit.
+\end{theorem}
+
+\section{Regime-Specific Sieve Geometry}
+\label{sec:geometry}
+
+Let \(\bm P\) be the \(T\times K\) sieve matrix whose \(t\)-th row is
+\[
+    \bm P_K(W_{t-1})'=(p_1(W_{t-1}),\ldots,p_K(W_{t-1})).
+\]
+For a partition \(\Lambda\), let \(\bm D_j(\Lambda)\) be the diagonal matrix with diagonal entry \(\ind\{t\in I_j(\Lambda)\}\). Define
 \begin{equation}
-    \widehat Z_t(\beta)=\widehat u_t(\beta)w_t^c.
-    \label{eq:geo-score}
+    \bm Q_{K,\Lambda}
+    =
+    \left[
+    \bm D_0(\Lambda)\bm P,\,
+    \bm D_1(\Lambda)\bm P,\,
+    \ldots,\,
+    \bm D_q(\Lambda)\bm P
+    \right],
+    \label{eq:block-q}
 \end{equation}
-The profile empirical likelihood and log-likelihood ratio are
+and
+\begin{equation}
+    \bm M_{K,\Lambda}
+    =
+    \bm I_T
+    -
+    \bm Q_{K,\Lambda}
+    (\bm Q_{K,\Lambda}'\bm Q_{K,\Lambda})^{-1}
+    \bm Q_{K,\Lambda}'.
+    \label{eq:block-m}
+\end{equation}
+The block nuisance space is
+\[
+    \mathcal N_{K,\Lambda}
+    =
+    \left\{
+      \sum_{j=0}^q
+      \ind(t\in I_j(\Lambda))\bm P_K(W_{t-1})'\bm c_j:
+      \bm c_j\in\R^K
+    \right\}.
+\]
+The matrix \(\bm M_{K,\Lambda}\) is the orthogonal residual-maker for this empirical space.
+
+For each \(\beta\) and \(\Lambda\), the profiled residual is
+\begin{equation}
+    \widehat{\bm u}(\beta,\Lambda)
+    =
+    \bm M_{K,\Lambda}(\bm Y-\beta\bm X_{lag}),
+    \label{eq:block-profile-resid}
+\end{equation}
+and the regime-orthogonalized weight is
+\begin{equation}
+    \bm w^c(\Lambda)
+    =
+    \bm M_{K,\Lambda}\bm w.
+    \label{eq:block-weight}
+\end{equation}
+The scalar score is
+\begin{equation}
+    \widehat Z_t(\beta,\Lambda)
+    =
+    \widehat u_t(\beta,\Lambda)w_t^c(\Lambda).
+    \label{eq:block-score}
+\end{equation}
+
+\begin{lemma}[Exact block projection identities]
+\label{lem:block-identities}
+For every partition \(\Lambda\) for which \(\bm Q_{K,\Lambda}'\bm Q_{K,\Lambda}\) is nonsingular,
+\[
+    \bm Q_{K,\Lambda}'\bm M_{K,\Lambda}=\bm0,
+    \qquad
+    \bm M_{K,\Lambda}'=\bm M_{K,\Lambda},
+    \qquad
+    \bm M_{K,\Lambda}^2=\bm M_{K,\Lambda}.
+\]
+Consequently, for every regime-specific sieve component \(\bm Q_{K,\Lambda}\bm c\),
+\[
+    (\bm Q_{K,\Lambda}\bm c)'
+    \bm M_{K,\Lambda}\bm w
+    =
+    0.
+\]
+\end{lemma}
+
+The empirical likelihood for \((\beta,\Lambda)\) is
 \begin{align}
-    L_T(\beta)
-    &=\sup\left\{
-       \prod_{t=1}^T(T\pi_t):
-       \pi_t\geq0,\quad
-       \sum_{t=1}^T\pi_t=1,\quad
-       \sum_{t=1}^T\pi_t\widehat Z_t(\beta)=0
-       \right\},                                                    \label{eq:geo-el}\\
-    \ell_T(\beta)
-    &=-2\log L_T(\beta)
-      =2\sum_{t=1}^T\log\{1+\widehat\lambda(\beta)\widehat Z_t(\beta)\},
-      \label{eq:geo-elr}
+    L_T(\beta,\Lambda)
+    &=
+    \sup
+    \left\{
+    \prod_{t=1}^T(T\pi_t):
+    \pi_t\geq0,\,
+    \sum_{t=1}^T\pi_t=1,\,
+    \sum_{t=1}^T\pi_t\widehat Z_t(\beta,\Lambda)=0
+    \right\},
+    \label{eq:block-el}\\
+    \ell_T(\beta,\Lambda)
+    &=
+    -2\log L_T(\beta,\Lambda)
+    =
+    2\sum_{t=1}^T
+    \log\{1+\widehat\lambda(\beta,\Lambda)\widehat Z_t(\beta,\Lambda)\},
+    \label{eq:block-elr}
 \end{align}
-where \(\widehat\lambda(\beta)\) solves the usual EL multiplier equation.
+where \(\widehat\lambda(\beta,\Lambda)\) solves the scalar EL multiplier equation.
 
-\section{Assumptions and Sieve Growth}
+\begin{remark}[Why sieve rather than kernel]
+Kernel methods are possible in principle through undersmoothing, bias correction, cross-fitting, or Robinson-type residualization. The reason for using a sieve here is narrower: the EL proof needs a residual-maker that is an exact projection after regime-specific nuisance functions are introduced. A generic kernel smoother \(\bm S_h\) need not satisfy \(\bm S_h'=\bm S_h\) or \(\bm S_h^2=\bm S_h\), so \(\bm I-\bm S_h\) is not generally an orthogonal residual-maker for the nuisance space. The sieve formulation reduces the proof burden to sieve approximation error and partition-estimation error, while retaining the finite-sample cancellation in Lemma~\ref{lem:block-identities}.
+\end{remark}
 
-Keep the empirical norm \(\|\bm v\|_T^2=T^{-1}\sum_{t=1}^T v_t^2\). All asymptotic statements are along a sequence \(K=K_T\to\infty\), although the subscript \(T\) is suppressed when no confusion can arise. Thus objects such as \(\bm P\), \(\bm M_K\), \(w_t^c\), \(A_T^K\), \(V_T^K\), and \(\eta_K^2\) are triangular-array objects indexed by both \(T\) and \(K_T\). The relevant oracle is the matched-projection oracle: it knows the true regression error \(U_t\) but uses the same nuisance-orthogonal instrument \(w_t^c=(\bm M_K\bm w)_t\) as the feasible procedure. This is important when \(X_{t-1}\) and \(W_{t-1}\) are correlated; the centered raw weight is then not the right nuisance-orthogonal benchmark.
+\section{Learning Multiple Nuisance Breaks}
+\label{sec:learning}
 
-\begin{assumption}[High-level matched-projection oracle score conditions]
-\label{ass:geo-score}
-The predictor persistence process belongs to a regularity class for which the matched-projection oracle score admits a mixed-normal self-normalized limit. This is the imported persistence-robust oracle condition; it is the only point in Theorem~\ref{thm:geo-wilks} where the specific local-to-unity or unit-root limit theory enters. With respect to the enlarged filtration
-\[
-    \mathcal H_t=\sigma\{(z_s,\varepsilon_s):s\leq t\}\vee\sigma\{W_s:s\leq t\},
-\]
-\(E(U_t\mid\mathcal H_{t-1})=0\), \(\sup_tE|U_t|^{2+\delta}<\infty\) for some \(\delta>0\), the raw weight is uniformly bounded, and the conditional-variance and maximum-score conditions needed for self-normalized empirical likelihood hold for the projected instrument. In particular, for
-\[
-    A_T^K=\frac1{\sqrt T}\sum_{t=1}^T U_tw_t^c,
-    \qquad
-    V_T^K=\frac1T\sum_{t=1}^T U_t^2(w_t^c)^2,
-\]
-there exists an a.s. positive, possibly random, variable \(\eta_K^2\) such that
+For an interval \([s,e]\), define the null-imposed segment cost
 \begin{equation}
-    A_T^K\xrightarrow{\mathrm{st}}MN(0,\eta_K^2),
-    \qquad
-    V_T^K\xrightarrow{p}\eta_K^2,
-    \qquad
-    \max_{t\leq T}|U_tw_t^c|=o_p(\sqrt T).
-    \label{eq:geo-oracle}
+    \mathcal C_K(s,e;\beta)
+    =
+    \min_{\bm c\in\R^K}
+    \sum_{t=s}^e
+    \{Y_t-\beta X_{t-1}-\bm P_K(W_{t-1})'\bm c\}^2.
+    \label{eq:segment-cost}
 \end{equation}
-\end{assumption}
-
-\begin{assumption}[Sieve orthogonality and projection]
-\label{ass:geo-projection}
-The nuisance covariate process \(\{W_t\}\) is strictly stationary and alpha-mixing, with mixing coefficients decaying fast enough for the displayed sample Gram and empirical-process bounds. In the leading Monte Carlo design this is implemented as a Gaussian AR(1) with \(|a_W|<1\), which is geometrically alpha-mixing. Because this process has unbounded support, the theory below is stated through the sample Gram, sample projection, and maximum-basis bounds that are actually used in the proof; compact-support, truncated-basis, or high-probability polynomial-basis conditions are sufficient ways to verify them. The first component of \(\bm P_K(W)\) is one, and the sample Gram matrix \(T^{-1}\bm P'\bm P\) has eigenvalues bounded away from zero and infinity with probability tending to one. If \(\zeta_K=\max_{t\leq T}\|\bm P_t\|\), then
-\begin{align}
-    \left\|T^{-1}\bm P'\bm U\right\|&=O_p(\sqrt{K/T}),
-      \label{eq:geo-rate-pu}\\
-    \left\|\bm\Pi_K\bm U\right\|_T&=O_p(\sqrt{K/T}),
-      \label{eq:geo-u-proj-l2}\\
-    \max_{t\leq T}|(\bm\Pi_K\bm U)_t|&=O_p(\zeta_K\sqrt{K/T})=o_p(1).
-      \label{eq:geo-u-proj-max}
-\end{align}
-These bounds control the component of the oracle error that is removed by the same projection used to remove the nuisance component. No population orthogonality between \(w(X_{t-1})\) and functions of \(W_{t-1}\) is required; dependence between \(X\) and \(W\) is handled by the matched projection itself.
-\end{assumption}
-
-\begin{assumption}[Approximation, rates, and nondegeneracy]
-\label{ass:geo-approx}
-For some \(\bm c_K\),
-\[
-    m(W_{t-1})=\bm P_K(W_{t-1})'\bm c_K+r_{K,t},
-\]
-where \(\|\bm r_K\|_T=O(a_K)\), \(\|\bm r_K\|_\infty=O(a_K)\), and \(\sqrt T a_K\to0\). The sieve projector is stable in sup norm on the approximation residual: \(\|\bm M_K\bm r_K\|_\infty=O(a_K)\). Moreover,
-\[
-    K/\sqrt T\to0,
-    \qquad
-    \zeta_K\sqrt{K/T}\to0,
-\]
-and \(P(\eta_K^2\geq\underline\eta^2)=1\) for some \(\underline\eta>0\). The projected instrument satisfies \(\max_t|w_t^c|=O_p(1)\), and the EL convex-hull condition holds under the null.
-\end{assumption}
-
-If \(m\) has smoothness \(s\), \(W\) is \(d\)-dimensional, and \(a_K\asymp K^{-s/d}\), then \(\sqrt T a_K\to0\) and \(K/\sqrt T\to0\) give the rate window
+For a partition \(\Lambda=(k_1,\ldots,k_q)\),
 \begin{equation}
-    T^{d/(2s)}\ll K\ll T^{1/2},
-    \label{eq:geo-rate-window}
+    RSS_K(\beta,\Lambda)
+    =
+    \sum_{j=0}^{q}
+    \mathcal C_K(k_j+1,k_{j+1};\beta).
+    \label{eq:rss}
 \end{equation}
-which is nonempty when \(s>d\).
-
-The displayed rate window is therefore a sufficient guide for smooth compact or effectively truncated designs. For unbounded \(W\), the formal assumptions are the sample bounds in Assumptions~\ref{ass:geo-projection}--\ref{ass:geo-approx}; the Monte Carlo Gaussian design illustrates the statistic under that DGP but is not a primitive verification that polynomial sieves are uniformly bounded on the whole real line.
-
-\section{Main Result}
-
-The main result has two layers. The first is feasible--oracle equivalence: the score based on \(\widehat u_t(\beta_0)w_t^c\) has the same first-order numerator and denominator as the matched-projection oracle score \(U_tw_t^c\). The second is persistence-robust Wilks calibration: once that oracle score satisfies the high-level persistence conditions in Assumption~\ref{ass:geo-score}, the profile EL statistic keeps the same \(\chi_1^2\) limit.
-
-\begin{theorem}[Geometric Wilks phenomenon]
-\label{thm:geo-wilks}
-Under Assumptions~\ref{ass:geo-score}--\ref{ass:geo-approx}, under \(H_0:\beta=\beta_0\),
+Let \(\mathcal L_q(\epsilon)\) be the set of \(q\)-break partitions satisfying the minimum spacing condition. The theoretical profile estimator is
+\begin{equation}
+    \widehat\Lambda_q(\beta)
+    =
+    \arg\min_{\Lambda\in\mathcal L_q(\epsilon)}
+    RSS_K(\beta,\Lambda).
+    \label{eq:lambda-hat-q}
+\end{equation}
+If the number of breaks is not fixed in advance, define
+\begin{equation}
+    \widehat q(\beta)
+    =
+    \arg\min_{0\leq q\leq\bar q}
+    \left\{
+    RSS_K(\beta,\widehat\Lambda_q(\beta))
+    +
+    \operatorname{pen}_T(q,K)
+    \right\},
+    \label{eq:qhat}
+\end{equation}
+and set
 \[
-    \ell_T(\beta_0)\xrightarrow{d}\chi_1^2.
+    \widehat\Lambda(\beta)=
+    \widehat\Lambda_{\widehat q(\beta)}(\beta).
+\]
+
+The break-adaptive statistic is
+\begin{equation}
+    \ell_T^{BA}(\beta)
+    =
+    \ell_T\{\beta,\widehat\Lambda(\beta)\}.
+    \label{eq:ba-stat}
+\end{equation}
+Confidence sets are obtained by inversion:
+\[
+    \mathcal C_{1-\alpha}
+    =
+    \{\beta:\ell_T^{BA}(\beta)\leq \chi^2_{1,1-\alpha}\}.
+\]
+
+The global minimization in \eqref{eq:lambda-hat-q} is the proof object. In computation, one can generate candidate break dates with seeded binary segmentation, narrowest-over-threshold, or related multiscale devices, using the split gain
+\[
+    G_K(s,e,b;\beta)
+    =
+    \mathcal C_K(s,e;\beta)
+    -
+    \mathcal C_K(s,b;\beta)
+    -
+    \mathcal C_K(b+1,e;\beta).
+\]
+The final selection is then based on the same profile-sieve RSS and information criterion. These algorithms are computational devices, not the statistical novelty.
+
+\section{Asymptotic Theory}
+\label{sec:theory}
+
+Let \(K_q=(q+1)K\) denote the block sieve dimension. All limits are along \(K=K_T\to\infty\) with fixed \(q_0\), unless stated otherwise.
+
+\begin{assumption}[Block-sieve rates]
+\label{ass:block-sieve}
+For the true partition and for each regime \(j\), there exists \(\bm c_{j,K}\) such that
+\[
+    m_j(W_{t-1})
+    =
+    \bm P_K(W_{t-1})'\bm c_{j,K}
+    +
+    r_{j,K,t},
+\]
+with \(\max_j\|\bm r_{j,K}\|_T=O_p(a_K)\), \(\max_j\|\bm r_{j,K}\|_\infty=O_p(a_K)\), and \(\sqrt T a_K\to0\). The block Gram matrix \(T^{-1}\bm Q_{K,\Lambda_0}'\bm Q_{K,\Lambda_0}\) has eigenvalues bounded away from zero and infinity with probability tending to one. If \(\zeta_K=\max_t\|\bm P_K(W_{t-1})\|\), then
+\[
+    \frac{(q_0+1)K}{\sqrt T}\to0,
+    \qquad
+    \zeta_K\sqrt{\frac{(q_0+1)K}{T}}\to0.
+\]
+\end{assumption}
+
+\begin{assumption}[Known-partition oracle score]
+\label{ass:oracle}
+With \(\bm v_0=\bm M_{K,\Lambda_0}\bm w\), define \(\widetilde{\bm U}_0=\bm M_{K,\Lambda_0}\bm U\) and
+\[
+    A_T^{(q)}
+    =
+    T^{-1/2}\sum_{t=1}^T U_tv_{t,0},
+    \qquad
+    V_T^{(q)}
+    =
+    T^{-1}\sum_{t=1}^T U_t^2v_{t,0}^2.
+\]
+The oracle numerator and denominator satisfy
+\[
+    A_T^{(q)}\xrightarrow{\mathrm{st}}MN(0,\eta_q^2),
+    \qquad
+    V_T^{(q)}\xrightarrow{p}\eta_q^2,
+    \qquad
+    \max_{t\leq T}|U_tv_{t,0}|=o_p(\sqrt T),
+\]
+where \(P(\eta_q^2>\underline\eta)=1\) for some \(\underline\eta>0\). In addition, the projection of the noise onto the block sieve is asymptotically negligible in the weighted score array:
+\[
+    T^{-1}\sum_{t=1}^T
+    \{(\widetilde U_{0,t}v_{t,0})^2-(U_tv_{t,0})^2\}
+    =o_p(1),
+    \qquad
+    \max_{t\leq T}|(\widetilde U_{0,t}-U_t)v_{t,0}|
+    =o_p(\sqrt T).
+\]
+The scalar EL convex-hull condition holds under the null.
+\end{assumption}
+
+\begin{theorem}[Known-partition Wilks theorem]
+\label{thm:known-wilks}
+Under Assumptions~\ref{ass:breaks}, \ref{ass:identification}, \ref{ass:block-sieve}, and \ref{ass:oracle}, under \(H_0:\beta=\beta_0\),
+\[
+    \ell_T(\beta_0,\Lambda_0)\Rightarrow\chi_1^2.
 \]
 \end{theorem}
 
-\paragraph{Proof sketch.}
-Assumption~\ref{ass:geo-score} supplies the high-level oracle score limit for
-\[
-    A_T^K=T^{-1/2}\sum_tU_tw_t^c,
-    \qquad
-    V_T^K=T^{-1}\sum_tU_t^2(w_t^c)^2.
-\]
-The matched projection gives the key exact identity \(\bm P'\bm w^c=0\). Hence the projected component of \(\bm U\) is orthogonal to the instrument in sample, and the feasible numerator differs from the oracle numerator only through the sieve approximation residual. Supplementary Lemma S2 proves
-\[
-    T^{-1/2}\sum_t\widehat Z_t(\beta_0)=A_T^K+o_p(1),
-    \qquad
-    T^{-1}\sum_t\widehat Z_t(\beta_0)^2=V_T^K+o_p(1).
-\]
-The denominator equivalence is a distance statement: the feasible score vector and the matched-projection oracle score vector have empirical distance \(o_p(1)\), so Cauchy--Schwarz gives equality of their squared lengths up to \(o_p(1)\). Supplementary Lemma S3 then gives the scalar EL expansion \(\ell_T(\beta_0)=S_T^2/\widehat V_T+o_p(1)\), and the result follows by Slutsky's theorem. Full details are given in Sections S1--S2 of the online Supplement.
+Theorem~\ref{thm:known-wilks} is the block-sieve version of the original geometric Wilks result. The key change is that the oracle weight is no longer a globally centered weight. It is \(v_{t,0}=(\bm M_{K,\Lambda_0}\bm w)_t\), the residualized weight after projecting on the regime-specific nuisance space.
 
-\begin{corollary}[No-predictability test]
-For \(H_0:\beta=0\), reject at asymptotic level \(\alpha\) whenever
+\begin{assumption}[Partition estimation]
+\label{ass:partition}
+For the true number of breaks,
 \[
-    \ell_T(0)>\chi^2_{1,1-\alpha}.
+    \max_{1\leq j\leq q_0}
+    |\widehat k_j(\beta_0)-k_{j,0}|
+    =
+    O_p(r_T),
+    \qquad
+    r_T=o(\sqrt T).
 \]
-A confidence set for \(\beta\) is \(\{\beta:\ell_T(\beta)\leq\chi^2_{1,1-\alpha}\}\).
+Equivalently, the number of observations assigned to the wrong regime satisfies
+\[
+    |\mathcal M_T|
+    =
+    \left|
+    \{t:j_{\widehat\Lambda(\beta_0)}(t)\neq j_{\Lambda_0}(t)\}
+    \right|
+    =
+    o_p(\sqrt T).
+\]
+Let
+\[
+    \mathcal Z_T
+    =
+    \max_{t\leq T}
+    \{|
+    \widehat Z_t(\beta_0,\widehat\Lambda(\beta_0))|
+    +
+    |\widehat Z_t(\beta_0,\Lambda_0)|
+    \}.
+\]
+The boundary observations are required to be negligible at the numerator and denominator scales:
+\[
+    T^{-1/2}|\mathcal M_T|\mathcal Z_T=o_p(1),
+    \qquad
+    T^{-1}|\mathcal M_T|\mathcal Z_T^2=o_p(1).
+\]
+These conditions follow, for example, from \(|\mathcal M_T|=o_p(\sqrt T)\) and uniformly bounded score contributions.
+\end{assumption}
+
+\begin{theorem}[Estimated-partition equivalence]
+\label{thm:estimated-equiv}
+Under the assumptions of Theorem~\ref{thm:known-wilks} and Assumption~\ref{ass:partition},
+\[
+    \ell_T\{\beta_0,\widehat\Lambda(\beta_0)\}
+    -
+    \ell_T(\beta_0,\Lambda_0)
+    =
+    o_p(1).
+\]
+Consequently,
+\[
+    \ell_T^{BA}(\beta_0)\Rightarrow\chi_1^2.
+\]
+\end{theorem}
+
+The proof does not require an operator-norm bound for
+\(\bm M_{K,\widehat\Lambda}-\bm M_{K,\Lambda_0}\), which can be too strong when a few rows switch regimes. It controls the direct contribution of the misclassified set \(\mathcal M_T\) to the numerator, denominator, and maximum score.
+
+\begin{corollary}[Unknown number of breaks]
+\label{cor:qhat}
+If \(P\{\widehat q(\beta_0)=q_0\}\to1\), then the conclusion of Theorem~\ref{thm:estimated-equiv} remains valid with \(\widehat\Lambda(\beta_0)\) defined by \eqref{eq:qhat}.
 \end{corollary}
 
+\begin{theorem}[Local predictive alternatives]
+\label{thm:local-power}
+Let \(\beta_T=\beta_0+d_T\), where \(d_T=h/r_T^\beta\) is local to the information scale of the residualized persistent score. Suppose the local drift satisfies
+\[
+    d_TT^{-1/2}\bm X_{lag}'\bm M_{K,\Lambda_0}\bm w
+    \xrightarrow{p}
+    \eta_q\delta_h,
+\]
+with \(\delta_h\) fixed, and suppose the known- and estimated-partition replacement conditions above continue to hold under \(\beta_T\). Then, when the statistic is evaluated at the null value \(\beta_0\),
+\[
+    \ell_T^{BA}(\beta_0)
+    \Rightarrow
+    \chi_1^2(\delta_h^2).
+\]
+The noncentrality parameter is generated by the predictive drift \(d_T\). It does not contain the nuisance-break drift \(B_T\), which is removed by the regime-specific projection.
+\end{theorem}
+
 \subsection*{Proof-dependency map}
-The argument deliberately separates finite-dimensional geometry from imported asymptotic probability. The following table records which parts are proved directly in the main paper or Supplement and which parts are assumed or inherited from existing persistence-robust EL theory.
+The theory deliberately separates the geometry proved in the paper from high-level persistence and segmentation inputs.
 \begin{center}
-\begin{tabular}{>{\raggedright\arraybackslash}p{0.24\textwidth}>{\raggedright\arraybackslash}p{0.33\textwidth}>{\raggedright\arraybackslash}p{0.33\textwidth}}
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.27\textwidth}>{\raggedright\arraybackslash}p{0.32\textwidth}>{\raggedright\arraybackslash}p{0.31\textwidth}}
 \hline
-Step & Main-paper or Supplement verification & External or high-level input \\
+Step & Direct paper or supplement argument & High-level input \\
 \hline
-Projection identities & \(\bm P'\bm M_K\bm w=\bm0\), residual orthogonality, and contraction of \(\bm M_K\). & Stable sample Gram matrix and full column rank of \(\bm P\). \\
-Feasible--oracle replacement & Numerator and denominator equivalence by projection algebra, approximation error, and Cauchy--Schwarz. & Sample projection rates, approximation rates, and maximum-score bounds. \\
-Wilks calibration & Reduction from the feasible statistic to the self-normalized oracle score, plus scalar EL expansion. & Matched-projection oracle mixed-normal limit and variance consistency in Assumption~\ref{ass:geo-score}. \\
-Efficiency frontier & Weighted-angle identity and equality condition by Cauchy--Schwarz. & Maintained conditional-mean model and its information calculation. \\
+Stable-method failure & Score decomposition and scalar EL expansion around the contaminated score. & Stable oracle expansion and non-negligible \(B_T\). \\
+Known-partition Wilks & Block projection identities, feasible-oracle replacement, and scalar EL expansion. & Persistent oracle mixed-normal score for \(U_tv_{t,0}\) and negligible block projection of noise. \\
+Partition learning & Profile-sieve RSS and candidate-segmentation construction. & Spacing, detectability, and \(r_T=o(\sqrt T)\) localization. \\
+Estimated-partition Wilks & Misclassification control for numerator, denominator, and maximum score. & High-level partition consistency plus boundary-score negligibility, or consistent \(\widehat q\). \\
 \hline
 \end{tabular}
 \end{center}
 
-\section{Efficiency Benchmark and Robustness--Efficiency Frontier}
-
-The Wilks result above concerns persistence-robust calibration for a fixed bounded saturated weight. This section asks a different question: which nuisance-orthogonal direction is efficient in a maintained conditional-mean model, and how far is the bounded direction from it? The answer is a conditional-moment efficiency benchmark, not a replacement for Theorem~\ref{thm:geo-wilks}.
-
-For this section, assume the sequential conditional-mean restriction
-\[
-    E(U_t\mid\mathcal H_{t-1})=0,
-    \qquad
-    \sigma_t^2=E(U_t^2\mid\mathcal H_{t-1}),
-    \qquad
-    q_t=\sigma_t^{-2}.
-\]
-The efficiency claim is relative to this conditional-moment model. It is not a global optimality statement for the full joint persistent-predictor experiment, where the law of \(X_t\) and its innovation may contain additional information.
-
-\begin{proposition}[Conditional-mean efficient direction]
-\label{prop:geo-eff-direction}
-Let
-\[
-    \mu_q(W)
-    =
-    \frac{E(q_tX_{t-1}\mid W_{t-1}=W)}
-         {E(q_t\mid W_{t-1}=W)},
-    \qquad
-    V_t=X_{t-1}-\mu_q(W_{t-1}).
-\]
-In the maintained conditional-mean semiparametric model, the efficient score direction for \(\beta\) is
-\[
-    S_{\mathrm{eff},t}=q_tV_tU_t,
-\]
-with efficient information
-\[
-    \mathcal I_{\mathrm{eff}}=E(q_tV_t^2).
-\]
-The corresponding efficient influence function is
-\[
-    \varphi_{\mathrm{eff},t}
-    =
-    \mathcal I_{\mathrm{eff}}^{-1}q_tV_tU_t.
-\]
-\end{proposition}
-
-Thus the optimal direction is the predictor residual after projecting \(X_{t-1}\) on the nuisance space generated by \(W_{t-1}\), with the projection weighted by conditional precision \(q_t\).
-
-\begin{proposition}[Squared-angle efficiency loss]
-\label{prop:geo-eff-angle}
-Suppress time subscripts and write \(\sigma^2=E(U^2\mid\mathcal H)\), \(q=\sigma^{-2}\), \(V=X-\mu_q(W)\), and \(g^\star=qV\). Let \(g\) be any nuisance-orthogonal instrument satisfying
-\[
-    E\{g h(W)\}=0
-    \qquad\text{for all square-integrable }h(W),
-\]
-with \(E(gV)\ne0\). The asymptotic variance of the estimator based on the moment \(E(gU)=0\) is
-\[
-    \operatorname{AVAR}(g)
-    =
-    \frac{E(\sigma^2g^2)}{\{E(gV)\}^2}.
-\]
-Its relative efficiency against the conditional-mean efficient benchmark is
-\[
-    \operatorname{RE}(g)
-    =
-    \frac{\{E(gV)\}^2}
-         {E(\sigma^2g^2)E(V^2/\sigma^2)}
-    =
-    \cos_{\sigma^2}^2\angle(g,g^\star)
-    \leq1,
-\]
-where the angle is computed under the weighted inner product
-\[
-    \langle a,b\rangle_{\sigma^2}=E(\sigma^2ab).
-\]
-Equality holds if and only if \(g\propto qV\).
-\end{proposition}
-
-The short derivations of Propositions~\ref{prop:geo-eff-direction}, \ref{prop:geo-eff-angle}, and~\ref{prop:geo-eff-attain} are collected in Section S2 of the online Supplement.
-
-At the population level, the bounded score uses the nuisance-orthogonal direction
-\[
-    g_w
-    =
-    w(X)-\Pi\{w(X)\mid L^2(W)\},
-\]
-with the sample construction \(\bm w^c=\bm M_K\bm w\) acting as its finite-dimensional analogue. This direction is valid and persistence-robust under the conditions of Theorem~\ref{thm:geo-wilks}, but it is fully efficient only when
-\[
-    g_w\propto qV.
-\]
-In the homoskedastic case this reduces to
-\[
-    M_Ww(X)\propto M_WX,
-\]
-where \(M_W\) denotes residualization against functions of \(W\). A fixed bounded saturated weight generally does not satisfy this condition. If \(X-E(X\mid W)\) has unbounded support, a bounded \(g_w\) cannot be proportional to it except in special designs.
-
-\begin{proposition}[Attainability under efficient weighting]
-\label{prop:geo-eff-attain}
-If the EL moment uses the efficient instrument \(g_t^\star=q_tV_t\), then the conditional-mean efficiency bound is attained under the corresponding regularity and oracle replacement conditions. In the regular stationary homoskedastic submodel, \(q_t\) is constant and scalar EL is invariant to a common nonzero rescaling of the moment, so the efficient direction simplifies to
-\[
-    g_t^\star=X_{t-1}-E(X_{t-1}\mid W_{t-1}).
-\]
-Its sample analogue is obtained by choosing the raw weight \(w_t=X_{t-1}\), which gives
-\[
-    w_t^c=(\bm M_K\bm X_{lag})_t.
-\]
-The associated least-squares root is
-\[
-    \widehat\beta_{\mathrm{eff}}
-    =
-    \frac{\bm X_{lag}'\bm M_K\bm Y}
-         {\bm X_{lag}'\bm M_K\bm X_{lag}}.
-\]
-More generally, in a persistent triangular-array setting let \(r_T\) be an information scale such that
-\[
-    J_T=\frac1{r_T^2}\sum_{t=1}^Tq_tV_{t,T}^2\xrightarrow{p}J>0.
-\]
-The normalized efficient weight
-\[
-    w_{t,T}^{\mathrm{eff}}=\frac{\sqrt T}{r_T}q_tV_{t,T}
-\]
-is only a proof normalization because scalar EL is unchanged when all moments are multiplied by the same nonzero constant. If the efficient oracle score satisfies the scaled CLT, denominator consistency, maximum-score condition, and feasible--oracle replacement at scale \(r_T\), then the resulting efficient-weight EL attains the corresponding conditional-moment bound at that scale.
-\end{proposition}
-
-\begin{remark}[Scope of the attainability statement]
-Proposition~\ref{prop:geo-eff-attain} is conditional on using the efficient direction and on the stated oracle conditions. It is not a claim that the bounded saturated score is semiparametrically efficient, nor that raw-\(X\) efficient weighting automatically preserves uniform persistence-robust calibration under contemporaneous endogeneity.
-\end{remark}
-
-The practical implication is a robustness--efficiency frontier. Bounded saturated weights protect the self-normalized EL calibration across persistence regimes by keeping the oracle score well behaved. Efficient residualized-\(X\) weighting can improve local power in regular stationary designs, but under strong persistence or contemporaneous correlation between \(U_t\) and \(\varepsilon_t\), it requires a separate oracle or limit-experiment theory. Bounded saturation therefore buys persistence robustness at a measurable efficiency cost, \(1-\cos_{\sigma^2}^2\angle(g_w,g^\star)\). Simulations should compare fixed bounded weights, gradually saturated weights, and the residualized raw-\(X\) efficient benchmark across stationary, local-to-unity, and unit-root designs.
-
 \section{Monte Carlo Evidence}
-\label{sec:geo-mc}
+\label{sec:mc}
 
-The simulations are designed around the same three claims as the theory: the feasible profile statistic should match the oracle bounded statistic, ignoring \(m(W)\) should distort inference, and changing the bounded score direction should reveal the efficiency frontier. The reproducible pipeline is config-driven; implementation details, config hashes, and additional design notes are reported in Section S3 of the online Supplement.
+The Monte Carlo experiment is designed to isolate the mechanism in Theorem~\ref{thm:failure}. The core DGP is
+\[
+    Y_t
+    =
+    \beta X_{t-1}
+    +
+    m_{j(t)}(W_{t-1})
+    +
+    U_t,
+    \qquad
+    X_t=\rho X_{t-1}+\varepsilon_t,
+\]
+with \(W_t\) stationary and correlated with the innovation driving \(X_t\). The nuisance function is stable when \(q_0=0\). In the break design, \(q_0=1\), the break is at mid-sample, and the second regime adds a level shift of 1.25 to the same smooth baseline function. The predictive null is \(\beta=0\), so rejection by the stable statistic reflects the omitted-break score component rather than genuine predictability.
 
-The headline design is a nonlinear Gaussian predictive-regression DGP with a stationary AR(1) nuisance covariate, stationary-to-unit-root predictor persistence, \(m(w)=0.5\sin(w)+0.3(w^2-1)\), and sieve dimension \(K=6\). The main bounded weight is \(w_b(x)=\tanh(x/b)\) with \(b=8\), while smaller saturation scales are used in the frontier experiment below. The full covariance specification, initialization choices, configuration files, and reproducibility records are described in Section S3 of the online Supplement.
+The reported procedures are the stable sieve EL, the oracle-break sieve EL, and the estimated-break sieve EL. The estimated procedure selects between zero and one nuisance break by the null-imposed profile-sieve information criterion. The persistence grid is \(\rho\in\{0.50,0.90,0.98,1.00\}\), with \(T=240\), \(K=4\), and 300 replications per design point.
 
-Table~\ref{tab:mc-size-t250} reports the rejection frequency of the nominal 5 percent test at \(T=250\) using 2000 replications. The proposed statistic closely tracks the oracle bounded statistic in every persistence regime. The intercept-only statistic, which ignores the nonlinear nuisance, is sharply oversized. The efficient residualized-\(X\) benchmark is well calibrated in this clean homoskedastic design, as expected, but its role here is a benchmark rather than the robustness claim.
-
-\begin{table}[t]
-\centering
-\caption{Monte Carlo size at 5 percent, \(T=250\), \(R=2000\)}
-\label{tab:mc-size-t250}
-\begin{tabular}{lccccc}
-\hline
-Persistence & Oracle & Profile & Intercept only & Efficient & Profile RE \\
-\hline
-Stationary low & 0.051 & 0.053 & 0.232 & 0.052 & 1.000 \\
-Stationary high & 0.047 & 0.049 & 0.126 & 0.052 & 0.993 \\
-Local to unity & 0.057 & 0.059 & 0.106 & 0.061 & 0.978 \\
-Unit root & 0.053 & 0.056 & 0.100 & 0.055 & 0.881 \\
-\hline
-\end{tabular}
-\end{table}
-
-The oracle-equivalence diagnostics move in the direction predicted by the theorem. With the matched-projection oracle, mean \(|D_S|\) is about 0.003 or smaller in every reported design. For the unit-root design, mean \(|D_V|\) falls from 0.057 at \(T=100\) to 0.025 at \(T=250\) and 0.015 at \(T=500\). Figure~\ref{fig:mc-qq} shows the corresponding \(\chi_1^2\) QQ check for the profile statistic at \(T=250\).
+Figure~\ref{fig:break-mc} and Table~\ref{tab:break-mc} report rejection rates at the five percent nominal level. Under \(q_0=0\), all three procedures remain close to nominal size, apart from the familiar finite-sample strain at the unit-root endpoint. Under \(q_0=1\), the stable statistic increasingly rejects as persistence rises: the rejection rate rises from 0.133 at \(\rho=0.50\) to 0.693 at \(\rho=1.00\). The oracle and estimated-break procedures remain near the nominal level throughout the same design. The estimated partition selects one break in every break-design replication, with mean absolute break-date error between 1.2 and 2.0 observations.
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.98\textwidth]{qq_chisq1_profile_bounded_T250.png}
-\caption{QQ check for the profile bounded EL statistic against \(\chi_1^2\), \(T=250\).}
-\label{fig:mc-qq}
+\includegraphics[width=.78\linewidth]{figures/break_mc_false_rejection.png}
+\caption{Monte Carlo rejection rates when the nuisance function has one omitted level break. The stable statistic confounds the omitted nuisance break with predictability as persistence increases; the oracle and estimated-break statistics remove the break-induced score component.}
+\label{fig:break-mc}
 \end{figure}
 
-Figure~\ref{fig:mc-frontier} plots the frontier generated by \(b\in\{0.25,0.5,1,2,4,8\}\). The left panel confirms the squared-angle interpretation: relative efficiency rises monotonically with \(b\). In the unit-root design, very small \(b\) over-saturates the matched-projection random-walk score and produces size distortion; by \(b=4\) and \(b=8\), calibration is close to nominal while relative efficiency is much higher. This is the finite-sample version of the robustness--efficiency frontier: bounded weighting is not a free lunch, and the saturation scale controls both score nondegeneracy and distance from the efficient direction.
+\input{tables/break_mc_summary.tex}
+\section{Empirical Application}
+\label{sec:empirical}
+
+The empirical application uses daily cocoa returns and Ghana weather anomalies. The sample contains 6,669 daily observations from October 4, 1994 to November 28, 2024. Let \(R_t\) denote the ICCO cocoa log return in percentage points, let \(X_{t-1}\) be the standardized lagged log cocoa price, and let the weather index be the first principal component of standardized Ghana precipitation and temperature anomalies. The fitted model is
+\[
+    R_t
+    =
+    \beta X_{t-1}
+    +
+    m_{j(t)}(\mathrm{Weather}_{t-1})
+    +
+    U_t.
+\]
+The same null-imposed profile-sieve information criterion used in the simulation is applied with \(q\le3\), a two-year minimum regime length, and a six-month candidate grid.
+
+Table~\ref{tab:ghana-empirical} reports the stable and break-adaptive EL statistics at \(\beta=0\). The information criterion selects \(\widehat q=0\), so the stable and break-adaptive statistics coincide: the EL ratio is 0.069 and the \(p\)-value is 0.793. Thus this application does not provide evidence of commodity-return predictability, nor does the conservative profile-sieve criterion find nuisance breaks large enough to alter the predictive conclusion. This is still an informative application because the procedure reports the absence of break-induced predictivity instead of forcing a break-adjusted story.
+
+\input{tables/ghana_break_empirical.tex}
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.9\textwidth]{figure_frontier.png}
-\caption{Robustness--efficiency frontier for \(w_b(x)=\tanh(x/b)\), \(T=250\), \(R=2000\).}
-\label{fig:mc-frontier}
+\includegraphics[width=.78\linewidth]{figures/ghana_weather_response.png}
+\caption{Estimated weather response for the Ghana cocoa application under the selected nuisance partition. The information criterion selects no nuisance break, so the displayed curve is the stable weather-index response.}
+\label{fig:ghana-weather}
 \end{figure}
-
-A contemporaneous-endogeneity stress design is reported in Section S3 of the online Supplement. The stress design confirms that feasible profiling continues to track the matched-projection oracle, while also showing that the high-level oracle Wilks conditions are substantive under unit-root persistence.
-
-\section{Interpretation: Weather Shocks and Commodity Returns}
-
-The formal model treats \(W_{t-1}\) as a generic stationary exogenous covariate vector. A motivating application is commodity-return prediction with local weather conditions. For cocoa futures, for example, precipitation, temperature, humidity, or other regional weather variables can affect expected supply and returns through a nonlinear response surface \(m(W_{t-1})\). At the same time, lagged prices and related financial predictors may be highly persistent.
-
-The geometric interpretation separates these roles. The sieve profile projects returns onto the weather-response space. The orthogonalized weight projects the raw predictor weight onto the orthogonal complement of that same space. The empirical likelihood score therefore tests the incremental predictive content of \(X_{t-1}\) using only the component that is geometrically separated from the nuisance directions.
-
 \section{Conclusion}
 
-The method extends fixed-intercept predictive regression EL to settings with an unknown exogenous control function. Its central object is an EL score that is nuisance-orthogonal, persistence-robust, and efficiency-interpretable. Under the rate window \(T^{d/(2s)}\ll K\ll T^{1/2}\), together with the displayed sample projection and oracle-score conditions, the profiled and orthogonalized feasible score is asymptotically equivalent to the matched-projection oracle bounded score, and the empirical likelihood ratio retains the standard \(\chi_1^2\) limit for mean predictability. The efficiency benchmark adds the complementary message: matched projection also identifies the conditional-moment efficient direction, and the bounded score's efficiency loss is exactly its squared weighted angle from that direction. The simulations support the same hierarchy: the profile statistic matches the oracle, ignoring the nuisance breaks size, and the saturation parameter traces the empirical robustness--efficiency frontier.
+The paper studies a specific source of spurious predictability: multiple unknown breaks in a nonparametric nuisance component. A stable semiparametric procedure leaves a break-induced term in the score when the omitted nuisance break is aligned with the residualized persistent weight. The proposed break-adaptive sieve EL removes that component by profiling a regime-specific nuisance partition under each null value and residualizing both the outcome and the score weight against the resulting block sieve space. The previous profile-sieve geometry is retained as the known-partition core, while the new results add the stable-method failure theorem, partition learning, estimated-partition Wilks inference, and the empirical distinction between break-induced score drift and genuine predictive drift.
 
 \section{Supplementary Material}
 
-The online Supplement contains three parts. Section S1 proves Theorem~\ref{thm:geo-wilks} using the projection identities, feasible--oracle replacement, and scalar EL expansion. Section S2 derives Propositions~\ref{prop:geo-eff-direction}--\ref{prop:geo-eff-attain}. Section S3 records Monte Carlo design and reproducibility details.
+The online Supplement gives the omitted-break expansion, the Wilks proofs, the estimated partition and local-power arguments, and implementation details.
+
+\begin{thebibliography}{99}
+
+\bibitem[Andersen and Varneskov(2021)]{AndersenVarneskov2021}
+Andersen, T. G. and Varneskov, R. T. (2021).
+Testing for parameter instability and structural change in persistent predictive regressions.
+NBER Working Paper No. 28570.
+
+\bibitem[Andrews(1993)]{Andrews1993}
+Andrews, D. W. K. (1993).
+Tests for parameter instability and structural change with unknown change point.
+{\it Econometrica} {\bf 61}, 821--856.
+
+\bibitem[Bai and Perron(1998)]{BaiPerron1998}
+Bai, J. and Perron, P. (1998).
+Estimating and testing linear models with multiple structural changes.
+{\it Econometrica} {\bf 66}, 47--78.
+
+\bibitem[Baranowski, Chen and Fryzlewicz(2019)]{BaranowskiChenFryzlewicz2019}
+Baranowski, R., Chen, Y. and Fryzlewicz, P. (2019).
+Narrowest-over-threshold detection of multiple change points and change-point-like features.
+{\it Journal of the Royal Statistical Society, Series B} {\bf 81}, 649--672.
+
+\bibitem[Kovacs et al.(2023)]{KovacsLiBuhlmannMunk2023}
+Kovacs, S., Li, H., Buhlmann, P. and Munk, A. (2023).
+Seeded binary segmentation: A general methodology for fast and optimal change point detection.
+{\it Biometrika} {\bf 110}, 249--256.
+
+\bibitem[Newey(1997)]{Newey1997}
+Newey, W. K. (1997).
+Convergence rates and asymptotic normality for series estimators.
+{\it Journal of Econometrics} {\bf 79}, 147--168.
+
+\bibitem[Owen(1988)]{Owen1988}
+Owen, A. B. (1988).
+Empirical likelihood ratio confidence intervals for a single functional.
+{\it Biometrika} {\bf 75}, 237--249.
+
+\bibitem[Owen(2001)]{Owen2001}
+Owen, A. B. (2001).
+{\it Empirical Likelihood}.
+Chapman and Hall/CRC, Boca Raton.
+
+\bibitem[Perron(1989)]{Perron1989}
+Perron, P. (1989).
+The great crash, the oil price shock, and the unit root hypothesis.
+{\it Econometrica} {\bf 57}, 1361--1401.
+
+\bibitem[Qin and Lawless(1994)]{QinLawless1994}
+Qin, J. and Lawless, J. (1994).
+Empirical likelihood and general estimating equations.
+{\it Annals of Statistics} {\bf 22}, 300--325.
+
+\bibitem[Zhu, Cai and Peng(2014)]{ZhuCaiPeng2014}
+Zhu, F., Cai, Z. and Peng, L. (2014).
+Predictive regressions for macroeconomic data.
+{\it Annals of Applied Statistics} {\bf 8}, 577--594.
+
+\end{thebibliography}
 
 \end{document}

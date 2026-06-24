@@ -1,0 +1,12 @@
+{
+  "n": 6669,
+  "start": "1994-10-04",
+  "end": "2024-11-28",
+  "K": 4,
+  "qhat": 0,
+  "break_indices": [],
+  "break_dates": [],
+  "PRCP_loading": 0.7071067811865486,
+  "TAVG_loading": -0.7071067811865464,
+  "score_gap_stable_minus_adaptive": 0.0
+}

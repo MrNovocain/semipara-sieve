@@ -1,0 +1,22 @@
+\begin{table}[t]
+\centering
+\caption{Monte Carlo rejection rates under nuisance breaks}
+\label{tab:break-mc}
+\begin{tabular}{ccccccc}
+\hline
+$q_0$ & $\rho$ & Stable & Oracle & Estimated & $P(\widehat q=1)$ & Break error \\
+\hline
+0 & 0.50 & 0.047 & 0.047 & 0.043 & 0.033 & -- \\
+0 & 0.90 & 0.037 & 0.037 & 0.040 & 0.037 & -- \\
+0 & 0.98 & 0.060 & 0.060 & 0.057 & 0.017 & -- \\
+0 & 1.00 & 0.090 & 0.090 & 0.093 & 0.033 & -- \\
+1 & 0.50 & 0.133 & 0.050 & 0.060 & 1.000 & 1.5 \\
+1 & 0.90 & 0.397 & 0.073 & 0.077 & 1.000 & 2.0 \\
+1 & 0.98 & 0.653 & 0.057 & 0.057 & 1.000 & 1.2 \\
+1 & 1.00 & 0.693 & 0.090 & 0.087 & 1.000 & 1.4 \\
+\hline
+\end{tabular}
+\begin{minipage}{0.94\linewidth}
+\footnotesize Notes: $T=240$, $K=4$, 300 replications in the submission run unless the script is called with a different replication count. The break design has a level shift of 1.25 at mid-sample. The estimated procedure selects between zero and one nuisance break by the null-imposed profile-sieve information criterion.
+\end{minipage}
+\end{table}
