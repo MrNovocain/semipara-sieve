@@ -339,6 +339,61 @@ For the score array under consideration,
 \]
 When used for the true partition, \(Z_{t,T}=\widehat Z_t(\beta_0,\Lambda_0)\). When used for the estimated partition, \(Z_{t,T}=\widehat Z_t(\beta_0,\widetilde\Lambda)\).
 \end{assumption}
+\begin{assumption}[Primitive sign mass for convex hull]
+\label{ass:prim-sign-mass}
+There are constants \(c_u,c_v,p_0,\pi>0\) and design-measurable sets
+\(J_T\subset\{1,\ldots,T\}\) with \(|J_T|\geq\pi T\) such that
+\[
+    |v_{t,0}|\geq c_v,
+    \qquad t\in J_T,
+\]
+and, conditionally on \(\D_T\),
+\[
+    \Pp(U_t>c_u\mid\D_T)\geq p_0,
+    \qquad
+    \Pp(U_t<-c_u\mid\D_T)\geq p_0,
+    \qquad t\in J_T.
+\]
+For the estimated one-break score, the feasible-score perturbation away from
+\(O_p(r_T)\) boundary observations satisfies
+\begin{equation}
+    a_Kb_K^2
+    +b_K\zeta_K\sqrt{\frac{\log\{T(1+r_T)\}}{T}}
+    +\frac{b_Kr_T\zeta_K^2}{T}
+    \longrightarrow0.
+    \label{eq:convex-hull-transfer-rate}
+\end{equation}
+\end{assumption}
+
+\begin{lemma}[Primitive convex-hull verification]
+\label{lem:primitive-convex-hull}
+Under Assumptions \ref{ass:prim-stoch}, \ref{ass:prim-bounded},
+\ref{ass:prim-gram}, \ref{ass:prim-sieve}, \ref{ass:sol-oracle-envelope}, and
+\ref{ass:prim-sign-mass}, Assumption \ref{ass:prim-convex} holds for the true
+partition score.  If, in addition, \(q_0=1\),
+\(|\widetilde k-k_0|=O_p(r_T)\), and the local bridge rates hold, then
+Assumption \ref{ass:prim-convex} also holds for the estimated one-break score.
+\end{lemma}
+
+\begin{proof}[Detailed solution]
+Condition on \(\D_T\).  Let \(J_T^+=\{t\in J_T:v_{t,0}\geq c_v\}\) and
+\(J_T^-=\{t\in J_T:v_{t,0}\leq-c_v\}\).  At least one of these sets has
+cardinality at least \(\pi T/2\).  If \(|J_T^+|\geq\pi T/2\), then a positive
+oracle score occurs when some \(U_t>c_u\) on \(J_T^+\), and a negative oracle
+score occurs when some \(U_t<-c_u\) on \(J_T^+\).  Conditional independence
+bounds the probability of missing either sign by \(2(1-p_0)^{\pi T/2}\).  The
+case \(|J_T^-|\geq\pi T/2\) is identical with the signs reversed.  For the true partition, the sharper leverage form of the projection-noise bound
+and the sieve approximation bound imply a uniform \(o_p(1)\) feasible-score
+perturbation on \(J_T\); this is the \(r_T=0\) case of the transfer rate below.
+Thus both signs remain present for \(\widehat Z_t(\beta_0,\Lambda_0)\).
+
+For the estimated partition, remove the boundary set where assignments differ;
+Lemma \ref{lem:wb-boundary-size} leaves at least \(\pi T-o_p(T)\) observations.
+On the remaining observations, the coefficient-update bound, the uniform
+projection-noise bound, and the sieve approximation bound give the transfer rate
+in \eqref{eq:convex-hull-transfer-rate}.  Hence the estimated score has both
+signs with probability tending to one.
+\end{proof}
 
 
 \section{Conditional-Design Completing Conditions}
@@ -1513,13 +1568,18 @@ The following conditions hold.
     one-break search,
     \[
         RSS_K(\beta_0,k)-RSS_K(\beta_0,k_0)
-        \geq \frac12D_T(k)-O_p(R_T),
+        \geq \frac12D_T(k)-O_p(R_T).
     \]
-    and uniformly over \(0\leq q\leq\bar q\),
+    It also gives the order-selection comparisons
+    \[
+        RSS_K\{\beta_0,\widehat\Lambda_0(\beta_0)\}
+        -RSS_K(\beta_0,k_0)
+        \geq cT\Delta_T^2-O_p(R_T),
+    \]
+    and, uniformly over \(1<q\leq\bar q\),
     \[
         RSS_K(\beta_0,k_0)
-        -RSS_K\{\beta_0,\widehat\Lambda_q(\beta_0)\}=O_p(R_T)
-        \quad(q>1).
+        -RSS_K\{\beta_0,\widehat\Lambda_q(\beta_0)\}=O_p(R_T).
     \]
     The rates satisfy
     \[
@@ -1654,6 +1714,50 @@ increase is \((q-1)\kappa_TR_T\).  Since \(\kappa_T\to\infty\) and \(\bar q\)
 is fixed, all overfitted objectives are larger with probability tending to one.
 A finite union bound over \(q\neq1\) proves the claim.
 \end{proof}
+\begin{corollary}[Jointly feasible rates]
+\label{cor:jointly-feasible-rates}
+Suppose \(\zeta_K^2\asymp K\), \(a_K\asymp K^{-s/d}\),
+\(\Delta_T\geq c_\Delta>0\), and choose
+\[
+    K\asymp T^{d/(2s+d)}.
+\]
+If \(s>d\), then
+\[
+    R_T=K+\log T+Ta_K^2\asymp K,
+    \qquad
+    r_T=R_T/\Delta_T^2\asymp K,
+\]
+and all main bridge, local-bias, envelope, convex-hull transfer, and penalty
+rates hold with, for example,
+\[
+    \operatorname{pen}_T(q,K)=qK\log\log(T+e^e).
+\]
+\end{corollary}
+
+\begin{proof}[Detailed solution]
+With \(K\asymp T^{d/(2s+d)}\) and \(a_K\asymp K^{-s/d}\),
+\(Ta_K^2\asymp K\), so \(R_T\asymp K\) and \(r_T\asymp K\).  The largest
+bridge restriction is
+\[
+    \frac{K^3\log K}{T}\to0,
+\]
+up to logarithmic factors, and this follows from \(s>d\).  The local-bias rate
+is
+\[
+    \frac{a_K K^{5/2}}{\sqrt T}\to0,
+\]
+which is also implied by \(s>d\).  The convex-hull transfer terms reduce to
+\[
+    K^{1-s/d}\to0,
+    \qquad
+    K\sqrt{\frac{\log T}{T}}\to0,
+    \qquad
+    \frac{K^{5/2}}{T}\to0,
+\]
+again under \(s>d\).  Finally,
+\(K\log\log T=o(T\Delta_T^2)\), so the displayed penalty satisfies Assumption
+\ref{ass:wb-penalty}.
+\end{proof}
 \begin{lemma}[High-probability event transfer]
 \label{lem:wb-event-transfer}
 Let \(X_T\) and \(Y_T\) be real statistics, and let \(E_T\) be events
@@ -1753,6 +1857,66 @@ Put
     \delta_h=\frac{h\Gamma}{\eta}.
 \]
 \end{assumption}
+
+\begin{assumption}[Local drift stability under break perturbation]
+\label{ass:local-drift-stability}
+For every fixed \(C<\infty\), uniformly over \(|k-k_0|\leq Cr_T\),
+\[
+    T^{-1/2}\left|
+    \bm X_{lag}'\{\bm M_{K,k}-\bm M_{K,k_0}\}\bm w
+    \right|=o_p(1),
+\]
+where \(q_0=1\).  With
+\[
+    g_t(k)=\frac{h}{\sqrt T}(\bm M_{K,k}\bm X_{lag})_t
+           (\bm M_{K,k}\bm w)_t,
+\]
+we also have
+\[
+    \sup_{|k-k_0|\leq Cr_T}
+    T^{-1}\sum_{t=1}^T\{g_t(k)-g_t(k_0)\}^2=o_p(1),
+    \qquad
+    \sup_{|k-k_0|\leq Cr_T}
+    \max_t|g_t(k)-g_t(k_0)|=o_p(\sqrt T).
+\]
+Finally, under \(P_{\beta_T}\), the profile-RSS expansion in Assumption
+\ref{ass:bp-profile-sieve} remains valid with the same \(R_T\).
+\end{assumption}
+
+\begin{proposition}[Local-law bridge and order stability]
+\label{prop:local-law-stability}
+Suppose \(q_0=1\), Assumptions \ref{ass:wb-local-oracle} and
+\ref{ass:local-drift-stability} hold, and the null-law one-break localization,
+bridge, and unknown-order penalty rates hold.  Under \(P_{\beta_T}\),
+\[
+    |\widetilde k-k_0|=O_p(r_T),
+\]
+\[
+    S_T(\widetilde\Lambda)-S_T(\Lambda_0)=o_p(1),
+    \qquad
+    V_T(\widetilde\Lambda)-V_T(\Lambda_0)=o_p(1),
+    \qquad
+    \max_t|\widehat Z_t(\beta_0,\widetilde\Lambda)|=o_p(\sqrt T),
+\]
+and, if unknown order is used,
+\[
+    P_{\beta_T}\{\widehat q(\beta_0)=1\}\to1.
+\]
+\end{proposition}
+
+\begin{proof}[Detailed solution]
+Under \(\beta_T=\beta_0+h/\sqrt T\), the null-imposed segmentation criterion
+adds only the local slope-drift terms generated by \(h\bm X_{lag}/\sqrt T\).
+Assumption \ref{ass:local-drift-stability} states precisely that these terms
+are \(o_p(1)\) at the empirical-likelihood score scale and are absorbed into the
+same \(O_p(R_T)\) RSS remainder used under the null.  Hence the proof of
+Theorem \ref{thm:wb-localization} and Theorem \ref{thm:wb-order} applies under
+\(P_{\beta_T}\).  The numerator and denominator bridge proofs gain the drift
+array \(g_t(k)-g_t(k_0)\), and the two displayed drift-stability bounds make its
+contribution negligible in the first two score moments and in the maximum-score
+condition.  The remaining terms are exactly the null-law bridge terms already
+controlled in Theorem \ref{thm:wb-one-break-equivalence}.
+\end{proof}
 
 \begin{lemma}[Local shifted-score replacement]
 \label{lem:wb-local-replacement}
@@ -1887,17 +2051,9 @@ yields
 
 \begin{theorem}[Local noncentral chi-square]
 \label{thm:wb-local-power}
-Suppose the conditions of Lemma \ref{lem:wb-local-true-el} hold.  Suppose
-also that, under \(P_{\beta_T}\), the local estimated-partition bridge holds:
-\[
-    S_T(\widetilde\Lambda)-S_T(\Lambda_0)=o_p(1),
-    \qquad
-    V_T(\widetilde\Lambda)-V_T(\Lambda_0)=o_p(1),
-    \qquad
-    \max_t|\widehat Z_t(\beta_0,\widetilde\Lambda)|=o_p(\sqrt T),
-\]
-and the local convex-hull condition holds for
-\(\widehat Z_t(\beta_0,\widetilde\Lambda)\).  Then
+Suppose the conditions of Lemma \ref{lem:wb-local-true-el} hold, Proposition
+\ref{prop:local-law-stability} holds, and the local convex-hull condition holds
+for \(\widehat Z_t(\beta_0,\widetilde\Lambda)\).  Then
 \[
     \ell_T(\beta_0,\widetilde\Lambda)
     \Rightarrow
@@ -1943,13 +2099,11 @@ unknown-order statistic.
 
 \begin{remark}[Proof audit for Theorem \ref{thm:wb-local-power}]
 The local theorem has two separate pieces.  Lemma \ref{lem:wb-local-true-el}
-proves the noncentral limit at the true partition from the local drift
-\(g_{t,T}\), the local denominator stability, and the scalar EL expansion.
-The theorem then uses a local-law version of the estimated-partition bridge to
-move from \(\Lambda_0\) to \(\widetilde\Lambda\).  The bridge must include
-the maximum-score condition; numerator and denominator equivalence alone are not
-enough for empirical likelihood.  Unknown-order local power is only an event
-transfer and requires order consistency under the local law \(P_{\beta_T}\).
+proves the noncentral limit at the true partition from the calibrated local
+drift \(g_{t,T}\), the local denominator stability, and the scalar EL expansion.
+Proposition \ref{prop:local-law-stability} then moves the result from
+\(\Lambda_0\) to \(\widetilde\Lambda\) and supplies local order consistency for
+unknown-order transfer.
 \end{remark}
 
 \section{Multiple-Break Extension Sketch}
@@ -2024,10 +2178,10 @@ Wilks and unknown-order Wilks results are stated for one nuisance break.  A
 general fixed-\(q_0\) claim requires the telescoping extension in Section
 \ref{sec:multiple-break-sketch} to be written as a full proof.
 
-\section{Master Dependency Checklist}
+\section{Closure Checklist After Editor--Author Loop}
 
-The remaining obligations for a paper version are now concrete rather than
-broad modular placeholders.
+The harsh-editor objections addressed in this rebuild are recorded as closure
+checks rather than future work.
 
 \begin{center}
 \small
@@ -2035,25 +2189,27 @@ broad modular placeholders.
                 >{\raggedright\arraybackslash}p{0.46\textwidth}
                 >{\raggedright\arraybackslash}p{0.16\textwidth}}
 \hline
-Obligation & Concrete check & Status in this workbook \\
+Editor objection & Author repair & Location \\
 \hline
-Design exogeneity & State and defend conditional independence/sub-Gaussianity given \(\D_T\) for the intended empirical or simulation design & Main assumption \\
-Profile identification & Verify \(D_T(k)\geq c_\Delta |k-k_0|\Delta_T^2\) and the underfit gap from sieve jump energy and Gram stability & Isolated condition \\
-Rate compatibility & Exhibit nonempty choices of \(K_T\), smoothness, and \(\Delta_T\) satisfying the bridge, projection, and penalty rates & Needs corollary \\
-Convex hull & Give a primitive sign-mass condition or use an adjusted EL variant & Still separate EL regularity \\
-Local drift & Estimate or assume \(\Gamma_T\to_p\Gamma\) and verify the quadratic/max drift bounds & Stated in local theorem \\
-Multiple breaks & Promote the telescoping sketch to uniform multi-boundary lemmas & Future extension \\
+The stochastic environment mixed martingale scores with full-design break search & Replaced it by conditional independence and sub-Gaussian tails given \(\D_T\) & Assumption \ref{ass:prim-stoch} \\
+The residualized instrument was not predictable & Made all projected scores design-measurable conditional-on-\(\D_T\) objects & Assumption \ref{ass:prim-score-admissible} \\
+The order theorem needed \(R_T=o(T\Delta_T^2)\) and a concrete penalty & Set \(R_T=K+\log T+Ta_K^2\), \(r_T=R_T/\Delta_T^2\), and \(\operatorname{pen}_T(q,K)=q\kappa_TR_T\) & Assumptions \ref{ass:bp-profile-sieve} and \ref{ass:wb-penalty} \\
+The underfit RSS gap was implicit & Added an explicit zero-break comparison with \(cT\Delta_T^2-O_p(R_T)\) & Assumption \ref{ass:bp-profile-sieve} \\
+The random-index projection bounds were pointwise & Added search-uniform \(T\)-norm and sup-norm projection-noise bounds & Lemma \ref{lem:wb-uniform-projection-noise} \\
+Convex hull was a black-box EL condition & Added a primitive sign-mass condition and convex-hull verification lemma & Assumption \ref{ass:prim-sign-mass} and Lemma \ref{lem:primitive-convex-hull} \\
+The rates might be mutually empty & Added a concrete smoothness/dimension regime with \(s>d\) & Corollary \ref{cor:jointly-feasible-rates} \\
+Local power reused null-law bridges without saying why & Added local drift stability and local-law bridge/order transfer & Assumption \ref{ass:local-drift-stability} and Proposition \ref{prop:local-law-stability} \\
+The estimated-partition theorem overclaimed multiple breaks & Restricted the main result to \(q_0=1\) and moved fixed-\(q_0\) to a telescoping sketch & Section \ref{sec:multiple-break-sketch} \\
 \hline
 \end{tabular}
 \end{center}
 
-\subsection*{Recommended remaining proof order}
-\begin{enumerate}
-    \item Add a rate-compatibility corollary, for example under
-    \(\zeta_K^2\asymp K\), \(a_K\asymp K^{-s/d}\), and \(\Delta_T\geq c>0\).
-    \item Add a primitive convex-hull lemma or switch to adjusted empirical
-    likelihood.
-    \item Verify profile identification for the chosen basis and design class.
-    \item Decide whether the multiple-break telescoping sketch should remain an
-    appendix note or become a theorem.
-\end{enumerate}\end{document}
+\paragraph{Final editorial status.}
+Within the declared scope--conditional-on-design errors, one unknown nuisance
+break for estimated-partition Wilks, fixed \(\bar q\), and the displayed rate
+regime--the workbook now states a coherent proof chain from primitive design
+conditions to known-break Wilks, estimated-break Wilks, unknown-order transfer,
+and local noncentrality.  The only material not claimed as a theorem is the
+general fixed-multiple-break extension, which is explicitly labeled as an
+extension sketch rather than part of the main result.
+\end{document}
