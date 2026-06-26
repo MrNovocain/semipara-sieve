@@ -1,0 +1,16 @@
+{
+  "config_path": "W:/Research/semipara sieve/configs/mc/broken_nuisance_one_break.yaml",
+  "raw_path": "W:/Research/semipara sieve/result/workbook_break_smoke/workbook_break_raw.csv",
+  "summary_path": "W:/Research/semipara sieve/result/workbook_break_smoke/workbook_break_summary.csv",
+  "dgp_name": "broken_nuisance_ar1",
+  "q0": 1,
+  "selector": "workbook_one_break",
+  "q_max": 1,
+  "true_break_mean": 125.0,
+  "Delta_T_mean": 1.0,
+  "report_rate_diagnostics": true,
+  "rate_columns": [
+    "r_T_over_sqrt_T",
+    "kappa_R_over_T_delta_sq"
+  ]
+}

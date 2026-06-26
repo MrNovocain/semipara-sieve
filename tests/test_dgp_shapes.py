@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 
-from pseel.dgp import PredictiveAR1DGP
+from pseel.dgp import BrokenNuisanceAR1DGP, PredictiveAR1DGP
 
 
 def _params(**overrides):
@@ -45,3 +45,22 @@ def test_unit_root_predictor_starts_from_controlled_initial_condition():
     data = dgp.simulate(seed=246, T=40, rho_design={"label": "unit_root", "formula": "fixed", "value": 1.0}, beta=0.0)
     assert data.meta["x_initialization"] == "zero_at_sample_start"
     assert data.x_lag[0] == 0.0
+
+def test_broken_nuisance_dgp_records_one_break_and_jump_size():
+    dgp = BrokenNuisanceAR1DGP(
+        _params(
+            break_fraction=0.4,
+            m_left={"name": "sinus_quad", "params": {"a1": 0.2, "a2": 0.0}},
+            m_right={"name": "sinus_quad", "params": {"a1": 0.2, "a2": 0.0, "level": 1.25}},
+        )
+    )
+
+    data = dgp.simulate(seed=135, T=100, rho_design={"label": "stationary", "formula": "fixed", "value": 0.6}, beta=0.0)
+
+    assert data.meta["q0"] == 1
+    assert data.meta["true_break"] == 40
+    assert data.meta["Delta_T"] > 1.0
+    assert len(data.meta["m_left_values"]) == data.T
+    assert len(data.meta["m_right_values"]) == data.T
+    assert np.allclose(data.m_w[:40], np.asarray(data.meta["m_left_values"])[:40])
+    assert np.allclose(data.m_w[40:], np.asarray(data.meta["m_right_values"])[40:])

@@ -7,6 +7,8 @@
 
 ## Hard Constraints
 - Do not modify `writing_samples/profile sieve.tex`.
+- For manuscript-theory or paper-text decisions, treat `writing_samples/profile_sieve_bai_perron_theory_workbook.tex` as the only current manuscript source.
+- Do not use other manuscript-like TeX files as current manuscript authority unless the user explicitly overrides this rule for a specific task. Keep them as noncanonical reference material listed in `writing_samples/source_notes/noncanonical_manuscript_sources.md`.
 - Keep Monte Carlo outputs in `results/<run_id>/` through the config-driven runner.
 - Prefer reproducible scripts over one-off notebook or shell-only experiments.
 - Keep personal application materials outside the paper workflow.

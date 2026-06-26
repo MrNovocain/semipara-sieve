@@ -1,0 +1,39 @@
+{
+  "source_page_url": "https://example.test/source",
+  "download_url": "https://example.test/export.xlsx",
+  "accessed_at_utc": "2026-06-26T01:57:16.438663+00:00",
+  "raw_file": {
+    "name": "PredictorData2025.xlsx",
+    "path": "result/goyal_welch_empirical/test_scratch/PredictorData2025.xlsx",
+    "size_bytes": 5954,
+    "sha256": "ea0bab36ba3f12ebfd02c9fc3e3af367e935dd42a737ea99b5504638df5608c8"
+  },
+  "processed_file": {
+    "name": "goyal_welch_monthly.csv",
+    "path": "result/goyal_welch_empirical/test_scratch/goyal_welch_monthly.csv",
+    "exists": true,
+    "rows": 1,
+    "sha256": "6661a0026a94010a8555c111ff28777f78dbb0664c4de47b3a3737b7832c7502"
+  },
+  "workbook": {
+    "sheets": [
+      {
+        "name": "Monthly",
+        "rows": 4,
+        "columns": 16
+      },
+      {
+        "name": "Annual",
+        "rows": 2,
+        "columns": 1
+      }
+    ]
+  },
+  "processing": {
+    "panel": "monthly",
+    "dependent_variable": "equity_premium = CRSP_SPvw - Rfree",
+    "default_x": "dp",
+    "default_w": "tms",
+    "lag_convention": "x_lag and w_lag are one-month lags of the cleaned predictor columns."
+  }
+}

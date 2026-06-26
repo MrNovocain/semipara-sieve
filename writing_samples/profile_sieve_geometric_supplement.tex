@@ -75,7 +75,7 @@ $\ $\par \fontsize{12}{14pt plus.8pt minus .6pt}\selectfont
 \vspace{.55cm}
 \fontsize{9}{11.5pt plus.8pt minus .6pt}\selectfont
 \noindent
-This supplement gives the technical details behind the block-sieve empirical likelihood construction in the main manuscript. Section S1 records the finite-sample block projection identities. Section S2 proves the stable-score decomposition and the omitted-break failure theorem. Section S3 proves the known-partition Wilks theorem by extending the original profile-sieve geometry to a regime-specific nuisance space. Section S4 gives the estimated-partition equivalence argument based on the set of misclassified observations. Section S5 proves the local-alternative calculation. Section S6 records implementation details for the reported simulations and the empirical application.
+This supplement gives the technical details behind the block-sieve empirical likelihood construction in the main manuscript. Section S1 records the finite-sample block projection identities using the Moore--Penrose inverse. Section S2 proves the stable-score decomposition and the conditional omitted-break failure theorem. Section S3 proves the known-partition Wilks theorem under projection-bias negligibility rather than full root-\(T\) undersmoothing. Section S4 gives the high-level fixed-order estimated-score likelihood transfer. Section S5 proves the shifted-array local-alternative calculation. Section S6 records implementation details for the reported simulations and the empirical application.
 \par
 
 \setcounter{section}{0}
@@ -90,13 +90,24 @@ This supplement gives the technical details behind the block-sieve empirical lik
 
 \fontsize{12}{14pt plus.8pt minus .6pt}\selectfont
 
+For a scalar array \(\bm a=(a_1,\ldots,a_T)'\), write
+\[
+    \|\bm a\|_T^2
+    =
+    T^{-1}\sum_{t=1}^T a_t^2,
+    \qquad
+    \|\bm a\|_\infty=\max_{t\leq T}|a_t|.
+\]
+Unless stated otherwise, \(O_p(\cdot)\) and \(o_p(\cdot)\) for growing
+vectors and matrices are in Euclidean and spectral norm, respectively.
+
 \section{Block Projection Algebra}
 
 Fix a partition \(\Lambda=(k_1,\ldots,k_q)\). Let \(\bm Q_{K,\Lambda}\) and \(\bm M_{K,\Lambda}\) be defined as in (\ref*{eq:block-q}) and (\ref*{eq:block-m}). Throughout this supplement, all projection equalities are equalities in the empirical Hilbert space \((\R^T,T^{-1}\bm a'\bm b)\).
 
 \begin{lemma}[Block projection identities]
 \label{lem:s-block-identities}
-If \(\bm Q_{K,\Lambda}'\bm Q_{K,\Lambda}\) is nonsingular, then
+For any partition \(\Lambda\),
 \[
     \bm Q_{K,\Lambda}'\bm M_{K,\Lambda}=\bm0,
     \qquad
@@ -111,7 +122,7 @@ For every \(\bm c\) conformable with \(\bm Q_{K,\Lambda}\),
 \end{lemma}
 
 \begin{proof}
-Let \(\bm\Pi_{K,\Lambda}=\bm Q_{K,\Lambda}(\bm Q_{K,\Lambda}'\bm Q_{K,\Lambda})^{-1}\bm Q_{K,\Lambda}'\). This is the orthogonal projector onto the column space of \(\bm Q_{K,\Lambda}\). Therefore \(\bm\Pi_{K,\Lambda}'=\bm\Pi_{K,\Lambda}\), \(\bm\Pi_{K,\Lambda}^2=\bm\Pi_{K,\Lambda}\), and \(\bm Q_{K,\Lambda}'(\bm I_T-\bm\Pi_{K,\Lambda})=\bm0\). Since \(\bm M_{K,\Lambda}=\bm I_T-\bm\Pi_{K,\Lambda}\), the displayed identities follow. The final equality is obtained by multiplying \(\bm Q_{K,\Lambda}'\bm M_{K,\Lambda}=\bm0\) by \(\bm c\) and \(\bm w\).
+Let \(\bm\Pi_{K,\Lambda}=\bm Q_{K,\Lambda}(\bm Q_{K,\Lambda}'\bm Q_{K,\Lambda})^\dagger\bm Q_{K,\Lambda}'\). This is the orthogonal projector onto the column space of \(\bm Q_{K,\Lambda}\). Therefore \(\bm\Pi_{K,\Lambda}'=\bm\Pi_{K,\Lambda}\), \(\bm\Pi_{K,\Lambda}^2=\bm\Pi_{K,\Lambda}\), and \(\bm Q_{K,\Lambda}'(\bm I_T-\bm\Pi_{K,\Lambda})=\bm0\). Since \(\bm M_{K,\Lambda}=\bm I_T-\bm\Pi_{K,\Lambda}\), the displayed identities follow. The final equality is obtained by multiplying \(\bm Q_{K,\Lambda}'\bm M_{K,\Lambda}=\bm0\) by \(\bm c\) and \(\bm w\).
 \end{proof}
 
 \section{Stable-Score Failure}
@@ -142,8 +153,18 @@ The scalar EL expansion gives
     \frac{\{S_T^{\mathrm{st}}(\beta_0)\}^2}{V_T^{\mathrm{st}}}
     +o_p(1).
 \]
-By Proposition \ref*{prop:stable-decomp}, \(S_T^{\mathrm{st}}(\beta_0)=A_T^{\mathrm{st}}+B_T\). If \(|B_T|/(V_T^{\mathrm{st}})^{1/2}\to_p\infty\), the quadratic ratio diverges in probability, so rejection at any fixed critical value has probability tending to one. If the normalized oracle term converges to \(N(0,1)\) and the normalized break term converges to a nondegenerate random variable \(B\), then the limiting quadratic form is \((Z+B)^2\), where \(Z\sim N(0,1)\) conditionally on the limiting variance. This is central chi-square only when \(B=0\) with probability one.
+By Proposition \ref*{prop:stable-decomp}, \(S_T^{\mathrm{st}}(\beta_0)=A_T^{\mathrm{st}}+B_T\). With
+\[
+    a_T=\frac{A_T^{\mathrm{st}}}{(V_T^{\mathrm{st}})^{1/2}},
+    \qquad
+    b_T=\frac{B_T}{(V_T^{\mathrm{st}})^{1/2}},
+\]
+the expansion is \(\ell_T^{\mathrm{st}}(\beta_0)=(a_T+b_T)^2+o_p(1)\). If \(a_T=O_p(1)\) and \(|b_T|\to_p\infty\), then \(|a_T+b_T|\geq |b_T|-|a_T|\to_p\infty\), so the statistic diverges in probability. Under joint stable convergence \((a_T,b_T)\xrightarrow{\mathrm{st}}(Z,B)\), the continuous mapping theorem gives \((a_T+b_T)^2\Rightarrow (Z+B)^2\). Since \(Z\) is conditionally standard normal given the limiting sigma-field, \((Z+B)^2\mid B\sim\chi_1^2(B^2)\).
 \end{proof}
+
+\begin{remark}[Scope of omitted-break divergence]
+The divergence conclusion is conditional on the stable empirical-likelihood quadratic expansion. With a fixed omitted nuisance break, \(B_T\) may be of order \(\sqrt T\), and the null-style scalar expansion need not hold automatically. A primitive fixed-break divergence proof therefore requires a separate expansion under the misspecified stable nuisance projection.
+\end{remark}
 
 \section{Known-Partition Wilks Theorem}
 
@@ -160,7 +181,7 @@ Under the true partition,
     =
     \bm Q_{K,\Lambda_0}\bm c_0+\bm r_0+\bm U,
 \]
-where \(\bm r_0\) stacks the regime-specific sieve approximation errors.
+where \(\bm r_0\) stacks the regime-specific sieve approximation errors. Let \(\bm e_0=\bm M_{K,\Lambda_0}\bm r_0\).
 
 \begin{lemma}[Known-partition replacement]
 \label{lem:s-known-replacement}
@@ -192,39 +213,72 @@ Because \(\bm M_{K,\Lambda_0}\) is symmetric and idempotent,
     =
     T^{-1/2}(\bm U+\bm r_0)'\bm v_0.
 \]
-The approximation term is bounded by
+By Assumption \ref*{ass:block-sieve},
 \[
-    |T^{-1/2}\bm r_0'\bm v_0|
-    \leq
-    \sqrt T\|\bm r_0\|_T\|\bm v_0\|_T=o_p(1),
+    T^{-1/2}\bm r_0'\bm v_0
+    =
+    T^{-1/2}\bm r_0'\bm M_{K,\Lambda_0}\bm w
+    =o_p(1),
 \]
-which proves (\ref{eq:s-num}). For the denominator, write \(\widetilde{\bm U}_0=\bm M_{K,\Lambda_0}\bm U\). The feasible score decomposes as
+which proves (\ref{eq:s-num}).
+
+It remains to record the denominator and maximum bounds. Let \(G_T=T^{-1}\bm Q_{K,\Lambda_0}'\bm Q_{K,\Lambda_0}\). Since the rows of \(\bm Q_{K,\Lambda_0}\) have norm at most \(\zeta_K\) and the eigenvalues of \(G_T\) are bounded away from zero and infinity,
+\[
+    \|\bm v_0\|_\infty=O_p(1+\zeta_K).
+\]
+Moreover,
+\[
+    T^{-1}\bm Q_{K,\Lambda_0}'\bm r_0=O_p(a_K),
+\]
+and hence
+\[
+    \|\bm e_0\|_T\leq\|\bm r_0\|_T=O_p(a_K),
+    \qquad
+    \|\bm e_0\|_\infty=O_p\{a_K(1+\zeta_K)\}.
+\]
+The stated rates imply
+\[
+    \|\bm e_0\odot\bm v_0\|_T
+    =O_p\{a_K(1+\zeta_K)\}=o_p(1),
+    \qquad
+    \|\bm e_0\odot\bm v_0\|_\infty
+    =O_p\{a_K(1+\zeta_K)^2\}=o_p(\sqrt T).
+\]
+For the denominator, write \(\widetilde{\bm U}_0=\bm M_{K,\Lambda_0}\bm U\). Then
 \[
     \widehat Z_t(\beta_0,\Lambda_0)
     =
-    \widetilde U_{0,t}v_{t,0}
-    +
-    (\bm M_{K,\Lambda_0}\bm r_0)_tv_{t,0}.
+    \widetilde U_{0,t}v_{t,0}+e_{0,t}v_{t,0}.
 \]
-The approximation contribution is negligible by Assumption \ref*{ass:block-sieve}. Assumption \ref*{ass:oracle} then gives
+Assumption \ref*{ass:oracle} gives
 \[
     T^{-1}\sum_{t=1}^T
     \{(\widetilde U_{0,t}v_{t,0})^2-(U_tv_{t,0})^2\}=o_p(1),
 \]
-which proves the denominator equivalence (\ref{eq:s-den}). The maximum bound follows from the oracle maximum condition, the projected-noise replacement condition, and the sup-norm sieve approximation bound.
+and Cauchy--Schwarz with \(\|\bm e_0\odot\bm v_0\|_T=o_p(1)\) gives the remaining cross and square terms. This proves (\ref{eq:s-den}). The maximum bound follows from
+\[
+    |\widehat Z_t(\beta_0,\Lambda_0)|
+    \leq
+    |U_tv_{t,0}|
+    +
+    |(\widetilde U_{0,t}-U_t)v_{t,0}|
+    +
+    |e_{0,t}v_{t,0}|,
+\]
+Assumption \ref*{ass:oracle}, and \(\|\bm e_0\odot\bm v_0\|_\infty=o_p(\sqrt T)\).
 \end{proof}
 
 \begin{lemma}[EL expansion]
 \label{lem:s-el-expansion}
-Let \(Z_{t,T}\) be scalar scores. Suppose the convex-hull condition holds and
+Let \(Z_{t,T}\) be scalar scores and \(\widehat V_T^Z=T^{-1}\sum_tZ_{t,T}^2\). Suppose zero lies in the interior of the scalar convex hull with probability tending to one and
 \[
     T^{-1/2}\sum_t Z_{t,T}=O_p(1),
     \qquad
-    T^{-1}\sum_t Z_{t,T}^2\to_p\eta^2,
+    \widehat V_T^Z\to_p\eta^2,
     \qquad
     \max_t|Z_{t,T}|=o_p(\sqrt T),
 \]
-where \(P(\eta^2>\underline\eta)>1-o(1)\). Then
+where \(P(\eta^2\geq c)=1\) for some fixed \(c>0\). Then
 \[
     2\sum_{t=1}^T\log(1+\widehat\lambda Z_{t,T})
     =
@@ -235,7 +289,14 @@ where \(P(\eta^2>\underline\eta)>1-o(1)\). Then
 \end{lemma}
 
 \begin{proof}
-The multiplier equation implies \(\widehat\lambda=O_p(T^{-1/2})\). Since \(\max_t|\widehat\lambda Z_{t,T}|=o_p(1)\), a Taylor expansion of the multiplier equation gives
+The second-moment condition implies \(P(\widehat V_T^Z\geq c/2)\to1\). Let \(S_T^Z=\sum_tZ_{t,T}\) and \(Q_T^Z=\sum_tZ_{t,T}^2\). On this event, \(S_T^Z=O_p(\sqrt T)\) and \(Q_T^Z\geq cT/2\). Monotonicity of the scalar multiplier equation, evaluated at \(\pm 2|S_T^Z|/Q_T^Z\), gives
+\[
+    |\widehat\lambda|
+    \leq
+    2|S_T^Z|/Q_T^Z
+    =O_p(T^{-1/2}).
+\]
+Since \(\max_t|\widehat\lambda Z_{t,T}|=o_p(1)\), a Taylor expansion of the multiplier equation gives
 \[
     \widehat\lambda
     =
@@ -246,7 +307,7 @@ Substitution into the second-order expansion of the log empirical likelihood giv
 \end{proof}
 
 \begin{proof}[Proof of Theorem \ref*{thm:known-wilks}]
-Apply Lemma \ref{lem:s-known-replacement} to reduce the feasible score to the matched block-projection oracle score \(U_tv_{t,0}\). Assumption \ref*{ass:oracle} gives the mixed-normal numerator limit, denominator consistency, and maximum-score condition. Lemma \ref{lem:s-el-expansion} then yields
+Apply Lemma \ref{lem:s-known-replacement} to reduce the feasible score to the matched block-projection oracle score \(U_tv_{t,0}\). Assumption \ref*{ass:oracle} gives the stable numerator limit, denominator consistency, feasible convex hull, and maximum-score condition. Lemma \ref{lem:s-el-expansion} then yields
 \[
     \ell_T(\beta_0,\Lambda_0)
     =
@@ -259,46 +320,43 @@ Apply Lemma \ref{lem:s-known-replacement} to reduce the feasible score to the ma
 
 \section{Estimated-Partition Equivalence}
 
-This section records the high-level argument behind Theorem \ref*{thm:estimated-equiv}. Let \(\widehat\Lambda=\widehat\Lambda(\beta_0)\) and define
+This section records the high-level likelihood-transfer argument behind Theorem \ref*{thm:estimated-equiv}. Let
 \[
-    \mathcal M_T=
-    \{t:j_{\widehat\Lambda}(t)\neq j_{\Lambda_0}(t)\}.
+    S_T(\Lambda)=T^{-1/2}\sum_t\widehat Z_t(\beta_0,\Lambda),
+    \qquad
+    V_T(\Lambda)=T^{-1}\sum_t\widehat Z_t(\beta_0,\Lambda)^2.
 \]
-Assumption \ref*{ass:partition} states that \(|\mathcal M_T|=o_p(\sqrt T)\) and that the boundary observations are negligible at the numerator and denominator scales.
 
-\begin{lemma}[Misclassification bound]
-\label{lem:s-misclassified}
-Suppose Assumption \ref*{ass:partition} holds. Suppose also that the projected weights are uniformly bounded in probability, the score arrays satisfy the same maximum-score bounds as in Assumption \ref*{ass:oracle}, and the segment Gram matrices are stable uniformly over admissible partitions. Then
-\begin{align*}
-    T^{-1/2}\sum_{t=1}^T
-    \{\widehat Z_t(\beta_0,\widehat\Lambda)-\widehat Z_t(\beta_0,\Lambda_0)\}
-    &=o_p(1),\\
-    T^{-1}\sum_{t=1}^T
-    \{\widehat Z_t(\beta_0,\widehat\Lambda)^2-\widehat Z_t(\beta_0,\Lambda_0)^2\}
-    &=o_p(1),\\
-    \max_t|\widehat Z_t(\beta_0,\widehat\Lambda)|&=o_p(\sqrt T).
-\end{align*}
-\end{lemma}
-
-\begin{proof}
-Away from \(\mathcal M_T\), the estimated partition and true partition assign observations to the same regime. The two residual makers differ only through least-squares fits perturbed by the boundary observations and by terms controlled by uniform Gram stability. With \(\mathcal Z_T\) defined in Assumption \ref*{ass:partition}, the direct contribution of the boundary set to the numerator is bounded by
+\begin{lemma}[Fixed-order estimated-partition likelihood transfer]
+\label{lem:s-estimated-transfer}
+Under the assumptions of Theorem \ref*{thm:known-wilks} and Assumption \ref*{ass:estimated-score},
 \[
-    T^{-1/2}|\mathcal M_T|\mathcal Z_T=o_p(1).
-\]
-The denominator contribution is bounded by \(T^{-1}|\mathcal M_T|\mathcal Z_T^2=o_p(1)\). The remaining terms are the uniform Gram-stability perturbations of the least-squares coefficients and are of the same smaller order. Uniform Gram stability transfers the maximum-score condition from the true partition to the estimated partition.
-\end{proof}
-
-\begin{proof}[Proof of Theorem \ref*{thm:estimated-equiv}]
-Lemma \ref{lem:s-misclassified} shows that the estimated-partition score and the true-partition score have the same first-order numerator, denominator, and maximum-score behavior. Applying Lemma \ref{lem:s-el-expansion} to both arrays yields
-\[
-    \ell_T\{\beta_0,\widehat\Lambda(\beta_0)\}
+    \ell_T(\beta_0,\widetilde\Lambda)
     -
     \ell_T(\beta_0,\Lambda_0)
     =o_p(1).
 \]
-The Wilks limit follows from Theorem \ref*{thm:known-wilks}. If \(P\{\widehat q(\beta_0)=q_0\}\to1\), the same argument holds on the event of correct order selection, proving Corollary \ref*{cor:qhat}.
+\end{lemma}
+
+\begin{proof}
+Lemma \ref{lem:s-known-replacement} and Assumption \ref*{ass:oracle} give \(S_T(\Lambda_0)=O_p(1)\), \(V_T(\Lambda_0)\to_p\eta_q^2\), and a true-partition maximum-score bound. Assumption \ref*{ass:estimated-score} gives
+\[
+    S_T(\widetilde\Lambda)-S_T(\Lambda_0)=o_p(1),
+    \qquad
+    V_T(\widetilde\Lambda)-V_T(\Lambda_0)=o_p(1),
+\]
+and the fixed-order estimated-partition maximum-score and convex-hull conditions. Lemma \ref{lem:s-el-expansion} applies to both arrays, and the two quadratic ratios differ by \(o_p(1)\) because both denominators are bounded away from zero with probability tending to one.
 \end{proof}
 
+\begin{proof}[Proof of Theorem \ref*{thm:estimated-equiv}]
+By Lemma \ref{lem:s-estimated-transfer},
+\[
+    \ell_T(\beta_0,\widetilde\Lambda)
+    =
+    \ell_T(\beta_0,\Lambda_0)+o_p(1).
+\]
+The result follows from Theorem \ref*{thm:known-wilks}. If \(P\{\widehat q(\beta_0)=q_0\}\to1\), then \(\widehat\Lambda(\beta_0)=\widetilde\Lambda\) with probability tending to one. This proves Corollary \ref*{cor:qhat} under the fixed-order event version of Assumption \ref*{ass:estimated-score}.
+\end{proof}
 \section{Local Predictive Alternatives}
 
 This section proves Theorem \ref*{thm:local-power}. Under the local alternative \(\beta_T=\beta_0+d_T\), the null-imposed residual satisfies
@@ -307,18 +365,26 @@ This section proves Theorem \ref*{thm:local-power}. Under the local alternative 
     =
     \bm\mu+\bm U+d_T\bm X_{lag}.
 \]
-At the true partition, the block projection removes the regime-specific sieve approximation to \(\bm\mu\), so the score numerator has the expansion
+At the true partition, the block projection removes the regime-specific sieve approximation to \(\bm\mu\). The numerator replacement condition in Theorem \ref*{thm:local-power} gives
 \[
     T^{-1/2}\sum_{t=1}^T \widehat Z_t(\beta_0,\Lambda_0)
     =
     T^{-1/2}\sum_{t=1}^T U_tv_{t,0}
     +
-    d_TT^{-1/2}\bm X_{lag}'\bm M_{K,\Lambda_0}\bm w
+    T^{-1/2}\sum_{t=1}^Tg_{t,T}
     +o_p(1).
 \]
-By the local drift condition in Theorem \ref*{thm:local-power}, the second term converges to \(\eta_q\delta_h\). The denominator remains \(\eta_q^2+o_p(1)\) because the local drift is at the testing scale and the nuisance-break component is removed by \(\bm M_{K,\Lambda_0}\). Hence the quadratic EL expansion gives a \(\chi_1^2(\delta_h^2)\) limit for the known partition.
-
-Lemma \ref{lem:s-misclassified} transfers the same numerator, denominator, and maximum-score behavior to \(\widehat\Lambda(\beta_0)\), proving the estimated-partition version.
+By the local drift condition, the second term converges to \(\eta_q\delta_h\). The denominator replacement condition reduces the feasible denominator to the shifted oracle denominator. Moreover,
+\[
+    T^{-1}\sum_t(U_tv_{t,0}+g_{t,T})^2
+    =
+    V_T^{(q)}
+    +
+    2T^{-1}\sum_tU_tv_{t,0}g_{t,T}
+    +
+    T^{-1}\sum_tg_{t,T}^2.
+\]
+The last term is \(o_p(1)\) by the local square condition, and the cross term is \(o_p(1)\) by Cauchy--Schwarz and \(V_T^{(q)}=O_p(1)\). Thus the feasible denominator remains \(\eta_q^2+o_p(1)\). The maximum condition follows from the oracle maximum condition and the local maximum and replacement conditions. The feasible convex-hull condition and Lemma \ref{lem:s-el-expansion} give the known-partition limit \((Z+\delta_h)^2\). Lemma \ref{lem:s-estimated-transfer}, applied under the local-alternative estimated-score and convex-hull conditions, transfers the result to \(\widetilde\Lambda\). Correct order selection gives the unknown-order statement for \(\ell_T^{BA}(\beta_0)\).
 \section{Implementation Details}
 
 For simulations, each replication uses the same null-imposed profile path as the theory:

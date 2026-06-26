@@ -85,13 +85,13 @@ python -m pseel.run configs/mc/endogeneity_stress.yaml
 
 Each run writes a lineage-complete directory under `results/<run_id>/` containing `config.yaml`, `config_hash.txt`, `git_commit.txt`, `source_hash.txt`, `environment.txt`, `manifest.json`, `raw_replications.parquet`, `summary.csv`, `diagnostics.json`, and `logs.txt`. The source hash covers the package shim, `src/pseel`, and Python scripts so uncommitted code-state changes are auditable. Deterministic post-processing additionally writes `summary_size.csv`, `summary_oracle_equiv.csv`, and `summary_frontier.csv` when applicable.
 
-The current manuscript evidence is based on these verified runs:
+The currently verified reproducible evidence pack includes these runs:
 
 - `size_main_20260622_220035_894be7b`: 2000 replications, size/oracle-equivalence table, QQ diagnostic.
 - `frontier_main_20260622_220246_9ff471a`: 2000 replications, robustness-efficiency frontier.
 - `endogeneity_stress_20260622_220035_e634f37`: 1000 replications, contemporaneous-endogeneity stress diagnostic.
 
-The current manuscript figures are stable copies under `writing_samples/figures/`, and compact CSV copies are under `writing_samples/tables/`. They are included or cited by `writing_samples/profile_sieve_geometric_paper.tex`.
+The current manuscript source of truth is `writing_samples/profile_sieve_bai_perron_theory_workbook.tex`. Stable figure copies remain under `writing_samples/figures/`, compact CSV/table copies remain under `writing_samples/tables/`, and noncanonical manuscript-like TeX files are listed in `writing_samples/source_notes/noncanonical_manuscript_sources.md`.
 
 
 ## Automated Theory Diagnostics

@@ -216,9 +216,12 @@ with the same nuisance break partition \(\Lambda_0\). Section \ref{sec:local-alt
 \label{ass:prim-stoch}
 Let
 \[
-    \D_T=\sigma\{X_{t-1},W_{t-1}:1\leq t\leq T\}.
+    \D_T=\sigma\{X_{t-1},W_{t-1},w_t:1\leq t\leq T\}.
 \]
-Conditional on \(\D_T\), the variables \(U_{1,T},\ldots,U_{T,T}\) are
+The inclusion of \(w_t\) is deliberate: the residualized empirical-likelihood
+weight \(\bm M_{K,\Lambda}\bm w\) must be fixed in the conditional-design
+arguments.  Conditional on \(\D_T\), the variables
+\(U_{1,T},\ldots,U_{T,T}\) are
 independent and satisfy
 \[
     \E(U_{t,T}\mid\D_T)=0,
@@ -317,6 +320,56 @@ Also,
 \]
 \end{assumption}
 
+\begin{assumption}[Segmentwise orthogonality route for score bias]
+\label{ass:score-bias-orthogonality}
+For each true segment \(I_{j,0}\), choose \(\bm c_{j,K}\) as the empirical
+least-squares projection of \(m_j(W_{t-1})\) on \(\bm P_K(W_{t-1})\) within
+that segment, so
+\[
+    \bm P_{j,0}'\bm r_{j,K}=0.
+\]
+The instrument admits a segmentwise sieve approximation
+\[
+    \bm w_{j,0}=\bm P_{j,0}\bm\gamma_{j,K}+\bm s_{j,K},
+    \qquad
+    \max_j\|\bm s_{j,K}\|_T=O_p(c_K),
+\]
+where \(\|\cdot\|_T\) uses the full-sample normalization.  The rates satisfy
+\[
+    a_K\to0,
+    \qquad
+    \sqrt T\,a_Kc_K\to0.
+\]
+\end{assumption}
+
+\begin{lemma}[Primitive score-bias verification]
+\label{lem:primitive-score-bias}
+Under Assumptions \ref{ass:prim-gram}, \ref{ass:prim-sieve} without its first
+score-bias display, and \ref{ass:score-bias-orthogonality},
+\[
+    T^{-1/2}\bm r_0'\bm M_{K,\Lambda_0}\bm w=o_p(1).
+\]
+Thus the score-bias display in Assumption \ref{ass:prim-sieve} is discharged by
+segmentwise empirical projection and a smooth residualized instrument.
+\end{lemma}
+
+\begin{proof}[Detailed solution]
+On the true partition, \(\bm M_{K,\Lambda_0}\) is block diagonal across the
+true segments.  Let \(\bm M_{j,0}\) be the residual-maker for \(\bm P_{j,0}\)
+on segment \(j\).  Since \(\bm P_{j,0}'\bm r_{j,K}=0\),
+\(\bm M_{j,0}\bm r_{j,K}=\bm r_{j,K}\).  Also
+\(\bm M_{j,0}\bm w_{j,0}=\bm M_{j,0}\bm s_{j,K}\).  Hence
+\[
+    |\bm r_0'\bm M_{K,\Lambda_0}\bm w|
+    \leq \sum_{j=0}^{q_0}
+    \|\bm r_{j,K}\|\,\|\bm M_{j,0}\bm s_{j,K}\|
+    \leq \sum_{j=0}^{q_0}\|\bm r_{j,K}\|\,\|\bm s_{j,K}\|.
+\]
+Because \(q_0\) is fixed and the norms in Assumptions \ref{ass:prim-sieve} and
+\ref{ass:score-bias-orthogonality} use full-sample normalization, the last
+sum is \(O_p(Ta_Kc_K)\).  Multiplication by \(T^{-1/2}\) gives
+\(O_p(\sqrt T\,a_Kc_K)=o_p(1)\).
+\end{proof}
 \begin{assumption}[One-break localization input for the bridge]
 \label{ass:prim-localization-target}
 In the one-break bridge, \(q_0=1\), \(\Lambda_0=(k_0)\), and
@@ -457,12 +510,12 @@ used to simplify the denominator bridge rate; without it the larger order
 \(b_K^2\zeta_K^2r_T/T\) should be retained.
 \end{assumption}
 
-\begin{assumption}[Primitive conditional-design segmentation route]
+\begin{assumption}[Deterministic conditional-design segmentation primitives]
 \label{ass:sol-localization}
-This is the primitive route used to discharge the profile-sieve break search in
-the one-break main theorem.  Let \(\bm\mu_K=\bm Q_{K,\Lambda_0}\bm c_0\) be the
-sieve part of the true nuisance mean and define the deterministic conditional
-profile loss
+This is the deterministic part of the route used to discharge the profile-sieve
+break search in the one-break main theorem.  Let
+\(\bm\mu_K=\bm Q_{K,\Lambda_0}\bm c_0\) be the sieve part of the true nuisance
+mean and define the deterministic conditional profile loss
 \[
     D_T(\Lambda)=\|\bm M_{K,\Lambda}\bm\mu_K\|^2.
 \]
@@ -488,9 +541,9 @@ The rates satisfy
     \qquad
     r_T=o(\sqrt T).
 \]
-Under Assumptions \ref{ass:prim-stoch} and \ref{ass:prim-gram}, conditional
-sub-Gaussian concentration for the finite admissible search then gives the
-profile-RSS localization and the overfit/underfit RSS gaps recorded in
+Together with Assumptions \ref{ass:prim-stoch}, \ref{ass:prim-gram}, and
+\ref{ass:prim-sieve}, Proposition \ref{prop:bp-primitive-expansion} verifies
+the profile-RSS localization and the overfit/underfit RSS gaps recorded in
 Assumption \ref{ass:bp-profile-sieve}.
 \end{assumption}
 
@@ -1437,7 +1490,7 @@ localization, local full-rank Gram regularity, and the three bridge rates
 listed in the theorem statement.
 \end{remark}
 
-\begin{theorem}[One-break primitive estimated-partition Wilks]
+\begin{theorem}[One-break estimated-partition Wilks]
 \label{thm:wb-one-break-wilks}
 Under the assumptions of Theorem \ref{thm:wb-known-wilks}, the convex-hull condition for the estimated-partition score array, and Theorem \ref{thm:wb-one-break-equivalence},
 \[
@@ -1590,6 +1643,82 @@ The following conditions hold.
 \end{enumerate}
 \end{assumption}
 
+\begin{proposition}[Primitive verification of the profile-RSS expansion]
+\label{prop:bp-primitive-expansion}
+Suppose \(q_0=1\), \(\bar q\) is fixed, and Assumptions
+\ref{ass:prim-stoch}, \ref{ass:prim-gram}, \ref{ass:prim-sieve}, and
+\ref{ass:sol-localization} hold.  Then the uniform RSS expansion and the
+underfit/overfit order comparisons in Assumption \ref{ass:bp-profile-sieve}
+hold with \(R_T=K+\log T+Ta_K^2\).
+\end{proposition}
+
+\begin{proof}[Detailed solution]
+Condition on \(\D_T\) and work on the Gram and sieve-approximation events whose
+probability tends to one.  For any admissible partition \(\Lambda\), write
+\(\bm y(\beta_0)=\bm\mu_K+\bm r_0+\bm U\).  Since
+\(\bm M_{K,\Lambda_0}\bm\mu_K=\bm0\),
+\begin{align*}
+    RSS_K(\beta_0,\Lambda)-RSS_K(\beta_0,\Lambda_0)
+    &=D_T(\Lambda)+2\bm U'\bm M_{K,\Lambda}\bm\mu_K
+      +\bm U'(\bm M_{K,\Lambda}-\bm M_{K,\Lambda_0})\bm U \\
+    &\quad+\mathcal E_{r,T}(\Lambda),
+\end{align*}
+where \(\mathcal E_{r,T}(\Lambda)\) collects every term containing
+\(\bm r_0\).  The admissible search over \(0\le q\le\bar q\) has polynomial
+cardinality, so its logarithm is \(O(\log T)\).
+
+For fixed \(\Lambda\), conditional sub-Gaussian tails give
+\[
+    2|\bm U'\bm M_{K,\Lambda}\bm\mu_K|
+    \leq \frac14D_T(\Lambda)+O_p(\log T)
+\]
+uniformly over the search after a union bound, because the conditional variance
+proxy is proportional to \(D_T(\Lambda)\).  Since
+\(\bm M_{K,\Lambda}-\bm M_{K,\Lambda_0}
+=\bm\Pi_{K,\Lambda_0}-\bm\Pi_{K,\Lambda}\), it is a difference of two
+fitted-space projections whose ranks are at most \((\bar q+1)K\).  Hence the
+difference has rank \(O(K)\) and operator norm bounded by a constant.
+Hanson--Wright concentration gives
+\[
+    \sup_{\Lambda}
+    \left|\bm U'(\bm M_{K,\Lambda}-\bm M_{K,\Lambda_0})\bm U
+    -\E\{\bm U'(\bm M_{K,\Lambda}-\bm M_{K,\Lambda_0})\bm U\mid\D_T\}\right|
+    =O_p(K+\log T),
+\]
+and the conditional expectation is \(O(K)\) by the bounded conditional variances
+and the same rank bound.
+
+Finally, projection contraction and \(\|\bm r_0\|^2=O_p(Ta_K^2)\) imply,
+uniformly over the search,
+\[
+    |\mathcal E_{r,T}(\Lambda)|
+    \leq \frac14D_T(\Lambda)+O_p(Ta_K^2+K+\log T).
+\]
+The mixed term \(\bm r_0'(\bm M_{K,\Lambda}-\bm M_{K,\Lambda_0})\bm U\) is
+absorbed by \(2ab\le a^2+b^2\) and the preceding projection-noise bound.
+Combining the three displays yields
+\[
+    RSS_K(\beta_0,\Lambda)-RSS_K(\beta_0,\Lambda_0)
+    \geq \frac12D_T(\Lambda)-O_p(R_T)
+\]
+uniformly over the admissible search.
+
+For one-break candidates, the deterministic identification inequality in
+Assumption \ref{ass:sol-localization} gives the displayed one-break RSS
+expansion and the localization rate \(r_T=R_T/\Delta_T^2\).  For the zero-break
+model, the underfit identification bound gives
+\[
+    RSS_K\{\beta_0,\widehat\Lambda_0(\beta_0)\}-RSS_K(\beta_0,k_0)
+    \geq cT\Delta_T^2-O_p(R_T).
+\]
+For \(q>1\), the same uniform lower bound and nonnegativity of \(D_T\) give
+\[
+    RSS_K(\beta_0,k_0)-RSS_K\{\beta_0,\widehat\Lambda_q(\beta_0)\}=O_p(R_T),
+\]
+because the right side is the largest possible stochastic overfit gain relative
+to the true one-break partition.  These are exactly the order-selection
+comparisons in Assumption \ref{ass:bp-profile-sieve}.
+\end{proof}
 \begin{proposition}[Profile-sieve reduction to segmented least squares]
 \label{prop:bp-profile-reduction}
 At \(\beta_0\), the fixed-order nuisance-break estimator is the least-squares
@@ -1716,7 +1845,7 @@ A finite union bound over \(q\neq1\) proves the claim.
 \end{proof}
 \begin{corollary}[Jointly feasible rates]
 \label{cor:jointly-feasible-rates}
-Suppose \(\zeta_K^2\asymp K\), \(a_K\asymp K^{-s/d}\),
+Suppose \(\zeta_K^2\asymp K\), \(a_K\asymp c_K\asymp K^{-s/d}\),
 \(\Delta_T\geq c_\Delta>0\), and choose
 \[
     K\asymp T^{d/(2s+d)}.
@@ -1746,7 +1875,12 @@ is
 \[
     \frac{a_K K^{5/2}}{\sqrt T}\to0,
 \]
-which is also implied by \(s>d\).  The convex-hull transfer terms reduce to
+which is also implied by \(s>d\).  The score-bias orthogonality route requires
+\[
+    \sqrt T\,a_Kc_K\to0,
+\]
+which already holds under \(s>d/2\) and therefore under \(s>d\).  The
+convex-hull transfer terms reduce to
 \[
     K^{1-s/d}\to0,
     \qquad
@@ -1815,6 +1949,50 @@ tie-breaking convention is essential: without it, the selected partition on
 \(E_T\) need not be literally the same measurable object as
 \(\widehat\Lambda_1(\beta_0)\).
 \end{remark}
+\begin{theorem}[Master one-break conditional-design Wilks]
+\label{thm:master-one-break-wilks}
+Suppose \(q_0=1\), \(\bar q\) is fixed, and Assumptions
+\ref{ass:prim-stoch}--\ref{ass:prim-sieve}, \ref{ass:prim-sign-mass},
+\ref{ass:sol-oracle-envelope}, \ref{ass:sol-local-bias},
+\ref{ass:sol-local-series}, \ref{ass:sol-localization}, and
+\ref{ass:wb-penalty} hold.  Suppose also
+\[
+    T^{-1}\sum_{t=1}^T\sigma_t^2v_{t,0}^2\xrightarrow{p}\eta^2,
+    \qquad
+    \Pp(\eta\geq\sqrt{c_\eta})=1
+\]
+for some \(c_\eta>0\), and the bridge rates in Theorem
+\ref{thm:wb-one-break-equivalence} hold.  Then, for the fixed one-break
+profile estimator \(\widetilde\Lambda=\widehat\Lambda_1(\beta_0)\),
+\[
+    \ell_T(\beta_0,\widetilde\Lambda)\Rightarrow\chi_1^2.
+\]
+Moreover, for the unknown-order selector over \(0\le q\le\bar q\) with the
+same deterministic tie-breaking rule,
+\[
+    \ell_T\{\beta_0,\widehat\Lambda(\beta_0)\}\Rightarrow\chi_1^2.
+\]
+\end{theorem}
+
+\begin{proof}[Detailed solution]
+Proposition \ref{prop:bp-primitive-expansion} verifies Assumption
+\ref{ass:bp-profile-sieve}.  Theorem \ref{thm:wb-localization} then verifies
+the localization input in Assumption \ref{ass:prim-localization-target} for
+\(\widetilde\Lambda=\widehat\Lambda_1(\beta_0)\).  Theorem
+\ref{thm:wb-one-break-equivalence} then transfers the first two empirical-score
+moments from \(\Lambda_0\) to \(\widetilde\Lambda\).  Lemma
+\ref{lem:primitive-convex-hull} verifies the convex-hull condition for both the
+true and estimated one-break scores under Assumption \ref{ass:prim-sign-mass}
+and the displayed transfer rate.  The known-partition Wilks theorem and the
+estimated-partition bridge therefore give
+\(\ell_T(\beta_0,\widetilde\Lambda)\Rightarrow\chi_1^2\).
+
+For unknown order, Theorem \ref{thm:wb-order} gives
+\(\Pp\{\widehat q(\beta_0)=1\}\to1\).  On that event the unknown-order
+partition equals \(\widetilde\Lambda\) by the common tie-breaking convention, so
+Lemma \ref{lem:wb-event-transfer} transfers the fixed-order Wilks limit to the
+unknown-order statistic.
+\end{proof}
 \section{Local Alternatives}
 \label{sec:local-alternatives}
 
@@ -2138,9 +2316,48 @@ has cardinality \(O(r_T^{q_0})\), so the uniform projection bounds replace
 \(\log(1+r_T)\) by \(q_0\log(1+r_T)=O(\log r_T)\).
 
 This sketch is not used in the main theorem.  A paper that claims general
-fixed-\(q_0\) estimated-partition Wilks should promote this sketch to a full
-lemma and verify the corresponding multi-boundary localization and local-law
-order-selection statements.
+fixed-\(q_0\) estimated-partition Wilks should extend the proof in the following
+order.
+\begin{enumerate}
+    \item \textbf{Known multiple-break Wilks.}  First keep \(\Lambda_0\) known
+    and fixed with fixed \(q_0\).  The existing block-projection algebra already
+    covers this case once the Gram, variance, convex-hull, and sieve conditions
+    are stated uniformly over the known blocks.
+
+    \item \textbf{Fixed-order estimated bridge.}  Next hold \(q_0\) fixed and
+    prove the componentwise bridge
+    \[
+        \max_{1\le j\le q_0}|\widehat k_j-k_{j,0}|=O_p(r_T),
+        \qquad
+        S_T(\widehat\Lambda)-S_T(\Lambda_0)=o_p(1),
+        \qquad
+        V_T(\widehat\Lambda)-V_T(\Lambda_0)=o_p(1).
+    \]
+    This is where the telescoping display above must become a lemma, including
+    the maximum-score condition for the scalar empirical-likelihood expansion.
+
+    \item \textbf{Multi-boundary localization.}  Prove localization under fixed
+    \(q_0\), fixed \(\bar q\), minimum spacing, minimum jump size \(\Delta_T\),
+    and non-overlapping \(Cr_T\) neighborhoods around the true breaks.  The
+    search-uniform stochastic terms should still be of order
+    \(R_T=K+\log T+Ta_K^2\) because \(q_0\) is fixed.
+
+    \item \textbf{Unknown-order consistency.}  Use the same penalty
+    \[
+        \operatorname{pen}_T(q,K)=q\kappa_T R_T.
+    \]
+    Underfitted models must lose order \(T\Delta_T^2\), while overfitted models
+    may gain only \(O_p(R_T)\).  This is the multi-break analogue of Theorem
+    \ref{thm:wb-order}.
+
+    \item \textbf{Final multi-break Wilks theorem.}  Only after the fixed-order
+    bridge and order-consistency proof are complete should the paper state
+    \[
+        \ell_T\{\beta_0,\widehat\Lambda(\beta_0)\}\Rightarrow\chi_1^2.
+    \]
+\end{enumerate}
+Until those steps are written as full proofs, multi-break computations are
+exploratory diagnostics rather than main-theorem evidence.
 \section{End-to-End Assumption Audit}
 \label{sec:bp-end-to-end-audit}
 
@@ -2196,7 +2413,10 @@ The residualized instrument was not predictable & Made all projected scores desi
 The order theorem needed \(R_T=o(T\Delta_T^2)\) and a concrete penalty & Set \(R_T=K+\log T+Ta_K^2\), \(r_T=R_T/\Delta_T^2\), and \(\operatorname{pen}_T(q,K)=q\kappa_TR_T\) & Assumptions \ref{ass:bp-profile-sieve} and \ref{ass:wb-penalty} \\
 The underfit RSS gap was implicit & Added an explicit zero-break comparison with \(cT\Delta_T^2-O_p(R_T)\) & Assumption \ref{ass:bp-profile-sieve} \\
 The random-index projection bounds were pointwise & Added search-uniform \(T\)-norm and sup-norm projection-noise bounds & Lemma \ref{lem:wb-uniform-projection-noise} \\
+The segmentation module still looked asserted rather than verified & Added a conditional-concentration proof of the uniform RSS expansion and order comparisons & Proposition \ref{prop:bp-primitive-expansion} \\
+The score-bias condition was still imposed without a primitive route & Added a segmentwise orthogonality and smooth residualized-instrument verification & Assumption \ref{ass:score-bias-orthogonality} and Lemma \ref{lem:primitive-score-bias} \\
 Convex hull was a black-box EL condition & Added a primitive sign-mass condition and convex-hull verification lemma & Assumption \ref{ass:prim-sign-mass} and Lemma \ref{lem:primitive-convex-hull} \\
+The endpoint theorem was implicit across several modules & Added a master one-break conditional-design Wilks theorem & Theorem \ref{thm:master-one-break-wilks} \\
 The rates might be mutually empty & Added a concrete smoothness/dimension regime with \(s>d\) & Corollary \ref{cor:jointly-feasible-rates} \\
 Local power reused null-law bridges without saying why & Added local drift stability and local-law bridge/order transfer & Assumption \ref{ass:local-drift-stability} and Proposition \ref{prop:local-law-stability} \\
 The estimated-partition theorem overclaimed multiple breaks & Restricted the main result to \(q_0=1\) and moved fixed-\(q_0\) to a telescoping sketch & Section \ref{sec:multiple-break-sketch} \\
@@ -2207,9 +2427,10 @@ The estimated-partition theorem overclaimed multiple breaks & Restricted the mai
 \paragraph{Final editorial status.}
 Within the declared scope--conditional-on-design errors, one unknown nuisance
 break for estimated-partition Wilks, fixed \(\bar q\), and the displayed rate
-regime--the workbook now states a coherent proof chain from primitive design
-conditions to known-break Wilks, estimated-break Wilks, unknown-order transfer,
-and local noncentrality.  The only material not claimed as a theorem is the
+regime--the workbook now states a coherent proof chain to known-break Wilks,
+estimated-break Wilks, and unknown-order transfer.  The local noncentral result
+is also stated, but explicitly under the additional local drift-stability and
+local convex-hull inputs.  The only material not claimed as a theorem is the
 general fixed-multiple-break extension, which is explicitly labeled as an
 extension sketch rather than part of the main result.
 \end{document}

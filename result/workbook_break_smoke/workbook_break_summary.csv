@@ -1,0 +1,2 @@
+n_replications,beta,beta0,under_null,empirical_size_estimated_5,empirical_size_known_5,el_rejection_rate_estimated_5,el_rejection_rate_known_5,selected_q_mean,selected_one_break_rate,mean_abs_break_error,median_abs_break_error,rate_check_available_rate,rate_check_pass_rate,mean_r_T_over_sqrt_T,mean_kappa_R_over_T_delta_sq
+3,0.0,0.0,True,0.0,0.0,0.0,0.0,1.0,1.0,3.0,3.0,1.0,1.0,0.6021900630544419,0.06547888293771995

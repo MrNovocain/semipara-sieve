@@ -1,0 +1,1733 @@
+  Bai–Perron Theory Workbook: Solved and Audited
+                     Edition
+         Profile Sieve Empirical Likelihood with Nuisance Breaks
+         Profile-sieve break segmentation module, EL bridge, and proof map
+
+
+Contents
+1 Primitive Setup and Notation                                                2
+
+2 Primitive Assumptions                                                       4
+
+3 Rigour Audit and Completing Conditions                                      6
+
+4 Deterministic Projection Algebra                                            8
+
+5 Known-Partition Primitive Wilks                                            10
+
+6 One-Break Estimated-Partition Bridge                                       16
+
+7 Bai–Perron-Type Profile-Sieve Segmentation                                 22
+
+8 Local Alternatives                                                         26
+
+9 End-to-End Assumption Audit                                                28
+
+10 Master Dependency Checklist                                               30
+
+
+
+
+                                        1
+1       Primitive Setup and Notation
+For a scalar array a = (a1 , . . . , aT )′ , write
+                                               T
+                                               X
+                              ∥a∥2T = T −1           a2t ,       ∥a∥∞ = max |at |.
+                                                                              t≤T
+                                               t=1
+
+All Op (·) and op (·) statements for vectors and matrices use Euclidean and spectral norm
+unless another norm is displayed.
+   The maintained null model is
+                                        q0
+                                        X
+                      Yt = β0 Xt−1 +           mj (Wt−1 )1{kj,0 < t ≤ kj+1,0 } + Ut ,            (1.1)
+                                         j=0
+
+
+where
+                             0 = k0,0 < k1,0 < · · · < kq0 ,0 < kq0 +1,0 = T.
+Throughout the primitive theory, q0 is fixed. The true break dates are minimum-spaced: for
+some fixed ϵ > 0,
+                                 min (kj+1,0 − kj,0 ) ≥ ϵT.
+                                       0≤j≤q0
+
+The coefficient β0 is stable. All structural breaks are in the nuisance component.
+  For a candidate partition Λ = (k1 , . . . , kq ), let k0 = 0, kq+1 = T , and
+
+                      Ij (Λ) = {t : kj < t ≤ kj+1 },                jΛ (t) = j if t ∈ Ij (Λ).
+
+For the same spacing constant, define the admissible candidate set
+                                                                                            
+ Lq (ϵ) = Λ = (k1 , . . . , kq ) : 0 = k0 < k1 < · · · < kq < kq+1 = T, min (kj+1 − kj ) ≥ ϵT .
+                                                                                        0≤j≤q
+
+
+Let
+                             µt = mjΛ0 (t) (Wt−1 ),              µ = (µ1 , . . . , µT )′ .
+      Let P be the T × K sieve matrix with t-th row
+
+                               PK (Wt−1 )′ = (p1 (Wt−1 ), . . . , pK (Wt−1 )).
+
+For a partition Λ, let Dj (Λ) be the T × T diagonal selector matrix with t-th diagonal entry
+1{t ∈ Ij (Λ)}, j = 0, . . . , q. Define
+
+        QK,Λ = [D0 (Λ)P , . . . , Dq (Λ)P ],           MK,Λ = IT − QK,Λ (Q′K,Λ QK,Λ )† Q′K,Λ .   (1.2)
+
+The Moore–Penrose inverse makes MK,Λ algebraically defined even when Q′K,Λ QK,Λ is sin-
+gular. Such singularity can arise if a candidate segment is too short relative to K or if the
+selected basis columns are collinear on that segment; the projection remains defined, but the
+asymptotic regularity used below may fail. The theory therefore relies on minimum-spaced
+admissible partitions and Gram-stability/full-rank conditions on the relevant candidate sets.
+
+                                                             2
+      For each (β, Λ), define
+
+                                          b (β, Λ) = MK,Λ (Y − βXlag ),
+                                          u                                                                         (1.3)
+                                            wc (Λ) = MK,Λ w,                                                        (1.4)
+                                                      bt (β, Λ)wc (Λ).
+                                         Zbt (β, Λ) = u                      t                                      (1.5)
+
+Let
+                                         T
+                                         X                                                 T
+                                                                                           X
+                                −1/2                                                  −1
+                   ST (Λ) = T                  Zbt (β0 , Λ),            VT (Λ) = T               Zbt (β0 , Λ)2 .
+                                         t=1                                               t=1
+
+   For a scalar score array Z1 , . . . , ZT satisfying the convex-hull condition, let λT be the
+unique solution of
+                       T
+                      X      Zt
+                                         = 0,     1 + λT Zt > 0 (t ≤ T ),
+                      t=1
+                          1 + λ T  Z  t
+
+and define the twice negative empirical-likelihood log ratio by
+                                                                  T
+                                                                  X
+                                     ℓT (Z1 , . . . , ZT ) = 2              log(1 + λT Zt ).                        (1.6)
+                                                                      t=1
+
+In particular,
+                                    ℓT (β, Λ) = ℓT {Zb1 (β, Λ), . . . , ZbT (β, Λ)}.
+      For an interval [s, e], define the null-imposed segment cost
+                                                      e
+                                                      X
+                         CK (s, e; β) = min                 {Yt − βXt−1 − PK (Wt−1 )′ c}2 .
+                                               c∈RK
+                                                      t=s
+
+For Λ = (k1 , . . . , kq ), define
+                                                            q
+                                                            X
+                                    RSSK (β, Λ) =                 CK (kj + 1, kj+1 ; β).
+                                                            j=0
+
+All minimizers are measurable selections with a fixed deterministic tie-breaking rule. For
+known order,
+                    b q (β) = arg min RSSK (β, Λ),
+                    Λ                                   e=Λ
+                                                        Λ   b q0 (β0 ).
+                                               Λ∈Lq (ϵ)
+
+For unknown order,
+
+             qb(β) = arg min {RSSK (β, Λ
+                                       b q (β)) + penT (q, K)},                                Λ(β)
+                                                                                               b     b qb(β) (β).
+                                                                                                    =Λ
+                           0≤q≤q̄
+
+Although the Moore–Penrose inverse makes MK,Λ algebraically defined for arbitrary Λ, all
+theoretical searches are restricted to minimum-spaced admissible partitions Lq (ϵ); thus no
+candidate segment is allowed to be asymptotically shorter than the sieve dimension K, and
+the Gram matrices used in the proofs are nonsingular on the relevant candidate set.
+   The sieve dimension is allowed to depend on the sample size and is written K = KT .
+Throughout, KT → ∞, subject to the rate restrictions in Assumptions 3–6 and the local
+
+                                                                  3
+Gram regularity conditions below. The basis is normalized so that its first component is
+constant, say p1 (w) ≡ 1, allowing regime-specific intercept and level shifts to be represented
+by the block sieve.
+   For local-power calculations, distinguish the null value used in the statistic from the
+data-generating slope. The alternative law allows
+
+                                          βT = β0 + dT ,               dT → 0,
+
+with data generated under PβT while the profile empirical likelihood is evaluated at β0 .
+Equivalently,
+                           Yt − β0 Xt−1 = µt + Ut + dT Xt−1 ,
+with the same nuisance break partition Λ0 . Section 8 records the corresponding drift condi-
+tions.
+
+
+2     Primitive Assumptions
+Assumption 1 (Primitive stochastic environment). The triangular array is defined on a
+filtered probability space (Ω, A, {Ft }Tt=0 , P). The variables Xt−1 , Wt−1 , PK (Wt−1 ), and wt =
+w(Xt−1 ) are Ft−1 -measurable. The error satisfies
+
+                                E(Ut | Ft−1 ) = 0,        E(|Ut |2+δ | Ft−1 ) ≤ C
+
+for some δ > 0 and finite C. The conditional variance σt2 = E(Ut2 | Ft−1 ) is bounded above
+and away from zero.
+
+Assumption 2 (Score admissibility under full-sample projection). For the true partition,
+v0 = MK,Λ0 w satisfies one of the following primitive routes.
+
+                                 Route A: vt,0 is Ft−1 -measurable for all t.
+                      ∗
+Under Route A, set vt,0 = vt,0 . If the full-sample projection is not predictable, assume there
+                                         ∗
+is an Ft−1 -measurable approximation vt,0    such that
+
+                      T
+                      X                                                T
+                                                                       X
+               −1/2                     ∗                         −1                       ∗ 2
+           T                Ut (vt,0 − vt,0 ) = op (1),       T                    2
+                                                                             Ut2 {vt,0 − (vt,0 ) } = op (1).
+                      t=1                                              t=1
+
+Assumption 3 (Bounded weights, nuisance functions, and basis envelope). The sieve di-
+mension satisfies K = KT → ∞. The first basis element is constant, p1 (w) ≡ 1. There are
+constants Cw , Cm < ∞ and an envelope ζK such that
+
+          max |wt | ≤ Cw ,              max sup |mj (x)| ≤ Cm ,                  max ∥PK (Wt−1 )∥ ≤ ζK
+           t≤T                         0≤j≤q0   x                                 t≤T
+
+
+with probability tending to one.
+
+
+
+                                                          4
+Assumption 4 (Spacing, smoothness, and break detectability). The number q0 is fixed. For
+some ϵ > 0,
+                             min (kj+1,0 − kj,0 ) ≥ ϵT.
+                                     0≤j≤q0
+
+Each mj belongs to a common smoothness class Hs . If q0 ≥ 1, then
+
+                                                                        T ∆2T
+                    ∆T = min ∥mj+1 − mj ∥L2 (PW ) > 0,                         → ∞.
+                           0≤j<q0                                      K log T
+
+Assumption 5 (Uniform Gram stability). For the true partition and all candidate partitions
+in the local neighborhood
+
+                         NT (rT ) = {Λ : max |kj − kj,0 | ≤ CrT , q = q0 },
+                                              j
+
+
+the eigenvalues of T −1 Q′K,Λ QK,Λ , restricted to nonzero directions, are bounded away from
+zero and infinity with probability tending to one.
+
+Assumption 6 (Sieve approximation and projection bias). For each regime j, there is a
+coefficient vector cj,K such that
+
+mj (Wt−1 ) = PK (Wt−1 )′ cj,K +rj,K,t ,       max ∥rj,K ∥T = Op (aK ),           max ∥rj,K ∥∞ = Op (aK ).
+                                                  j                               j
+
+
+Let r0 be the stacked true-partition approximation error. The rates satisfy
+                                                                                          √
+         T −1/2 r0′ MK,Λ0 w = op (1),         aK (1 + ζK ) → 0,         aK (1 + ζK )2 = o( T ).
+
+Also,                                                      r
+                            (q0 + 1)K                           (q0 + 1)K
+                                √     → 0,            ζK                  → 0.
+                                  T                                 T
+Assumption 7 (Fixed-order localization target). For known q0 ,
+                                                           √
+                     max |ekj − kj,0 | = Op (rT ),  rT = o( T ).
+                           1≤j≤q0
+
+
+This assumption is a target to be derived in Section 7; it may be used as an input in Section
+6.
+
+Assumption 8 (Empirical-likelihood convex hull). For the score array under consideration,
+
+                                 P{min Zt,T < 0 < max Zt,T } → 1.
+                                    t≤T                   t≤T
+
+
+When used for the true partition, Zt,T = Zbt (β0 , Λ0 ). When used for the estimated partition,
+Zt,T = Zbt (β0 , Λ).
+                 e
+
+
+
+
+                                                      5
+3    Rigour Audit and Completing Conditions
+Several displays in the original workbook were labelled “targets.” They are not all con-
+sequences of Assumptions 1–8 as originally written. The precise gaps are: the predictable
+approximation needs an envelope and variance-replacement condition; local partition pertur-
+bations need local stability of the sieve bias; logarithmic RSS concentration does not follow
+from only a finite (2 + δ)-moment; and an overfitting penalty that merely diverges need not
+dominate the searched RSS gain. The following conditions make every proof below logically
+complete. They are stated separately so that none of the missing hypotheses is hidden.
+   Write
+                    dK = (q0 + 1)K,       bK = 1 + ζK ,     δ0 = min{δ, 2}.
+
+Assumption 9 (Oracle envelope completion). In the notation of Assumption 2, the pre-
+                ∗
+dictable score vt,0 can be chosen so that
+
+                                                       T
+                                                       X
+                       ∗
+                 max |vt,0 | = Op (bK ),        T −1                ∗ 2
+                                                             σt2 {(vt,0      2
+                                                                        ) − vt,0 } = op (1).
+                  t≤T
+                                                       t=1
+
+Moreover,
+                                           b2+δ
+                                            K
+                                                0
+                                                  T −δ0 /2 −→ 0.                               (3.1)
+                                 ∗
+Under Route A this is read with vt,0 = vt,0 .
+
+Assumption 10 (Local sieve-bias stability). In the one-break section, for every fixed C < ∞,
+
+                           sup        T −1/2 |r0′ {MK,k − MK,k0 }w| = op (1).                  (3.2)
+                        |k−k0 |≤CrT
+
+
+A sufficient primitive rate, proved in the solution of Lemma 9, is
+                                                    2
+                                        aK bK (1 + ζK )rT
+                                               √          −→ 0.                                (3.3)
+                                                 T
+Assumption 11 (Local full-rank series regularity). In the one-break section, every segment
+Gram matrix associated with a partition satisfying |k − k0 | ≤ CrT is nonsingular, and its
+eigenvalues are between cT and CT , uniformly with probability tending to one. Also
+                                               2
+                                              ζK = O(K).                                       (3.4)
+
+The last display is the usual normalized-series envelope condition. It is needed for the de-
+nominator rate stated in Lemma 11; without it that rate must be replaced by the larger order
+b2K ζK
+     2
+       rT /T .
+
+Assumption 12 (Segmentation concentration completion). This assumption records one
+primitive route for verifying the Bai–Perron profile-sieve input in Assumption 13. Given the
+design sigma-field DT , the errors are independent, centered, conditionally sub-Gaussian with
+
+
+
+                                                    6
+a common conditional variance σ 2 . Every minimum-spaced one-break sieve matrix has rank
+2K. If h = |k − k0 | and Ak = MK,k − MK,k0 , then, uniformly over candidates,
+
+                                                                           |ρT (k)|
+                µ′ Ak µ ≥ c∆ h∆2T − ρT (k),                          sup        2
+                                                                                    = op (1),       (3.5)
+                                                                     k: h≥1 h∆T
+
+                ∥Ak µ∥2 ≤ ChK                                                                       (3.6)
+
+with probability tending to one. Condition (3.5) is a sample profile-identification condition.
+It follows, for example, in the exact-sieve case from uniform segment Gram bounds and a
+local empirical jump-energy lower bound. Together with the sub-Gaussian concentration and
+rank conditions above, these displays deliver the deterministic drift and stochastic search
+controls collected in Assumption 13.
+
+Remark 1 (Why the segmentation completion is high-level). The martingale restriction
+E(Ut | Ft−1 ) = 0 does not imply E(Ut | DT ) = 0, because DT contains future regressors
+and those regressors may reveal Ut . Also, a finite (2 + δ)-moment does not by itself yield a
+log T search bound for a quadratic form. Thus the Bai–Perron module is not free from the
+primitive martingale assumptions. One must either verify Assumption 12 or cite an adapted
+Bai–Perron theorem that supplies the same growing-K profile-sieve drift, fluctuation, and
+rank conclusions.
+
+Lemma 1 (Scalar empirical-likelihood expansion). Let Z1,T , . . . , ZT,T satisfy the convex-hull
+condition and suppose
+                              T
+                              X                                           T
+                                                                          X
+                       −1/2                                          −1          2
+              AT = T                Zt,T = Op (1),         BT = T               Zt,T ≥ c + op (1)
+                              t=1                                         t=1
+
+for some c > 0, and                                         √
+                                          max |Zt,T | = op ( T ).
+                                          t≤T
+
+Then
+                                                          A2T
+                              ℓT (Z1,T , . . . , ZT,T ) =     + op (1).                   (3.7)
+                                                          BT
+                 P                P 2
+Proof. Put S1 = t Zt,T , S2 = t Zt,T         , and MT = maxt |Zt,T |. The convex-hull condition
+gives a unique multiplier λT in the interval on which every 1 + λT Zt,T is positive. Its score
+equation implies the exact identity
+                                                    T    2
+                                                    X  Zt,T
+                                        S1 = λT                 .
+                                                t=1
+                                                    1 + λT Zt,T
+
+Consequently,
+                                                        |λT |S2
+                                          |S1 | ≥                .
+                                                     1 + |λT |MT
+After rearrangement,
+                                       |λT |{S2 − |S1 |MT } ≤ |S1 |.
+
+                                                       7
+                √
+Now |S1 | = Op ( T ), S2 ≥ (c + op (1))T , and |S1 |MT = op (T ). Hence
+
+                                   λT = Op (T −1/2 ),       |λT |MT = op (1).
+
+Using (1 + x)−1 = 1 − x + x2 /(1 + x) in the score equation gives
+
+                                                                         λ2T MT S2
+                      0 = S1 − λT S2 + R1T ,                |R1T | ≤               .
+                                                                       1 − |λT |MT
+
+Thus
+                                                  S1
+                                           λT =      + op (T −1/2 ).
+                                                  S2
+Finally, Taylor expansion of the logarithm, uniformly because |λT |MT = op (1), yields
+                         X
+                       2     log(1 + λT Zt,T ) = 2λT S1 − λ2T S2 + R2T ,
+                               t
+
+where
+                                       |R2T | ≤ C|λT |3 MT S2 = op (1).
+Substituting the expansion for λT gives
+                          X                             S12           A2
+                      2        log(1 + λT Zt,T ) =          + op (1) = T + op (1),
+                          t
+                                                        S2            BT
+
+which proves (3.7).
+
+
+4      Deterministic Projection Algebra
+Lemma 2 (Block projection identities). For every partition Λ,
+
+                  Q′K,Λ MK,Λ = 0,               ′
+                                               MK,Λ = MK,Λ ,             2
+                                                                        MK,Λ = MK,Λ .
+
+Consequently, for every conformable c,
+
+                                           (QK,Λ c)′ MK,Λ w = 0.
+
+Detailed solution. Abbreviate Q = QK,Λ . Take a thin singular-value decomposition
+
+                                               Q = Ur Σr Vr′ ,
+
+where r = rank(Q), the columns of Ur and Vr are orthonormal, and Σr is diagonal with
+strictly positive entries. Then
+
+                              Q′ Q = Vr Σ2r Vr′ ,        (Q′ Q)† = Vr Σ−2  ′
+                                                                       r Vr .
+
+Therefore
+                                       ΠK,Λ = Q(Q′ Q)† Q′ = Ur Ur′ .
+
+                                                        8
+This is the orthogonal projector onto col(Q). In particular,
+                     Π′K,Λ = ΠK,Λ ,       Π2K,Λ = ΠK,Λ ,       ΠK,Λ Q = Q.
+Since MK,Λ = IT − ΠK,Λ ,
+                                          ′
+                                         MK,Λ = MK,Λ
+and
+                     2
+                    MK,Λ = (IT − ΠK,Λ )2 = IT − 2ΠK,Λ + Π2K,Λ = MK,Λ .
+Also
+                                Q′ MK,Λ = {MK,Λ Q}′ = 0′ .
+For conformable c and w, it follows immediately that
+                              (Qc)′ MK,Λ w = c′ Q′ MK,Λ w = 0.
+
+
+Lemma 3 (Uniform fitted-value and leverage bounds). Under Assumptions 3 and 5, uni-
+formly over Λ ∈ NT (rT ),
+       ∥MK,Λ w∥∞ = Op (1 + ζK ),         max{QK,Λ (Q′K,Λ QK,Λ )† Q′K,Λ }tt = Op (ζK
+                                                                                  2
+                                                                                    K/T ).
+                                         t≤T
+
+Detailed solution. Write Q = QK,Λ , G = Q′ Q, and let qt′ denote row t of Q. Because
+exactly one regime block is active in each row,
+                                   ∥qt ∥ = ∥PK (Wt−1 )∥ ≤ ζK .
+On the uniform Gram event in Assumption 5,
+                                   C
+                         ∥G† ∥ ≤     ,       ∥Q∥2 = λmax (Q′ Q) ≤ CT.
+                                   T
+              √
+Since ∥w∥ ≤ Cw T , the least-squares coefficient vector
+                                          cbΛ = G† Q′ w
+satisfies
+                                             C
+                                    cΛ ∥ ≤
+                                   ∥b          ∥Q∥ ∥w∥ ≤ C.
+                                             T
+Thus, uniformly in t and Λ,
+                                |(ΠK,Λ w)t | = |qt′ cbΛ | ≤ CζK ,
+and hence
+                      ∥MK,Λ w∥∞ ≤ ∥w∥∞ + ∥ΠK,Λ w∥∞ = Op (1 + ζK ).
+For the leverage,
+                                                                  ζ2
+                          (ΠK,Λ )tt = qt′ G† qt ≤ ∥G† ∥ ∥qt ∥2 ≤ C K .
+                                                                   T
+                                                                       2
+This is sharper than the displayed target and therefore implies Op (ζK   K/T ), because K ≥ 1.
+All inequalities hold on a single uniform Gram event whose probability tends to one.
+
+                                                 9
+5       Known-Partition Primitive Wilks
+Set
+                                                           T
+                                                           X                                       T
+                                                                                                   X
+                                      (q)                                                (q)
+             v0 = MK,Λ0 w,           AT = T −1/2                 Ut vt,0 ,             VT = T −1              2
+                                                                                                         Ut2 vt,0 .
+                                                           t=1                                     t=1
+
+Lemma 4 (Oracle martingale CLT). Under Assumptions 1, 2, 3, 5, and 9, suppose
+                                    T
+                               −1
+                                    X               p                              √
+                           T                   2
+                                          σt2 vt,0 − ηq2 ,
+                                                   →                   P(ηq ≥       cη ) = 1
+                                    t=1
+
+for some cη > 0. Then
+                                                        (q) st
+                                                       → ηq Z,
+                                                    AT −
+where Z ∼ N (0, 1) is independent of the limiting sigma-field generating ηq .
+                                                                        ∗
+Detailed solution. Let δ0 = min{δ, 2}. Under Route A in Assumption 2, vt,0 = vt,0 . Under
+                              ∗
+the approximation route, vt,0 is the predictable approximation from that assumption. In
+             ∗
+either case vt,0 is Ft−1 -measurable, and
+
+                                                    T
+                                                    X
+                               RT = T −1/2                            ∗
+                                                          Ut (vt,0 − vt,0 ) = op (1),
+                                                    t=1
+
+with RT ≡ 0 under Route A. It is therefore enough to prove the stable limit for
+                                                                 T
+                                                                 X
+                                            ST∗ = T −1/2                   ∗
+                                                                       Ut vt,0 .
+                                                                 t=1
+
+      Define the martingale-difference array
+                                                 ∗
+                               Xt,T = T −1/2 Ut vt,0 ,                  t = 1, . . . , T.
+         ∗
+Because vt,0 is Ft−1 -measurable and E(Ut | Ft−1 ) = 0,
+
+                                               E(Xt,T | Ft−1 ) = 0.
+
+Its conditional variance sum is
+                                            T
+                                            X
+                                    VT∗ =            2
+                                                  E(Xt,T | Ft−1 )
+                                            t=1
+                                                    T
+                                                    X
+                                               −1               ∗ 2
+                                          =T              σt2 (vt,0 )
+                                                    t=1
+                                                     T
+                                                                                   p
+                                                    X
+                                          = T −1               2
+                                                          σt2 vt,0          − ηq2 ,
+                                                                   + op (1) →
+                                                    t=1
+
+
+
+                                                            10
+where the second equality uses predictability and the third uses Assumption 9 together with
+the variance convergence assumed in the lemma.
+   Next verify the conditional Lindeberg condition. Since δ0 ≤ δ, the conditional moment
+bound in Assumption 1 implies E(|Ut |2+δ0 | Ft−1 ) ≤ C. For any fixed ε > 0,
+               T
+               X                                                            T
+                                                                            X
+                        2
+                     E{Xt,T 1(|Xt,T | > ε) | Ft−1 } ≤ ε−δ0                           E(|Xt,T |2+δ0 | Ft−1 )
+               t=1                                                           t=1
+                                                                                                  T
+                                                                                                  X
+                                                                           −δ0       −(1+δ0 /2)             ∗ 2+δ0
+                                                                ≤ Cε             T                        |vt,0 |
+                                                                                                    t=1
+                                                                           −δ0       −δ0 /2         ∗ 2+δ0
+                                                                ≤ Cε             T            max |vt,0 |
+                                                                                              t≤T
+
+                                                                = Op {b2+δ
+                                                                       K
+                                                                           0
+                                                                             T −δ0 /2 } = op (1).
+The last equality is exactly the envelope rate in Assumption 9. Thus the predictable array
+satisfies the conditional variance convergence and conditional Lindeberg condition for the
+martingale triangular-array CLT.
+    By the stable martingale central limit theorem, for every bounded random variable H
+measurable with respect to the limiting sigma-field and every fixed u ∈ R,
+                             E{H exp(iuST∗ )} −→ E{H exp(−u2 ηq2 /2)}.
+This is the characteristic-function definition of stable convergence to ηq Z, where Z ∼ N (0, 1)
+is independent of that limiting sigma-field. Hence
+                                                           st
+                                                     ST∗ −
+                                                         → ηq Z.
+Finally,
+                                        (q)
+                                   AT = ST∗ + RT ,                     RT = op (1),
+                          (q) st                               √
+and stable Slutsky gives AT − → ηq Z.    The lower bound P(ηq ≥ cη ) = 1 is not needed for
+tightness of the CLT but records the nondegeneracy used later when the empirical-likelihood
+statistic is studentized by the oracle variance.
+Lemma 5 (Oracle denominator LLN). Under Assumptions 1, 2, 3, 5, and 9, suppose
+                                                     T
+                                                                       p
+                                                     X
+                                              T −1              2
+                                                           σt2 vt,0 − ηq2 .
+                                                                    →
+                                                     t=1
+
+Then
+                                                 (q)
+                                               VT − ηq2 = op (1).
+                                              ∗
+Detailed solution. Use the predictable score vt,0 from Assumption 2; under Route A this is
+         ∗
+simply vt,0 = vt,0 . Decompose
+                                  T
+                                  X                              T
+                                                                 X
+                             −1               ∗ 2
+                         T              Ut2 (vt,0 ) = T −1                   ∗ 2
+                                                                       σt2 (vt,0 )
+                                  t=1                            t=1
+                                                                     T
+                                                                     X
+                                                                −1                       ∗ 2
+                                                       +T                  (Ut2 − σt2 )(vt,0 ).
+                                                                     t=1
+
+
+                                                            11
+The first term satisfies
+                                    T                             T
+                                                                                           p
+                                    X                             X
+                               −1               ∗ 2
+                           T              σt2 (vt,0 ) = T −1                 2
+                                                                        σt2 vt,0          − ηq2
+                                                                                 + op (1) →
+                                    t=1                           t=1
+
+by Assumption 9 and the displayed variance convergence.
+   It remains to show that the martingale term is op (1). Put
+                                                                                        ∗ 2
+                      p = 1 + δ0 /2 ∈ (1, 2],                      Dt,T = (Ut2 − σt2 )(vt,0 ).
+       ∗
+Since vt,0 is Ft−1 -measurable and σt2 = E(Ut2 | Ft−1 ), Dt,T is a martingale difference. Also,
+because 2p = 2 + δ0 ≤ 2 + δ and σt2 is bounded,
+
+                                               E(|Ut2 − σt2 |p | Ft−1 ) ≤ C.
+
+For a fixed constant C0 < ∞, define the predictable truncation
+                            ∗       ∗
+                  v̄t,C0 = vt,0 1{|vt,0 | ≤ C0 bK },                    D̄t,T,C0 = (Ut2 − σt2 )v̄t,C
+                                                                                                 2
+                                                                                                     0
+                                                                                                       .
+
+Then D̄t,T,C0 is a martingale difference and the von Bahr–Esseen inequality for martingales
+gives
+                                          T                p                 T
+                                          X                                  X
+                                    −1                                  −p
+                           E T                  D̄t,T,C0       ≤ Cp T            E|D̄t,T,C0 |p
+                                          t=1                            t=1
+                                                                           X T
+                                                               ≤ CC0 T −p       b2p
+                                                                                 K
+                                                                            t=1
+
+                                                               = CC0 b2+δ
+                                                                      K
+                                                                          0
+                                                                            T −δ0 /2 = o(1).
+                    ∗
+Let ET,C0 = {maxt |vt,0 | ≤ C0 bK }. On this event, Dt,T = D̄t,T,C0 for every t. Hence, for any
+ε > 0,                                          !
+                                   XT
+                          P T −1      Dt,T > ε ≤ P(ET,C  c
+                                                           0
+                                                             ) + o(1).
+                                               t=1
+               ∗
+Because maxt |vt,0 | = Op (bK ), the right side can be made arbitrarily small by first taking
+T → ∞ and then C0 → ∞. Thus
+                                                         T
+                                                         X
+                                                 T −1          Dt,T = op (1).
+                                                         t=1
+
+Finally, Assumption 2 gives
+                                               T
+                                               X
+                                          −1                        ∗ 2
+                                     T                      2
+                                                      Ut2 {vt,0 − (vt,0 ) } = op (1),
+                                                t=1
+
+                                             ∗                                                 (q)
+so the same LLN holds with vt,0 in place of vt,0 . This is exactly VT                                = ηq2 + op (1).
+
+                                                                12
+Lemma 6 (Oracle maximum bound). Under Assumptions 1, 3, 5, and 9,
+                                                √
+                           max |Ut vt,0 | = op ( T ).
+                                        t≤T
+
+Detailed solution. Lemma 3 gives
+
+                                         max |vt,0 | = Op (bK ).
+                                          t≤T
+
+Fix ε > 0 and C0 < ∞. Then
+                                      √
+                                                              
+                  P max |Ut vt,0 | > ε T ≤ P max |vt,0 | > C0 bK
+                      t≤T                                      t≤T
+                                                                        √ !
+                                                                       ε T
+                                                       + P max |Ut | >        .
+                                                           t≤T         C 0 bK
+
+The first term can be made arbitrarily small by taking C0 large. For the second term, the
+unconditional (2 + δ0 )-moment bound implied by Assumption 1 and the union bound yield
+                                      √ !       T               √ !
+                                     ε T       X              ε T
+                       P max |Ut | >        ≤      P |Ut | >
+                          t≤T        C 0 bK    t=1
+                                                              C 0 bK
+                                                           2+δ0
+                                                         bK
+                                            ≤ Cε,C0 T √
+                                                          T
+                                                     2+δ0 −δ0 /2
+                                            = Cε,C0 bK T         → 0.
+
+The rate is Assumption 9. Letting C0 → ∞ proves the stated maximum bound.
+
+Lemma 7 (Feasible true-partition replacement). Under Assumptions 1, 2, 3, 5, 6, and 9,
+suppose
+                                      T
+                                              2 p
+                                      X
+                                 T −1    σt2 vt,0 − ηq2 .
+                                                  →
+                                                t=1
+
+Then
+                                 T
+                                 X                             T
+                                                               X
+                          −1/2
+                      T              Zbt (β0 , Λ0 ) = T −1/2         Ut vt,0 + op (1),   (5.1)
+                             t=1                             t=1
+                             T
+                             X                              T
+                                                            X
+                      T −1         Zbt (β0 , Λ0 )2 = T −1              2
+                                                                  Ut2 vt,0 + op (1),     (5.2)
+                             t=1                            t=1
+                                                       √
+                            max |Zbt (β0 , Λ0 )| = op ( T ).                             (5.3)
+                            t≤T
+
+Detailed solution. Let Q0 = QK,Λ0 , Π0 = IT − MK,Λ0 , and v0 = MK,Λ0 w. The sieve
+representation gives
+                            Y − β0 Xlag = Q0 c0 + r0 + U .
+
+
+                                                      13
+By Lemma 2,
+                                  b (β0 , Λ0 ) = MK,Λ0 (r0 + U ).
+                                  u
+Define
+                   e0 = MK,Λ0 r0 ,         h 0 = Π0 U ,        d0 = (e0 − h0 ) ⊙ v0 .
+Then, componentwise,
+                                     Zbt (β0 , Λ0 ) = Ut vt,0 + dt,0 .                  (5.4)
+                                                ′
+        control the projection noise h0 . Let qt,0
+   FirstP                                          be row t of Q0 . The vector martingale
+ ′
+Q0 U = t qt,0 Ut has predictable quadratic-variation trace
+                                     T
+                                     X
+                                           σt2 ∥qt,0 ∥2 = Op (T dK ),
+                                     t=1
+
+because the conditional variances are bounded and the Gram upper bound gives
+                                      tr(Q′0 Q0 ) = Op (T dK ).
+A standard stopped Hilbert-space martingale argument therefore gives
+                                                  p
+                                   ∥Q′0 U ∥ = Op ( T dK ).
+                                                              √
+On the Gram event, ∥(Q′0 Q0 )† ∥ = Op (T −1 ) and ∥Q0 ∥ = Op ( T ). Hence
+                            ∥h0 ∥T = T −1/2 ∥Π0 U ∥
+                                     ≤ T −1/2 ∥Q0 ∥∥(Q′0 Q0 )† ∥∥Q′0 U ∥
+                                           p
+                                     = Op ( dK /T ),
+and, row by row,
+                                                               p      
+                ∥h0 ∥∞ ≤ max ∥qt,0 ∥∥(Q′0 Q0 )† ∥∥Q′0 U ∥ = Op ζK dK /T .
+                              t
+
+   For the approximation error, orthogonal projection is a contraction, so
+                                     ∥e0 ∥T ≤ ∥r0 ∥T = Op (aK ).
+Also,
+                                                   C
+                          ∥(Q′0 Q0 )† Q′0 r0 ∥ ≤     ∥Q0 ∥ ∥r0 ∥ = Op (aK ),
+                                                   T
+and therefore
+                       ∥e0 ∥∞ ≤ ∥r0 ∥∞ + ∥Π0 r0 ∥∞ = Op {aK (1 + ζK )}.
+Lemma 3 gives ∥v0 ∥∞ = Op (bK ). Combining these displays,
+                       ∥d0 ∥T ≤ ∥v0 ∥∞ {∥e0 ∥T + ∥h0 ∥T }
+                                               p        
+                              = Op aK bK + bK dK /T = op (1),
+                       ∥d0 ∥∞ ≤ ∥v0 ∥∞ {∥e0 ∥∞ + ∥h0 ∥∞ }
+                                   
+                                         2
+                                                  p         √
+                              = Op aK bK + ζK bK dK /T = op ( T ).
+
+
+                                                    14
+The final√rates follow from Assumption
+                             p               6 and the envelope rate in Assumption 9; in partic-
+ular, bK / T = o(1) and ζK dK /T = o(1).
+   For the numerator, symmetry and idempotence of MK,Λ0 give an exact cancellation:
+                            X
+                     T −1/2   Zbt (β0 , Λ0 ) = T −1/2 (U + r0 )′ MK,Λ
+                                                                  2
+                                                                      0
+                                                                        w
+                                 t
+
+                                                           = T −1/2 U ′ v0 + T −1/2 r0′ MK,Λ0 w
+                                                           = T −1/2 U ′ v0 + op (1),
+
+where the last line is Assumption 6. For the denominator, (5.4) yields
+
+                        X                        X
+                 T −1        Zbt2 − T −1                       2
+                                                          Ut2 vt,0 ≤ 2∥U ⊙ v0 ∥T ∥d0 ∥T + ∥d0 ∥2T
+                         t                       t
+                                                                  = op (1),
+                                                                             √
+because Lemma 5 gives ∥U ⊙ v0 ∥T = Op (1). Finally, Lemma 6 and ∥d0 ∥∞ = op ( T ) imply
+                                                        √
+                             max |Zbt (β0 , Λ0 )| = op ( T ).
+                                             t
+
+
+
+
+Theorem 1 (Primitive known-partition Wilks). Under Assumptions 1–6, 8, and 9, suppose
+                                      T
+                                 −1
+                                      X                    p                   √
+                             T                   2
+                                            σt2 vt,0 − ηq2 ,
+                                                     →                P(ηq ≥    cη ) = 1
+                                      t=1
+
+for some cη > 0. Then
+                                                     ℓT (β0 , Λ0 ) ⇒ χ21 .
+
+Detailed solution. Set
+                                      T
+                                      X                                            T
+                                                                                   X
+                             −1/2                                             −1
+                  AT = T                    Zbt (β0 , Λ0 ),          BT = T              Zbt (β0 , Λ0 )2 .
+                                      t=1                                          t=1
+
+Lemma 7, followed by Lemmas 4 and 5, gives
+                                                     st                   p
+                                            AT −
+                                               → ηq Z,                  − ηq2 .
+                                                                     BT →
+
+Because ηq2 ≥ cη almost surely, BT ≥ cη /2 with probability tending to one. Lemmas 6 and
+7 give                                                     √
+                                max |Zbt (β0 , Λ0 )| = op ( T ).
+                                             t
+
+Assumption 8 supplies the convex-hull condition for the same score array. Therefore Lemma
+1 applies and yields
+                                               A2
+                                ℓT (β0 , Λ0 ) = T + op (1).
+                                               BT
+
+                                                                15
+Stable Slutsky, using ηq > 0 almost surely, gives
+
+                                   A2T  ηq2 Z 2
+                                       ⇒ 2 = Z 2 ∼ χ21 .
+                                   BT     ηq
+
+This proves the theorem.
+
+Remark 2 (Proof audit for Theorem 1). The theorem rests on five explicit inputs and no
+estimated-break argument. Lemma 4 proves the oracle numerator CLT from the predictable
+score route or its predictable approximation. Lemma 5 proves the oracle denominator LLN
+using the same variance convergence. Lemma 6 gives the maximum-score condition needed
+by scalar empirical likelihood. Lemma 7 transfers all three oracle properties from Ut vt,0 to
+the feasible true-partition score. Finally, Assumption 8 and Lemma 1 convert those three
+score facts into Wilks. Thus singular candidate partitions, break-date localization, and Bai–
+Perron order selection are irrelevant for Theorem 1; they enter only later, when Λ0 is replaced
+by an estimated partition.
+
+
+6     One-Break Estimated-Partition Bridge
+                                                   e = (e
+In this section only, take q0 = 1, Λ0 = (k0 ), and Λ    k). Let
+
+                   ∆M = MK,Λe − MK,Λ0 ,          MT = {t : jΛe (t) ̸= jΛ0 (t)}.
+
+                                 k − k0 | = Op (rT ), then
+Lemma 8 (Boundary-set size). If |e
+
+                                        |MT | = Op (rT ).
+
+Detailed solution. Suppose first that e k ≥ k0 . For t ≤ k0 , both partitions assign observation
+t to the left regime; for t > k, both assign it to the right regime. The assignments differ
+                                e
+exactly on
+                                           k0 < t ≤ e
+                                                    k.
+Thus |MT | = e  k − k0 . If e
+                            k < k0 , the same argument gives the differing set e  k < t ≤ k0 , so
+|MT | = k0 − e k. Hence, in all cases,
+
+                                           k − k0 | = Op (rT ).
+                                  |MT | = |e
+
+
+
+Lemma 9 (Nuisance part of partition perturbation). Suppose q0 = 1, Assumptions 3, 5, 6,
+and 10 hold, and |e k − k0 | = Op (rT ). Then
+                                                 
+                      −1/2 ′                bK rT
+                    T     µ ∆M w = Op √             + op (1), bK = 1 + ζK .
+                                               T
+                                             √
+In particular, this term is op (1) if bK rT / T → 0.
+
+                                               16
+Detailed solution. It suffices to prove a uniform deterministic bound for all |k − k0 | ≤ CrT ,
+then evaluate it at k = e   k on the localization event. Consider first k = k0 + h, h ≥ 0, and let
+H = {k0 + 1, . . . , k0 + h}. Let c0 and c1 be the true-regime sieve coefficients. If the candidate
+partition uses c0 on its left block and c1 on its right block, then
+
+                                         µ = QK,k c(k) + dH + r0 ,
+
+where dH is supported on H. For t ∈ H,
+
+           dH,t = PK (Wt−1 )′ (c1 − c0 ) = m1 (Wt−1 ) − m0 (Wt−1 ) − {r1,K,t − r0,K,t }.
+
+Assumptions 3 and 6 imply ∥dH ∥∞ = Op (1). Since Q′K,k MK,k = 0,
+
+                                  µ′ MK,k w = d′H MK,k w + r0′ MK,k w.
+
+At the true partition,
+                                         µ′ MK,k0 w = r0′ MK,k0 w.
+Therefore, using Lemma 3 uniformly over local candidates,
+
+                     T −1/2 |µ′ (MK,k − MK,k0 )w| ≤ T −1/2 ∥dH ∥1 ∥MK,k w∥∞
+                                                      + T −1/2 |r0′ (MK,k − MK,k0 )w|
+                                                                
+                                                           bK h
+                                                    = Op √           + op (1),
+                                                              T
+where the final term is Assumption 10. The case k < k0 is identical after exchanging the left
+                          k − k0 | = Op (rT ), the lemma follows.
+and right regimes. Since |e
+   The sufficient primitive rate in (3.3) follows from the same local coefficient update. Write
+vk = MK,k w. On the boundary set H, |vt,k − vt,k0 | = Op (bK ). Off the boundary, the
+candidate and true fitted-weight coefficients differ by Op (hζK bK /T ), and each row has norm
+at most ζK . Hence
+                                                             2
+                              ∥vk − vk0 ∥1 = Op {hbK (1 + ζK   )}.
+Consequently,
+                                                                                           2
+                                                                                                 
+              −1/2                                                             aK bK (1 + ζK )h
+          T          |r0′ (vk − vk0 )| ≤ T −1/2 ∥r0 ∥∞ ∥vk − vk0 ∥1 = Op             √                ,
+                                                                                       T
+which is uniformly op (1) for h ≤ CrT under (3.3).
+
+Lemma 10 (Stochastic part of partition perturbation).
+                                                 √         Suppose q0 = 1, Assumptions 1, 3,
+5, and 11 hold, |k − k0 | = Op (rT ), and bK rT / T → 0. Then
+                 e
+                                                    r      !
+                                                      Kr T
+                          T −1/2 U ′ ∆M w = Op ζK            + op (1).
+                                                       T
+                                             p
+In particular, this term is op (1) if ζK      KrT /T → 0.
+
+                                                     17
+Detailed solution. Work uniformly over deterministic local candidates |k − k0 | ≤ CrT , then
+evaluate at k = ek on the localization event. Take k = k0 + h > k0 and define
+  A = {1, . . . , k0 },   H = {k0 + 1, . . . , k0 + h},   B = {k0 + h + 1, . . . , T },   R = H ∪ B.
+For a segment J, put
+                                  GJ = PJ′ PJ ,       bJ = G−1
+                                                      γ        ′
+                                                            J PJ wJ .
+
+Assumption 11 gives ∥G−1 J ∥ = Op (T
+                                     −1
+                                        ) for all long local segments, and bounded weights
+       γJ ∥ = Op (1). The exact update identity
+imply ∥b
+                                γ      bA = G−1
+                                bA∪H − γ          ′
+                                             A∪H PH (wH − PH γ
+                                                             bA )
+
+therefore yields                                         
+                                                  hζK bK
+                               γA∪H − γ
+                              ∥b      bA ∥ = Op             .
+                                                    T
+The same calculation after removing H from the true right segment gives
+                                                       
+                                                 hζK bK
+                                γB − γ
+                               ∥b    bR ∥ = Op            .
+                                                   T
+   The residualized weights are segmentwise
+                                                 bA , wR − PR γ
+                                  vk0 = (wA − PA γ            bR ),
+                                                bA∪H , wB − PB γ
+                              vk = (wA∪H − PA∪H γ              bB ).
+Cancelling the raw wH terms gives the exact decomposition
+                               U ′ (vk − vk0 ) = (PA′ UA )′ (b
+                                                             γA − γ bA∪H )
+                                                       ′      ′
+                                                 + (PB UB ) (b   γR − γ
+                                                                      bB )
+                                                       ′       ′
+                                                 + (PH UH ) (b   γR − γ
+                                                                      bA∪H ).                     (6.1)
+By martingale isometry and the Gram bounds,
+                                   √                        √
+                   ∥PA′ UA ∥ = Op ( T K),   ∥PB′ UB ∥ = Op ( T K).
+For the local moving block, Doob’s inequality applied to the vector martingale partial sums
+gives
+                                                       √
+                               sup ∥PH′ UH ∥ = Op (ζK rT ).
+                                    h≤CrT
+
+The coefficient difference in the last line of (6.1) is Op (1). Combining the displays, uniformly
+for h ≤ CrT ,
+                                                          √ !           r !
+                                                 hζK  b K  K               h
+                 T −1/2 |U ′ (vk − vk0 )| = Op                  + Op ζK        .
+                                                       T                   T
+                                p                    p
+The first
+       √  order  divided by  ζK   Kh/T    equals b K  h/T , which
+                                                               p is o(1) uniformly under
+bK rT / T → 0. Since K ≥ 1, the second order is bounded by ζK Kh/T . Taking h = Op (rT )
+proves the result. The case k < k0 is the same with left and right interchanged.
+
+                                                    18
+Lemma 11 (Denominator perturbation). Suppose q0 = 1, Assumptions 1, 2, 3, 5, 6, 9, 10,
+and 11 hold. Suppose also
+                                   T
+                                                  p
+                                   X
+                              −1
+                          T                   2
+                                         σt2 vt,0 − ηq2 ,
+                                                  →               k − k0 | = Op (rT ),
+                                                                 |e
+                                   t=1
+
+and                                                 r
+                                                                           2
+                       bK rT                            KrT               ζK KrT
+                        √ → 0,                 ζK           → 0,                 → 0.
+                          T                              T                   T
+Then                                               2       2
+                                                                  
+                      e − VT (Λ0 ) = Op            bK rT   ζK KrT
+                  VT (Λ)                                 +          + op (1) = op (1).
+                                                     T        T
+Detailed solution.
+               P Again       work uniformly over |k − k0 | ≤ CrT . Put vk = MK,k w and
+VU,T (k) = T −1 t Ut2 vt,k
+                       2
+                           . As in Lemma 9, for a local candidate partition,
+
+                                          µ = QK,k c(k) + dH + r0 ,
+
+where dH is supported on the boundary set and ∥dH ∥∞ = Op (1). Therefore
+
+             b (β0 , k) = U − Πk U + MK,k r0 + MK,k dH ,
+             u                                                                 Πk = IT − MK,k ,
+
+and
+                                          b 0 , k) = U ⊙ vk + ρk ,
+                                          Z(β
+with
+                   ∥ρk ∥T ≤ ∥vk ∥∞ {∥Πk U ∥T + ∥MK,k r0 ∥T + ∥MK,k dH ∥T }.
+The projection-noise pcalculation used in Lemma 7, uniformly over the local full-rank set,
+gives ∥Πk U ∥T = Op ( K/T ). Projection contraction gives
+                                                                 p
+                   ∥MK,k r0 ∥T = Op (aK ),   ∥MK,k dH ∥T = Op ( h/T ).
+                                                                   √
+Since ∥vk ∥∞ = Op (bK ), Assumptions 6 and 9, together with bK rT / T → 0, imply
+
+                                              sup       ∥ρk ∥T = op (1).                          (6.2)
+                                          |k−k0 |≤CrT
+
+   It remains to compare the oracle denominators. The coefficient-update bounds from
+Lemma 10 imply, for h = |k − k0 |,
+                                           (
+                                            CbK ,        t ∈ MT ,
+                         |vt,k − vt,k0 | ≤
+                                                2
+                                            ChζK           / MT .
+                                                  bK /T, t ∈
+
+Also maxt (|vt,k | + |vt,k0 |) = Op (bK ). For a boundary interval of length h, the finite (2 + δ0 )-
+moment condition and the martingale maximal inequality on dyadic blocks give
+                                                 1 X 2
+                                            sup        Ut = Op (1),
+                                         1≤h≤CrT h
+                                                   t∈H      h
+
+
+
+                                                            19
+and T −1       2
+           P
+            t Ut = Op (1). Hence, uniformly over local candidates,
+                                                    X
+                 |VU,T (k) − VU,T (k0 )| ≤ T −1           Ut2 |vt,k − vt,k0 |(|vt,k | + |vt,k0 |)
+                                             t2        2 2 
+                                             bK h        hζK bK
+                                       = Op        + Op         .
+                                               T           T
+Assumption 11 gives b2K = O(K), so the second term is Op (ζK 2
+                                                               Kh/T ). Thus
+                                                     2    2
+                                                                 
+                                                     bK h ζK  Kh
+                       |VU,T (k) − VU,T (k0 )| = Op      +         .
+                                                      T      T
+By Lemma 5, VU,T (k0 ) = Op (1); hence ∥U ⊙ vk ∥T = Op (1) uniformly locally. The square-
+difference inequality and (6.2) imply
+                                    VT (k) − VU,T (k) = op (1)
+
+                                                            k − k0 | = Op (rT ) gives the
+uniformly locally, and the same is true at k0 . Taking h = |e
+displayed bound.
+Theorem 2 (One-break estimated-partition score equivalence). Suppose q0 = 1, Assump-
+tions 1–7, 9, 10, and 11 hold, and
+                                              T
+                                                              p
+                                              X
+                                       T −1              2
+                                                    σt2 vt,0 − ηq2 .
+                                                             →
+                                              t=1
+
+Assume rT ≥ 1 and the bridge rates
+                      r
+                                                                         2
+                        KrT                    bK rT                    ζK KrT
+                   ζK         → 0,              √ → 0,                         → 0.
+                          T                       T                        T
+Then
+                       e − ST (Λ0 ) = op (1),
+                   ST (Λ)                                      e − VT (Λ0 ) = op (1).
+                                                           VT (Λ)
+                                       k − k0 | = Op (rT ). For every one-break partition Λ,
+Detailed solution. Assumption 7 gives |e
+symmetry and idempotence imply
+                                ST (Λ) = T −1/2 (U + µ)′ MK,Λ w.
+Therefore
+                          e − ST (Λ0 ) = T −1/2 µ′ ∆M w + T −1/2 U ′ ∆M w.
+                      ST (Λ)
+Lemma 9 bounds the nuisance term by
+                                      
+                                 bK rT
+                            Op √         + op (1) = op (1),
+                                    T
+and Lemma 10 bounds the stochastic term by
+                                 r      !
+                                    KrT
+                          Op ζK            + op (1) = op (1).
+                                      T
+
+                                                     20
+This proves the numerator equivalence.
+   For the denominator, Lemma 11 gives
+                                               2       2
+                                                              
+                          e − VT (Λ0 ) = Op    bK rT   ζK KrT
+                      VT (Λ)                         +          + op (1).
+                                                 T        T
+
+The third bridge rate makes the second term op (1). Since rT ≥ 1,
+                                                           2
+                                b2K rT
+                                              
+                                          1       bK r T
+                                       =           √            = o(1),
+                                  T      rT          T
+so the denominator difference is op (1).
+
+Remark 3 (Proof audit for Theorem 2). Theorem 2 is only a bridge from the true one-
+break partition to a localized estimated break. Lemma 8 limits the number of observations
+whose regime assignment can change. Lemma 9 handles the deterministic nuisance compo-
+nent and makes the local sieve-bias condition explicit. Lemma 10 handles the martingale
+component through segmentwise coefficient updates. Lemma 11 proves that the empirical
+second moment is stable after the same partition perturbation. No convex-hull condition
+and no empirical-likelihood expansion is used in this theorem; those enter only in the next
+Wilks theorem. The result would fail without localization, local full-rank Gram regularity,
+and the three bridge rates listed in the theorem statement.
+
+Theorem 3 (One-break primitive estimated-partition Wilks). Under the assumptions of
+Theorem 1, the convex-hull condition for the estimated-partition score array, and Theorem
+2,
+                                              e ⇒ χ2 .
+                                     ℓT (β0 , Λ)   1
+
+Detailed solution. Let AT (Λ) = ST (Λ) and BT (Λ) = VT (Λ). Theorem 2 gives
+
+                      e = AT (Λ0 ) + op (1),
+                  AT (Λ)                                   e = BT (Λ0 ) + op (1).
+                                                       BT (Λ)
+
+The known-partition proof gives
+                                      st                            p
+                              AT (Λ0 ) −
+                                       → ηq Z,                  − ηq2 .
+                                                       BT (Λ0 ) →
+
+We must also verify the maximum condition; numerator and denominator equivalence alone
+would not imply it. The local representation in the proof of Lemma 11 gives
+
+                                 Z(β
+                                  b 0 , Λ)  e = U ⊙ ve + ρe .
+                                                        k    k
+                                                 √
+The envelope rate implies maxt |Ut vt,ek | = op ( T ). For the remainder, the uniform projection
+calculation gives                                   p         
+                               ∥Πek U ∥∞ = Op ζK K/T ,
+while the sieve calculation gives
+
+                               ∥MK,ek r0 ∥∞ = Op {aK (1 + ζK )}.
+
+                                                  21
+Finally, because dH has bounded entries and support of size Op (rT ),
+                                                    2
+                                                     
+                                                rT ζK
+                         ∥MK,ek dH ∥∞ = Op 1 +          = Op (1).
+                                                  T
+
+Multiplication√ by ∥vek ∥∞ = Op (bK ), followed by the sieve, bridge, and envelope rates, gives
+∥ρek ∥∞ = op ( T ). Hence                                √
+                                  max |Zbt (β0 , Λ)|
+                                                 e = op ( T ).
+                                      t
+
+The estimated-partition convex-hull condition and Lemma 1 now yield
+                                                    e 2
+                                            e = AT (Λ) + op (1).
+                                   ℓT (β0 , Λ)
+                                                BT (Λ)
+                                                    e
+
+Substitution of the two equivalences reduces this ratio to the true-partition ratio plus op (1),
+and Theorem 1 gives the χ21 limit.
+
+
+7     Bai–Perron-Type Profile-Sieve Segmentation
+This section replaces the detailed RSS drift and fluctuation derivations by a Bai–Perron-
+type high-level input tailored to the profile-sieve criterion. The replacement is deliber-
+ately modular. It handles the least-squares break search and order selection; it does not
+replace the empirical-likelihood score replacement, the estimated-partition bridge, or the
+local-alternative calculation.
+    At the null value β0 , define
+
+                                       yt (β0 ) = Yt − β0 Xt−1 .
+
+Then the nuisance-break model and sieve approximation imply
+
+                  yt (β0 ) = PK (Wt−1 )′ cj,K + Ut + rj,K,t ,      kj,0 < t ≤ kj+1,0 .
+
+Thus, apart from approximation error, the break search is a Bai–Perron least-squares seg-
+mentation problem with regime-specific coefficient vectors cj,K . The nonstandard feature is
+that the regressor dimension K = KT may increase and the regressors are generated sieve
+functions.
+
+Assumption 13 (Bai–Perron profile-sieve segmentation input). For the profile least-squares
+criterion RSSK (β0 , Λ), the following Bai–Perron-type conditions hold.
+
+    1. Admissible partitions. All searches are over Lq (ϵ), and the true partition belongs
+       to Lq0 (ϵ).
+
+    2. Series rank and conditioning. Uniformly over the admissible candidate sets used
+       below, every segment Gram matrix is full rank and has eigenvalues bounded above and
+       below at the correct segment scale. This excludes segments too short relative to K and
+       excludes collinearity of the selected sieve columns on a segment.
+
+                                                  22
+                                                                                     √
+  3. Profile identification. There is a deterministic sequence rT with rT = o( T ) such
+     that, uniformly over fixed-order admissible candidates satisfying maxj |kj −kj,0 | ≥ M rT ,
+
+                                    RSSK (β0 , Λ) − RSSK (β0 , Λ0 ) > 0
+
+      with probability tending to one as first T → ∞ and then M → ∞.
+
+  4. Order-selection gaps. For RT denoting the maximal spurious RSS gain,
+                                  b q (β0 )) − RSSK (β0 , Λ0 )} ≥ cT ∆2 − Op (RT ),
+                   min{RSSK (β0 , Λ                                   T
+                   q<q0
+
+
+      and
+                          max{RSSK (β0 , Λ0 ) − RSSK (β0 , Λ
+                                                           b q (β0 ))} = Op (RT ).
+                          q>q0
+
+      A typical profile-sieve Bai–Perron rate under sub-Gaussian errors and segment Gram
+      stability is RT = K log T .
+
+Remark 4 (What Bai–Perron is buying). Assumption 13 is the place where a Bai–Perron
+theorem, or a high-dimensional extension of it, enters the workbook. It replaces the need to
+prove the deterministic RSS drift and stochastic RSS fluctuation lemmas inside the empirical-
+likelihood paper. It does not assert that the classical fixed-dimensional Bai–Perron theorem
+applies without modification; the growing sieve dimension, approximation error, and segment
+Gram stability must be part of the segmentation input.
+
+Proposition 1 (Profile-sieve reduction to Bai–Perron form). At β0 , the fixed-order nuisance-
+break estimator is the least-squares segmentation estimator in the generated regression
+
+                           yt (β0 ) = PK (Wt−1 )′ cj + error,            t ∈ Ij (Λ).
+
+Consequently, any Bai–Perron-type theorem valid for this growing-dimensional profile-sieve
+regression can be used as an input for Λ
+                                       b q0 (β0 ).
+
+Detailed solution. For a fixed candidate partition Λ, minimizing the null-imposed segment
+cost over the nuisance coefficients gives
+                                      q               kj+1
+                                      X               X
+                  RSSK (β0 , Λ) =           min              {yt (β0 ) − PK (Wt−1 )′ cj }2 .
+                                            cj ∈RK
+                                      j=0            t=kj +1
+
+
+This is exactly the Bai–Perron least-squares criterion for a linear regression whose coefficient
+vector may change across regimes. The block matrix QK,Λ is the stacked design matrix for
+this segmented regression, and MK,Λ is its residual-maker. Therefore the break-date search
+has the same algebraic form as Bai–Perron. The only additional qualifications are that K
+can grow, the regressors are sieve basis functions, and the approximation remainder rj,K,t
+must be small enough not to change the objective at the break-localization scale. These
+qualifications are precisely what Assumption 13 records.
+
+
+
+                                                      23
+Lemma 12 (Fixed-order profile-RSS exclusion). Under Assumption 13, define
+                                                              
+                BT (M ) = Λ ∈ Lq0 (ϵ) : max |kj − kj,0 | ≥ M rT .
+                                                         1≤j≤q0
+
+
+Then                                                                                
+                                                                             
+              lim lim inf P         inf           RSSK (β0 , Λ) − RSSK (β0 , Λ0 ) > 0 = 1.
+              M →∞ T →∞           Λ∈BT (M )
+
+Detailed solution. This is the profile-identification clause of Assumption 13 written as an
+exclusion event. That clause says that, for candidates whose maximum break-date error
+is at least M rT , the profile RSS difference relative to the true partition is positive with
+probability tending to one as first T → ∞ and then M → ∞. Taking the infimum over
+exactly that candidate class gives the displayed statement.
+Theorem 4 (Fixed-order Bai–Perron localization). Under Assumption 13, for known q0 ,
+                                                             √
+                        kj (β0 ) − kj,0 | = Op (rT ),
+                   max |b                             rT = o( T ).
+                      1≤j≤q0
+
+Detailed solution. The fixed-order estimator is the measurable minimizer of RSSK (β0 , Λ)
+over Lq0 (ϵ). Since Λ0 ∈ Lq0 (ϵ),
+
+                              RSSK {β0 , Λ
+                                         b q0 (β0 )} ≤ RSSK (β0 , Λ0 ).
+
+Fix M . On the exclusion event in Lemma 12, no candidate in BT (M ) can satisfy this
+minimizing inequality. Therefore
+                                                                                
+    P max |kj (β0 ) − kj,0 | ≥ M rT ≤ P
+             b                            inf [RSSK (β0 , Λ) − RSSK (β0 , Λ0 )] ≤ 0
+          j                                            Λ∈BT (M )
+
+Taking T → ∞ and then M → ∞ makes the right side         √ zero by Lemma 12. This is exactly
+      kj (β0 ) − kj,0 | = Op (rT ). The condition rT = o( T ) is part of Assumption 13 and is
+maxj |b
+recorded because the empirical-likelihood bridge uses it at the score scale.
+Remark 5 (Proof audit for Theorem 4). The proof uses only three ingredients: admis-
+sible minimum-spaced fixed-order search, true-partition admissibility, and the profile-RSS
+exclusion condition in Assumption 13. The theorem does not claim that a classical fixed-
+dimensional Bai–Perron theorem automatically applies; the growing-K profile-sieve rank,
+conditioning, approximation, and stochastic search controls are exactly the content of As-
+sumption 13.
+Assumption 14 (Bai–Perron penalty-rate target). Let RT be the maximal spurious searched
+RSS gain in Assumption 13. The penalty satisfies
+                          penT (q, K) − penT (q0 , K)
+                                                      → ∞ for q > q0 ,
+                                      RT
+and
+                    | penT (q, K) − penT (q0 , K)| = o(T ∆2T ) for q < q0 .
+
+                                                         24
+Theorem 5 (Unknown-order Bai–Perron consistency). Under Assumptions 13 and 14,
+                                        q (β0 ) = q0 } → 1.
+                                      P{b
+Detailed solution. Write
+                                 RSSq∗ = RSSK {β0 , Λ
+                                                    b q (β0 )}.
+For q < q0 , the order-selection gap in Assumption 13 gives
+                              RSSq∗ − RSSq∗0 ≥ cT ∆2T − Op (RT ),
+up to using Λ0 as an admissible true-order benchmark. The penalty is o(T ∆2T ) in absolute
+value for underfitting, so underfitted models have larger penalized objective with probability
+tending to one. For q > q0 , the same assumption gives
+                                  RSSq∗0 − RSSq∗ = Op (RT ),
+while the penalty difference diverges relative to RT . Hence overfitted models also have larger
+penalized objective with probability tending to one. Since q̄ is fixed, a finite union bound
+over q ̸= q0 proves the claim.
+Lemma 13 (High-probability event transfer). Let XT and YT be real statistics, and let ET
+be events such that P(ET ) → 1. If XT ⇒ X and YT = XT on ET , then YT ⇒ X.
+Detailed solution. For every bounded continuous function f ,
+                           |Ef (YT ) − Ef (XT )| ≤ 2∥f ∥∞ P(ETc ) → 0.
+Since Ef (XT ) → Ef (X), the same convergence holds for Ef (YT ), which is weak convergence
+of YT to X.
+Corollary 1 (Unknown-order Wilks). Suppose Theorem 5 holds, the fixed-order estimated-
+partition Wilks theorem 3 holds for Λ  e = Λb q0 (β0 ), and the same measurable tie-breaking
+convention is used for fixed-order and unknown-order selection. Then
+                                               b 0 )} ⇒ χ21 .
+                                      ℓT {β0 , Λ(β
+Detailed solution. Let ET = {bq (β0 ) = q0 }. By Theorem 5, P(ET ) → 1. On ET , unknown-
+order selection uses the same order q0 and the same deterministic tie-breaking rule as the
+fixed-order estimator, so
+                                     b 0) = Λ
+                                     Λ(β      b q0 (β0 ) = Λ.
+                                                           e
+Therefore
+                                   ℓT {β0 , Λ(β
+                                            b 0 )} = ℓT (β0 , Λ)
+                                                              e
+                                                                         e ⇒ χ21 , and Lemma
+on ET . The fixed-order estimated-partition Wilks theorem gives ℓT (β0 , Λ)
+13 transfers this limit to the unknown-order statistic.
+Remark 6 (Proof audit for Corollary 1). The corollary uses only order consistency and event
+transfer. It does not introduce a new empirical-likelihood expansion and does not need a
+new break localization argument once the fixed-order estimated-partition Wilks theorem is
+available. The deterministic tie-breaking convention is essential: without it, the selected
+                                                                    b q0 (β0 ).
+partition on ET need not be literally the same measurable object as Λ
+
+                                                25
+8      Local Alternatives
+Assumption 15 (Local-law oracle and drift). Let βT = β0 + dT , dT → 0, and define
+                                                       gt,T = dT (MK,Λ0 Xlag )t vt,0 .
+Under the local law PβT ,
+                   T                                                T
+            −1/2
+                   X                  st                       −1
+                                                                    X              p                                  √
+        T                Ut vt,0 −
+                                 → ηq Z,                   T                   2
+                                                                          Ut2 vt,0 − ηq2 ,
+                                                                                   →             max |Ut vt,0 | = op ( T ),
+                                                                                                   t
+                   t=1                                              t=1
+
+and
+                       T                                            T
+                −1/2
+                       X              p                        −1
+                                                                    X
+                                                                           2
+                                                                                                                   √
+            T                     − ηq δh ,
+                             gt,T →                        T              gt,T = op (1),         max |gt,T | = op ( T ).
+                                                                                                   t
+                       t=1                                          t=1
+
+Lemma 14 (Local shifted-score replacement). Suppose Assumptions 6, 3, 5, and 9 continue
+to hold under PβT . Then
+                                             T
+                                             X
+                                      −1/2
+                                  T                  {Zbt (β0 , Λ0 ) − (Ut vt,0 + gt,T )} = op (1),                           (8.1)
+                                             t=1
+                                           T
+                                           X
+                               T −1              {Zbt (β0 , Λ0 )2 − (Ut vt,0 + gt,T )2 } = op (1),                            (8.2)
+                                           t=1
+                                                                                            √
+                                             max |Zbt (β0 , Λ0 ) − (Ut vt,0 + gt,T )| = op ( T ).                             (8.3)
+                                                 t
+
+Detailed solution. Under PβT ,
+                                       Y − β0 Xlag = QK,Λ0 c0 + r0 + U + dT Xlag .
+Apply MK,Λ0 and put
+                         e0 = MK,Λ0 r0 ,                     h0 = ΠK,Λ0 U ,                  xc0 = MK,Λ0 Xlag .
+Then
+                                                 b (β0 , Λ0 ) = U − h0 + e0 + dT xc0 .
+                                                 u
+Multiplication by v0 = MK,Λ0 w gives the exact identity
+                         Zbt (β0 , Λ0 ) = Ut vt,0 + gt,T + dt,T ,                      dt,T = (et,0 − ht,0 )vt,0 .
+The vector dT is the same feasibility error controlled in Lemma 7; under the stated local-law
+continuation of the primitive assumptions,
+                    X                                                     √
+             T −1/2    dt,T = op (1),     ∥dT ∥T = op (1),   ∥dT ∥∞ = op ( T ).
+                              t
+
+The first and third displays of the lemma follow immediately.
+  For the square replacement, set at,T = Ut vt,0 + gt,T . Then
+                        X                          X                  X
+                   T −1    {Zbt2 − a2t,T } = 2T −1   at,T dt,T + T −1   d2t,T .
+                                       t                                       t                       t
+
+Assumption 15 gives ∥U ⊙ v0 ∥T = Op (1) and ∥gT ∥T = op (1), hence ∥aT ∥T = Op (1). By
+Cauchy–Schwarz and ∥dT ∥T = op (1), both terms on the right are op (1).
+
+                                                                          26
+Lemma 15 (True-partition local empirical-likelihood limit). Under Assumption 15, Lemma
+14, and the local convex-hull condition for Zbt (β0 , Λ0 ),
+
+                                             ℓT (β0 , Λ0 ) ⇒ χ21 (δh2 ).
+
+Detailed solution. Lemma 14 and Assumption 15 give
+                       X                         X                  X
+                T −1/2   Zbt (β0 , Λ0 ) = T −1/2   Ut vt,0 + T −1/2   gt,T + op (1)
+                         t                                t                        t
+                                             st
+                                             → ηq (Z + δh ).
+                                             −
+
+For the second moment,
+             X                           X                  X                     X
+        T −1   (Ut vt,0 + gt,T )2 = T −1        2
+                                           Ut2 vt,0 + 2T −1   Ut vt,0 gt,T + T −1    2
+                                                                                    gt,T .
+               t                                  t                        t               t
+
+The first term converges to ηq2 and the last term is op (1). The cross term is op (1) by Cauchy–
+Schwarz:
+                                                     !1/2               !1/2
+                  X                      X                       X
+               −1                     −1       2 2            −1    2
+             T      Ut vt,0 gt,T ≤ T         Ut vt,0        T      gt,T      = op (1).
+                    t                                 t                        t
+
+The local replacement lemma therefore gives
+                                                       p
+                                    X
+                               T −1    Zbt (β0 , Λ0 )2 →
+                                                       − ηq2 .
+                                                  t
+
+The maximum condition follows from
+                                                                  √
+                                      max |Ut vt,0 + gt,T | = op ( T )
+                                         t
+
+and the maximum replacement bound in Lemma 14. The scalar empirical-likelihood expan-
+sion, Lemma 1, now yields
+                                     {ηq (Z + δh )}2
+                   ℓT (β0 , Λ0 ) =          2
+                                                     + op (1) ⇒ (Z + δh )2 ∼ χ21 (δh2 ).
+                                           ηq
+
+
+Theorem 6 (Local noncentral chi-square). Suppose the conditions of Lemma 15 hold. Sup-
+pose also that, under PβT , the local estimated-partition bridge holds:
+                                                                                        √
+       e − ST (Λ0 ) = op (1),
+   ST (Λ)                              e − VT (Λ0 ) = op (1),
+                                   VT (Λ)                        max |Zbt (β0 , Λ)|
+                                                                                e = op ( T ),
+                                                                                       t
+
+                                                        e Then
+and the local convex-hull condition holds for Zbt (β0 , Λ).
+                                                      e ⇒ χ2 (δ 2 ).
+                                             ℓT (β0 , Λ)   1 h
+
+        q (β0 ) = q0 } → 1, the same limit holds for ℓT {β0 , Λ(β
+If PβT {b                                                     b 0 )}.
+
+                                                          27
+Detailed solution. The proof of Lemma 15 gives the true-partition score limits
+                   st                       p                                   √
+          ST (Λ0 ) −
+                   → ηq (Z + δh ),          − ηq2 ,
+                                   VT (Λ0 ) →        max |Zbt (β0 , Λ0 )| = op ( T ).
+                                                           t
+
+The local bridge transfers the first two limits and supplies the maximum bound for the
+estimated partition:
+                  st                        p                               √
+               e −
+           ST (Λ) → ηq (Z + δh ),        e →
+                                     VT (Λ) − ηq2 ,  max |Zbt (β0 , Λ)|
+                                                                    e = op ( T ).
+                                                           t
+
+The local convex-hull condition and Lemma 1 give
+                                      e 2
+                              e = ST (Λ) + op (1) ⇒ (Z + δh )2 ∼ χ2 (δ 2 ).
+                     ℓT (β0 , Λ)                                  1 h
+                                  VT (Λ)
+                                      e
+
+For unknown order, let ET = {b   q (β0 ) = q0 }. On ET , Λ(β    e under the same tie-breaking
+                                                         b 0) = Λ
+convention used in Corollary 1. Since PβT (ET ) → 1, the event-transfer lemma 13 transfers
+the fixed-order local limit to the unknown-order statistic.
+
+Remark 7 (Proof audit for Theorem 6). The local theorem has two separate pieces. Lemma
+15 proves the noncentral limit at the true partition from the local drift gt,T , the local de-
+nominator stability, and the scalar EL expansion. The theorem then uses a local-law ver-
+                                                           e The bridge must include the
+sion of the estimated-partition bridge to move from Λ0 to Λ.
+maximum-score condition; numerator and denominator equivalence alone are not enough for
+empirical likelihood. Unknown-order local power is only an event transfer and requires order
+consistency under the local law PβT .
+
+
+9    End-to-End Assumption Audit
+This section records the full proof audit for the Bai–Perron replacement workbook. It sep-
+arates algebraic definitions from the assumptions that must be proved or imported. In
+particular, the Moore–Penrose inverse makes the projection matrix defined, but it does not
+rescue asymptotic regularity when a candidate segment is too short, when the basis is locally
+collinear, or when the profile criterion lacks a usable drift.
+
+
+
+
+                                              28
+  Proof block             Required inputs                           What would fail if omitted
+  Primitive setup and     Fixed q0 , minimum true spacing,          Tiny segments, undefined
+  search space            admissible Lq (ϵ), explicit Dj (Λ),       regime blocks,
+                          stable β0 , deterministic tie-breaking    nonmeasurable
+                                                                    minimizers, or
+                                                                    moving-order rates not
+                                                                    covered by the proof
+  Sieve construction      K = KT → ∞, K rate restrictions,          Missing intercept shifts,
+                          bounded envelope ζK , constant basis      excessive series variance,
+                          element p1 (w) ≡ 1, approximation         or nuisance approximation
+                          error bounds                              leaking into the β-score
+  Projection regularity   Uniform Gram stability, local             Singular or ill-conditioned
+                          full-rank segment regularity, and the     Q′K,Λ QK,Λ invalidates
+                          caveat that Moore–Penrose definition      leverage and perturbation
+                          is not enough                             bounds
+  Known-partition         Assumptions 1–6, oracle envelope          CLT, denominator LLN,
+  Wilks                   completion 9, and convex hull 8           maximum-score bound, or
+                                                                    EL expansion can fail
+  Estimated-partition     Localization 7, boundary-size Lemma       Estimated and true
+  bridge                  8, local bias 10, local rank 11, and      partition scores need not
+                          bridge rates                              be first-order equivalent
+  Bai–Perron              Profile-sieve reduction 1,                The phrase Bai–Perron
+  replacement             segmentation input 13, exclusion          alone does not deliver
+                          Lemma 12, and optional primitive          growing-K,
+                          route 12                                  nuisance-projected RSS
+                                                                    localization
+  Unknown order           Penalty target 14, underfit separation,   The selected order may
+                          overfit penalty dominance, fixed q̄,      underfit or overfit, so
+                          and event-transfer Lemma 13               unknown-order Wilks
+                                                                    cannot be transferred
+  Local alternatives      βT = β0 + dT , local oracle drift 15,     Noncentrality,
+                          shifted-score Lemma 14, true-local EL     denominator stability, or
+                          Lemma 15, local bridge, and order         order-transfer can change
+                          consistency under PβT                     under drifting laws
+
+Audit conclusion. No theorem in this workbook is licensed by the name Bai–Perron
+alone. The replacement reduces the workload only after Assumption 13 has been verified or
+cited from a theorem that permits growing K = KT , series approximation error, minimum-
+spaced admissible partitions, and profile-RSS order selection. If q0 is allowed to grow, if K
+grows faster than the displayed rates, or if βT drifts outside the local regime in Section 8,
+the proof requires new rates.
+
+
+
+
+                                               29
+10    Master Dependency Checklist
+ Goal                       Must prove first                  Output when finished
+ Known-partition Wilks      Lemmas 4, 5, 6, 7                 Theorem 1
+ One-break bridge           Lemmas 8, 9, 10, 11               Theorem 2
+ Bai–Perron segmentation    Proposition 1, Assumption 13,     Theorem 4
+                            Lemma 12
+ Unknown order              Theorem 5, Assumption 14,         Corollary 1
+                            Lemma 13
+ Local alternatives         Assumption 15, Lemmas 14,         Theorem 6
+                            15, local bridge
+
+Recommended homework order
+ 1. Prove deterministic projection algebra and leverage bounds.
+
+ 2. Prove known-partition Wilks from primitive martingale assumptions.
+
+ 3. Prove the one-break partition perturbation bounds.
+
+ 4. Invoke or verify the Bai–Perron profile-sieve segmentation input.
+
+ 5. Then work on unknown-order selection and local alternatives.
+
+
+
+
+                                           30
+

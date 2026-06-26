@@ -18,16 +18,17 @@ def _rho_from_design(design: dict, T: int) -> float:
 def _m_function(w: np.ndarray, config: dict) -> np.ndarray:
     name = config.get("name", "sinus_quad")
     params = config.get("params", {})
+    level = float(params.get("level", 0.0))
     if name == "zero":
-        return np.zeros_like(w, dtype=float)
+        return np.zeros_like(w, dtype=float) + level
     if name == "sinus_quad":
         a1 = float(params.get("a1", 0.5))
         a2 = float(params.get("a2", 0.3))
-        return a1 * np.sin(w) + a2 * (w**2 - 1.0)
+        return level + a1 * np.sin(w) + a2 * (w**2 - 1.0)
     if name == "strong_nonlinear":
         a1 = float(params.get("a1", 0.5))
         a2 = float(params.get("a2", 0.4))
-        return a1 * np.sin(2.0 * w) + a2 * w * np.exp(-0.5 * w**2)
+        return level + a1 * np.sin(2.0 * w) + a2 * w * np.exp(-0.5 * w**2)
     raise ValueError(f"Unknown nuisance m function: {name}")
 
 
@@ -125,5 +126,82 @@ class PredictiveAR1DGP:
             "kappa": self.kappa,
             "xi": self.xi,
             "m_type": self.m_config.get("name", "unknown"),
+        }
+        return Dataset(y=y, x_lag=x_lag, w_lag=w_lag, u=u, m_w=m_w, meta=meta)
+
+@register_dgp("broken_nuisance_ar1")
+class BrokenNuisanceAR1DGP(PredictiveAR1DGP):
+    """Predictive AR(1) DGP with one break in the nonlinear nuisance function."""
+
+    def __init__(self, params: dict):
+        super().__init__(params)
+        self.break_fraction = float(self.params.get("break_fraction", 0.5))
+        if not 0.0 < self.break_fraction < 1.0:
+            raise ValueError("break_fraction must lie strictly between 0 and 1.")
+        self.m_left_config = self.params.get("m_left", self.params.get("m", {"name": "sinus_quad", "params": {}}))
+        self.m_right_config = self.params.get(
+            "m_right",
+            {"name": "sinus_quad", "params": {"a1": 0.5, "a2": 0.3, "level": 1.0}},
+        )
+
+    def simulate(self, seed: int, T: int, rho_design: dict, beta: float) -> Dataset:
+        if T <= 0:
+            raise ValueError("T must be positive.")
+        rho = _rho_from_design(rho_design, T)
+        rng = np.random.default_rng(seed)
+        n = T + self.burnin + 1
+        innovations = rng.multivariate_normal(np.zeros(3), self.covariance, size=n)
+        u_full = innovations[:, 0]
+        v_full = innovations[:, 1]
+        eta_full = innovations[:, 2]
+
+        x = np.zeros(n, dtype=float)
+        w = np.zeros(n, dtype=float)
+        w[0] = rng.normal(0.0, np.sqrt(1.0 / (1.0 - self.a_w**2)))
+        for t in range(1, n):
+            w[t] = self.a_w * w[t - 1] + eta_full[t]
+
+        if self.x_initialization == "burnin":
+            for t in range(1, n):
+                x[t] = rho * x[t - 1] + v_full[t]
+        else:
+            sample_start = self.burnin
+            x[sample_start] = 0.0
+            for t in range(sample_start + 1, n):
+                x[t] = rho * x[t - 1] + v_full[t]
+
+        idx = np.arange(self.burnin + 1, self.burnin + T + 1)
+        x_lag = x[idx - 1]
+        w_lag = w[idx - 1]
+        u = u_full[idx]
+        true_break = int(round(self.break_fraction * T))
+        true_break = min(max(true_break, 1), T - 1)
+        m_left_values = _m_function(w_lag, self.m_left_config)
+        m_right_values = _m_function(w_lag, self.m_right_config)
+        m_w = np.where(np.arange(T) < true_break, m_left_values, m_right_values)
+        delta_T = float(np.sqrt(np.mean((m_right_values - m_left_values) ** 2)))
+        y = m_w + float(beta) * x_lag + u
+        meta = {
+            "T": int(T),
+            "rho_label": rho_design.get("label", str(rho)),
+            "rho_value": float(rho),
+            "rho_formula": rho_design.get("formula", "fixed"),
+            "beta": float(beta),
+            "a_w": self.a_w,
+            "x_initialization": self.x_initialization,
+            "w_process": "stationary_gaussian_ar1",
+            "w_stationary": True,
+            "w_alpha_mixing": "geometric",
+            "kappa": self.kappa,
+            "xi": self.xi,
+            "m_type": "broken_nuisance",
+            "q0": 1,
+            "true_break": true_break,
+            "break_fraction": self.break_fraction,
+            "Delta_T": delta_T,
+            "m_left_name": self.m_left_config.get("name", "unknown"),
+            "m_right_name": self.m_right_config.get("name", "unknown"),
+            "m_left_values": m_left_values.tolist(),
+            "m_right_values": m_right_values.tolist(),
         }
         return Dataset(y=y, x_lag=x_lag, w_lag=w_lag, u=u, m_w=m_w, meta=meta)

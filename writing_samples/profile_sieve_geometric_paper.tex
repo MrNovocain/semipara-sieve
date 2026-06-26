@@ -145,7 +145,7 @@ where \(\bm P\) is the usual sieve matrix in \(W_{t-1}\), and \(\bm D_j(\Lambda)
     \bm I_T
     -
     \bm Q_{K,\Lambda}
-    (\bm Q_{K,\Lambda}'\bm Q_{K,\Lambda})^{-1}
+    (\bm Q_{K,\Lambda}'\bm Q_{K,\Lambda})^\dagger
     \bm Q_{K,\Lambda}'.
 \]
 The proposed score is
@@ -165,6 +165,17 @@ The paper is related to four literatures. Weighted-score EL for predictive regre
 
 \section{Model, Identification, and Break-Induced Predictivity}
 \label{sec:model}
+
+For a scalar array \(\bm a=(a_1,\ldots,a_T)'\), write
+\[
+    \|\bm a\|_T^2
+    =
+    T^{-1}\sum_{t=1}^T a_t^2,
+    \qquad
+    \|\bm a\|_\infty=\max_{t\leq T}|a_t|.
+\]
+Unless stated otherwise, \(O_p(\cdot)\) and \(o_p(\cdot)\) for growing
+vectors and matrices are in Euclidean and spectral norm, respectively.
 
 Let
 \[
@@ -241,12 +252,12 @@ where
     \qquad
     B_T
     =
-    T^{-1/2}\bm\mu'\bm M_{K,0}\bm w,
+    T^{-1/2}\bm\mu'\bm M_{K,0}\bm w.
 \]
-The term \(B_T\) is the omitted-break component left by imposing the no-break nuisance projection.
+The term \(B_T\) is the stable-projection nuisance component left by imposing the no-break nuisance projection. When \(q_0=0\), this component is asymptotically negligible under the projection-bias condition in Assumption~\ref{ass:block-sieve}; when \(q_0>0\), a nonnegligible component is interpreted as break-induced.
 \end{proposition}
 
-Proposition~\ref{prop:stable-decomp} identifies the object that can be misread as predictability. If \(B_T=o_p(1)\), the stable score may remain valid. If \(B_T\) is non-negligible, the stable statistic is centered at the wrong score.
+Proposition~\ref{prop:stable-decomp} identifies the object that can be misread as predictability. If \(B_T=o_p(1)\), the stable score may remain valid. If \(B_T\) is non-negligible, the stable statistic is centered at the wrong score. The condition is directional: a nuisance break with little projection on the residualized persistent weight need not distort the test.
 
 \begin{definition}[Break-induced spurious predictivity]
 The stable nuisance specification generates break-induced spurious predictivity at \(\beta_0\) if
@@ -260,26 +271,47 @@ The stable nuisance specification generates break-induced spurious predictivity 
 The condition is directional. A nuisance break with little projection on the residualized persistent weight need not distort the test.
 \end{definition}
 
+For the stable no-break empirical-likelihood statistic, write
+\[
+    V_T^{\mathrm{st}}
+    =
+    T^{-1}\sum_{t=1}^T \widehat Z_t(\beta_0,0)^2,
+\]
+where \(\widehat Z_t(\beta_0,0)\) is the score in \eqref{eq:block-score} computed under the no-break partition.
+
 \begin{theorem}[Omitted-break failure]
 \label{thm:failure}
-Suppose the stable EL statistic admits the standard scalar EL expansion around \(S_T^{\mathrm{st}}(\beta_0)\), with stable denominator \(V_T^{\mathrm{st}}\) bounded away from zero in probability. If
+Suppose the stable empirical-likelihood statistic admits
 \[
-    |B_T|/(V_T^{\mathrm{st}})^{1/2}\xrightarrow{p}\infty,
+    \ell_T^{\mathrm{st}}(\beta_0)
+    =
+    \frac{\{S_T^{\mathrm{st}}(\beta_0)\}^2}{V_T^{\mathrm{st}}}
+    +o_p(1),
 \]
-then for every fixed chi-square critical value \(c_\alpha\),
+with \(V_T^{\mathrm{st}}\) bounded away from zero in probability. Define
+\[
+    a_T=\frac{A_T^{\mathrm{st}}}{(V_T^{\mathrm{st}})^{1/2}},
+    \qquad
+    b_T=\frac{B_T}{(V_T^{\mathrm{st}})^{1/2}}.
+\]
+If \(a_T=O_p(1)\) and \(|b_T|\to_p\infty\), then, for every fixed chi-square critical value \(c_\alpha\),
 \[
     P\{\ell_T^{\mathrm{st}}(\beta_0)>c_\alpha\}\to1.
 \]
 If instead
 \[
-    A_T^{\mathrm{st}}/(V_T^{\mathrm{st}})^{1/2}\Rightarrow N(0,1),
-    \qquad
-    B_T/(V_T^{\mathrm{st}})^{1/2}\Rightarrow B,
-    \qquad
-    P(B\neq0)>0,
+    (a_T,b_T)\xrightarrow{\mathrm{st}}(Z,B),
 \]
-then the stable EL statistic has a noncentral, or random-noncentral, chi-square limit rather than a central \(\chi_1^2\) limit.
+where \(Z\sim N(0,1)\) is independent of the limiting sigma-field and \(B\) is measurable with respect to that sigma-field, then
+\[
+    \ell_T^{\mathrm{st}}(\beta_0)\Rightarrow (Z+B)^2.
+\]
+Conditionally on \(B\), the limit is \(\chi_1^2(B^2)\). Thus a constant \(B=\delta\) gives \(\chi_1^2(\delta^2)\), a random \(B\) gives a mixture of noncentral chi-squares, and \(B=0\) almost surely gives the central \(\chi_1^2\) limit.
 \end{theorem}
+
+\begin{remark}[Scope of omitted-break divergence]
+The divergence part of Theorem~\ref{thm:failure} is conditional on the displayed stable empirical-likelihood quadratic expansion. With a fixed omitted nuisance break, \(B_T\) can be of order \(\sqrt T\), and the null-style scalar expansion need not follow automatically. Establishing generic fixed-break divergence therefore requires a separate expansion under the misspecified stable nuisance projection.
+\end{remark}
 
 \section{Regime-Specific Sieve Geometry}
 \label{sec:geometry}
@@ -307,10 +339,11 @@ and
     \bm I_T
     -
     \bm Q_{K,\Lambda}
-    (\bm Q_{K,\Lambda}'\bm Q_{K,\Lambda})^{-1}
+    (\bm Q_{K,\Lambda}'\bm Q_{K,\Lambda})^\dagger
     \bm Q_{K,\Lambda}'.
     \label{eq:block-m}
 \end{equation}
+Here \({}^\dagger\) denotes the Moore--Penrose inverse. Thus the definition is valid for every candidate partition; when the block Gram matrix is nonsingular, it coincides with the ordinary inverse.
 The block nuisance space is
 \[
     \mathcal N_{K,\Lambda}
@@ -347,7 +380,7 @@ The scalar score is
 
 \begin{lemma}[Exact block projection identities]
 \label{lem:block-identities}
-For every partition \(\Lambda\) for which \(\bm Q_{K,\Lambda}'\bm Q_{K,\Lambda}\) is nonsingular,
+For every partition \(\Lambda\),
 \[
     \bm Q_{K,\Lambda}'\bm M_{K,\Lambda}=\bm0,
     \qquad
@@ -467,7 +500,7 @@ The final selection is then based on the same profile-sieve RSS and information 
 
 Let \(K_q=(q+1)K\) denote the block sieve dimension. All limits are along \(K=K_T\to\infty\) with fixed \(q_0\), unless stated otherwise.
 
-\begin{assumption}[Block-sieve rates]
+\begin{assumption}[Block-sieve rates and projection bias]
 \label{ass:block-sieve}
 For the true partition and for each regime \(j\), there exists \(\bm c_{j,K}\) such that
 \[
@@ -477,13 +510,27 @@ For the true partition and for each regime \(j\), there exists \(\bm c_{j,K}\) s
     +
     r_{j,K,t},
 \]
-with \(\max_j\|\bm r_{j,K}\|_T=O_p(a_K)\), \(\max_j\|\bm r_{j,K}\|_\infty=O_p(a_K)\), and \(\sqrt T a_K\to0\). The block Gram matrix \(T^{-1}\bm Q_{K,\Lambda_0}'\bm Q_{K,\Lambda_0}\) has eigenvalues bounded away from zero and infinity with probability tending to one. If \(\zeta_K=\max_t\|\bm P_K(W_{t-1})\|\), then
+with \(\max_j\|\bm r_{j,K}\|_T=O_p(a_K)\) and \(\max_j\|\bm r_{j,K}\|_\infty=O_p(a_K)\). Let \(\bm r_0\) denote the stacked approximation-error vector under \(\Lambda_0\). The directional projection bias satisfies
+\[
+    T^{-1/2}\bm r_0'\bm M_{K,\Lambda_0}\bm w=o_p(1).
+\]
+The block Gram matrix \(T^{-1}\bm Q_{K,\Lambda_0}'\bm Q_{K,\Lambda_0}\) has eigenvalues bounded away from zero and infinity with probability tending to one. If \(\zeta_K=\max_t\|\bm P_K(W_{t-1})\|\), then
+\[
+    a_K(1+\zeta_K)\to0,
+    \qquad
+    a_K(1+\zeta_K)^2=o(\sqrt T),
+\]
+and
 \[
     \frac{(q_0+1)K}{\sqrt T}\to0,
     \qquad
     \zeta_K\sqrt{\frac{(q_0+1)K}{T}}\to0.
 \]
 \end{assumption}
+
+\begin{remark}[Projection bias versus undersmoothing]
+The condition \(T^{-1/2}\bm r_0'\bm M_{K,\Lambda_0}\bm w=o_p(1)\) only requires the nuisance approximation error to be negligible in the residualized score direction. It is weaker than the full root-\(T\) undersmoothing condition \(\sqrt T a_K\to0\). A sufficient primitive route is a product-rate condition \(\sqrt T\,a_{m,K}a_{w,K}\to0\), where \(a_{m,K}\) approximates the nuisance functions and \(a_{w,K}\) approximates the conditional mean of the weight \(w_t\) given \(W_{t-1}\).
+\end{remark}
 
 \begin{assumption}[Known-partition oracle score]
 \label{ass:oracle}
@@ -497,15 +544,19 @@ With \(\bm v_0=\bm M_{K,\Lambda_0}\bm w\), define \(\widetilde{\bm U}_0=\bm M_{K
     =
     T^{-1}\sum_{t=1}^T U_t^2v_{t,0}^2.
 \]
-The oracle numerator and denominator satisfy
+There exist a random scale \(\eta_q\), a constant \(c_\eta>0\), and a standard normal \(Z\), independent of the limiting sigma-field generating \(\eta_q\), such that
 \[
-    A_T^{(q)}\xrightarrow{\mathrm{st}}MN(0,\eta_q^2),
+    A_T^{(q)}\xrightarrow{\mathrm{st}}\eta_qZ,
     \qquad
     V_T^{(q)}\xrightarrow{p}\eta_q^2,
     \qquad
+    P(\eta_q\geq\sqrt{c_\eta})=1.
+\]
+In addition,
+\[
     \max_{t\leq T}|U_tv_{t,0}|=o_p(\sqrt T),
 \]
-where \(P(\eta_q^2>\underline\eta)=1\) for some \(\underline\eta>0\). In addition, the projection of the noise onto the block sieve is asymptotically negligible in the weighted score array:
+and the projection of the noise onto the block sieve is asymptotically negligible in the weighted score array:
 \[
     T^{-1}\sum_{t=1}^T
     \{(\widetilde U_{0,t}v_{t,0})^2-(U_tv_{t,0})^2\}
@@ -514,7 +565,14 @@ where \(P(\eta_q^2>\underline\eta)=1\) for some \(\underline\eta>0\). In additio
     \max_{t\leq T}|(\widetilde U_{0,t}-U_t)v_{t,0}|
     =o_p(\sqrt T).
 \]
-The scalar EL convex-hull condition holds under the null.
+Finally, the feasible true-partition score array satisfies the scalar empirical-likelihood convex-hull condition
+\[
+    P\left\{
+    \min_{t\leq T}\widehat Z_t(\beta_0,\Lambda_0)<0<
+    \max_{t\leq T}\widehat Z_t(\beta_0,\Lambda_0)
+    \right\}\to1.
+\]
+This condition is imposed on the feasible array \(\widehat Z_t(\beta_0,\Lambda_0)\), not only on the oracle array \(U_tv_{t,0}\).
 \end{assumption}
 
 \begin{theorem}[Known-partition Wilks theorem]
@@ -527,86 +585,121 @@ Under Assumptions~\ref{ass:breaks}, \ref{ass:identification}, \ref{ass:block-sie
 
 Theorem~\ref{thm:known-wilks} is the block-sieve version of the original geometric Wilks result. The key change is that the oracle weight is no longer a globally centered weight. It is \(v_{t,0}=(\bm M_{K,\Lambda_0}\bm w)_t\), the residualized weight after projecting on the regime-specific nuisance space.
 
-\begin{assumption}[Partition estimation]
-\label{ass:partition}
+For the fixed-order analysis, define
+\[
+    \widetilde\Lambda
+    =
+    \widehat\Lambda_{q_0}(\beta_0),
+    \qquad
+    \widetilde\Lambda=(\widetilde k_1,\ldots,\widetilde k_{q_0}).
+\]
+The unknown-order estimator \(\widehat\Lambda(\beta_0)\) is used only in Corollary~\ref{cor:qhat}.
+
+\begin{assumption}[Fixed-order partition localization]
+\label{ass:partition-localization}
 For the true number of breaks,
 \[
     \max_{1\leq j\leq q_0}
-    |\widehat k_j(\beta_0)-k_{j,0}|
+    |\widetilde k_j-k_{j,0}|
     =
     O_p(r_T),
     \qquad
     r_T=o(\sqrt T).
 \]
-Equivalently, the number of observations assigned to the wrong regime satisfies
+Equivalently, the number of fixed-order observations assigned to the wrong regime satisfies
 \[
     |\mathcal M_T|
     =
     \left|
-    \{t:j_{\widehat\Lambda(\beta_0)}(t)\neq j_{\Lambda_0}(t)\}
+    \{t:j_{\widetilde\Lambda}(t)\neq j_{\Lambda_0}(t)\}
     \right|
     =
     o_p(\sqrt T).
 \]
-Let
-\[
-    \mathcal Z_T
-    =
-    \max_{t\leq T}
-    \{|
-    \widehat Z_t(\beta_0,\widehat\Lambda(\beta_0))|
-    +
-    |\widehat Z_t(\beta_0,\Lambda_0)|
-    \}.
-\]
-The boundary observations are required to be negligible at the numerator and denominator scales:
-\[
-    T^{-1/2}|\mathcal M_T|\mathcal Z_T=o_p(1),
-    \qquad
-    T^{-1}|\mathcal M_T|\mathcal Z_T^2=o_p(1).
-\]
-These conditions follow, for example, from \(|\mathcal M_T|=o_p(\sqrt T)\) and uniformly bounded score contributions.
+This localization condition does not by itself imply score equivalence, because moving boundary observations also perturbs the fitted regime coefficients outside \(\mathcal M_T\).
 \end{assumption}
 
-\begin{theorem}[Estimated-partition equivalence]
-\label{thm:estimated-equiv}
-Under the assumptions of Theorem~\ref{thm:known-wilks} and Assumption~\ref{ass:partition},
-\[
-    \ell_T\{\beta_0,\widehat\Lambda(\beta_0)\}
-    -
-    \ell_T(\beta_0,\Lambda_0)
-    =
-    o_p(1).
-\]
-Consequently,
-\[
-    \ell_T^{BA}(\beta_0)\Rightarrow\chi_1^2.
-\]
-\end{theorem}
+\begin{assumption}[High-level fixed-order estimated-score equivalence]
+\label{ass:estimated-score}
+Under \(H_0:\beta=\beta_0\),
+\begin{align}
+    T^{-1/2}\sum_{t=1}^T
+    \{\widehat Z_t(\beta_0,\widetilde\Lambda)-\widehat Z_t(\beta_0,\Lambda_0)\}
+    &=o_p(1),
+    \label{eq:estimated-score-num}\\
+    T^{-1}\sum_{t=1}^T
+    \{\widehat Z_t(\beta_0,\widetilde\Lambda)^2-\widehat Z_t(\beta_0,\Lambda_0)^2\}
+    &=o_p(1),
+    \label{eq:estimated-score-den}\\
+    \max_{t\leq T}|\widehat Z_t(\beta_0,\widetilde\Lambda)|&=o_p(\sqrt T).
+    \label{eq:estimated-score-max}
+\end{align}
+Zero lies in the interior of the scalar empirical-likelihood convex hull for the fixed-order estimated-partition score array with probability tending to one. This is a high-level score-equivalence condition; Assumption~\ref{ass:partition-localization} alone is not claimed to prove it.
+\end{assumption}
 
-The proof does not require an operator-norm bound for
-\(\bm M_{K,\widehat\Lambda}-\bm M_{K,\Lambda_0}\), which can be too strong when a few rows switch regimes. It controls the direct contribution of the misclassified set \(\mathcal M_T\) to the numerator, denominator, and maximum score.
+\begin{theorem}[Fixed-order estimated-partition Wilks theorem]
+\label{thm:estimated-equiv}
+Under the assumptions of Theorem~\ref{thm:known-wilks} and Assumption~\ref{ass:estimated-score},
+\[
+    \ell_T(\beta_0,\widetilde\Lambda)\Rightarrow\chi_1^2.
+\]
+This theorem is high-level: it proves that fixed-order estimated-score equivalence implies empirical-likelihood equivalence, not that the profile-sieve partition estimator satisfies Assumption~\ref{ass:estimated-score} from primitive conditions.
+\end{theorem}
 
 \begin{corollary}[Unknown number of breaks]
 \label{cor:qhat}
-If \(P\{\widehat q(\beta_0)=q_0\}\to1\), then the conclusion of Theorem~\ref{thm:estimated-equiv} remains valid with \(\widehat\Lambda(\beta_0)\) defined by \eqref{eq:qhat}.
+If \(P\{\widehat q(\beta_0)=q_0\}\to1\) and Assumption~\ref{ass:estimated-score} holds on the fixed-order event, then
+\[
+    \ell_T^{BA}(\beta_0)\Rightarrow\chi_1^2.
+\]
 \end{corollary}
 
 \begin{theorem}[Local predictive alternatives]
 \label{thm:local-power}
-Let \(\beta_T=\beta_0+d_T\), where \(d_T=h/r_T^\beta\) is local to the information scale of the residualized persistent score. Suppose the local drift satisfies
+Let \(\beta_T=\beta_0+d_T\), where \(d_T\to0\). Define
 \[
-    d_TT^{-1/2}\bm X_{lag}'\bm M_{K,\Lambda_0}\bm w
-    \xrightarrow{p}
-    \eta_q\delta_h,
+    g_{t,T}
+    =
+    d_T(\bm M_{K,\Lambda_0}\bm X_{lag})_tv_{t,0}.
 \]
-with \(\delta_h\) fixed, and suppose the known- and estimated-partition replacement conditions above continue to hold under \(\beta_T\). Then, when the statistic is evaluated at the null value \(\beta_0\),
+Suppose
+\begin{align}
+    T^{-1/2}\sum_{t=1}^Tg_{t,T}&\xrightarrow{p}\eta_q\delta_h,
+    \label{eq:local-drift}\\
+    T^{-1}\sum_{t=1}^Tg_{t,T}^2&=o_p(1),
+    \label{eq:local-l2}\\
+    \max_{t\leq T}|g_{t,T}|&=o_p(\sqrt T),
+    \label{eq:local-max}
+\end{align}
+with \(\delta_h\) fixed, and set \(Z_{t,T}^{\mathrm{loc}}=U_tv_{t,0}+g_{t,T}\). Under the local data-generating law \(\beta_T\), assume the feasible true-partition score satisfies
+\begin{align}
+    T^{-1/2}\sum_{t=1}^T
+    \{\widehat Z_t(\beta_0,\Lambda_0)-Z_{t,T}^{\mathrm{loc}}\}
+    &=o_p(1),
+    \label{eq:local-repl-num}\\
+    T^{-1}\sum_{t=1}^T
+    \{\widehat Z_t(\beta_0,\Lambda_0)^2-(Z_{t,T}^{\mathrm{loc}})^2\}
+    &=o_p(1),
+    \label{eq:local-repl-den}\\
+    \max_{t\leq T}
+    |\widehat Z_t(\beta_0,\Lambda_0)-Z_{t,T}^{\mathrm{loc}}|
+    &=o_p(\sqrt T).
+    \label{eq:local-repl-max}
+\end{align}
+Also assume that, under \(\beta_T\), the feasible true-partition score array satisfies
 \[
-    \ell_T^{BA}(\beta_0)
+    P_{\beta_T}\left\{
+    \min_{t\leq T}\widehat Z_t(\beta_0,\Lambda_0)<0<
+    \max_{t\leq T}\widehat Z_t(\beta_0,\Lambda_0)
+    \right\}\to1.
+\]
+Assume, in addition, that the fixed-order estimated-score equivalence in Assumption~\ref{ass:estimated-score} holds under \(\beta_T\), with all \(o_p\) statements evaluated under the local law. Then, when the statistic is evaluated at \(\beta_0\),
+\[
+    \ell_T(\beta_0,\widetilde\Lambda)
     \Rightarrow
     \chi_1^2(\delta_h^2).
 \]
-The noncentrality parameter is generated by the predictive drift \(d_T\). It does not contain the nuisance-break drift \(B_T\), which is removed by the regime-specific projection.
+If \(P\{\widehat q(\beta_0)=q_0\}\to1\), the same limit holds for \(\ell_T^{BA}(\beta_0)\). The noncentrality parameter is generated by the predictive drift \(d_T\). It does not contain the nuisance-break drift \(B_T\), which is removed by the regime-specific projection.
 \end{theorem}
 
 \subsection*{Proof-dependency map}
@@ -617,9 +710,9 @@ The theory deliberately separates the geometry proved in the paper from high-lev
 Step & Direct paper or supplement argument & High-level input \\
 \hline
 Stable-method failure & Score decomposition and scalar EL expansion around the contaminated score. & Stable oracle expansion and non-negligible \(B_T\). \\
-Known-partition Wilks & Block projection identities, feasible-oracle replacement, and scalar EL expansion. & Persistent oracle mixed-normal score for \(U_tv_{t,0}\) and negligible block projection of noise. \\
+Known-partition Wilks & Block projection identities, projection-bias replacement, and scalar EL expansion. & Persistent oracle mixed-normal score for \(U_tv_{t,0}\), feasible convex hull, and negligible block projection of noise. \\
 Partition learning & Profile-sieve RSS and candidate-segmentation construction. & Spacing, detectability, and \(r_T=o(\sqrt T)\) localization. \\
-Estimated-partition Wilks & Misclassification control for numerator, denominator, and maximum score. & High-level partition consistency plus boundary-score negligibility, or consistent \(\widehat q\). \\
+Estimated-partition Wilks & Likelihood transfer from the fixed-order estimated score to the true-partition score. & High-level estimated-score equivalence; localization alone is not asserted to prove it, plus consistent \(\widehat q\) for unknown order. \\
 \hline
 \end{tabular}
 \end{center}
@@ -684,7 +777,7 @@ The paper studies a specific source of spurious predictability: multiple unknown
 
 \section{Supplementary Material}
 
-The online Supplement gives the omitted-break expansion, the Wilks proofs, the estimated partition and local-power arguments, and implementation details.
+The online Supplement gives the omitted-break expansion, the projection-bias Wilks proofs, the high-level estimated-partition transfer, the shifted-array local-power argument, and implementation details.
 
 \begin{thebibliography}{99}
 

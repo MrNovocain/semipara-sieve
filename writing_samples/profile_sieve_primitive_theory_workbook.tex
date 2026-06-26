@@ -1,0 +1,2099 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{amsthm}
+\usepackage{bm}
+\usepackage{array}
+\usepackage[margin=1in]{geometry}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+
+\numberwithin{equation}{section}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}{Proposition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+\newtheorem{assumption}{Assumption}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{remark}{Remark}
+
+\newcommand{\ind}{\mathbf 1}
+\newcommand{\R}{\mathbb R}
+\newcommand{\E}{\mathbb E}
+\newcommand{\Pp}{\mathbb P}
+\newcommand{\F}{\mathcal F}
+\newcommand{\op}{o_p}
+\newcommand{\Op}{O_p}
+
+\begin{document}
+
+\begin{center}
+{\Large\bf Primitive Theory Workbook: Solved and Audited Edition}\\[6pt]
+{\large Profile Sieve Empirical Likelihood with Nuisance Breaks}\\[6pt]
+{\normalsize Complete proofs, exact rate calculations, and necessary repairs}
+\end{center}
+
+\tableofcontents
+\newpage
+
+\section{Primitive Setup and Notation}
+
+For a scalar array \(\bm a=(a_1,\ldots,a_T)'\), write
+\[
+    \|\bm a\|_T^2=T^{-1}\sum_{t=1}^T a_t^2,
+    \qquad
+    \|\bm a\|_\infty=\max_{t\leq T}|a_t|.
+\]
+All \(O_p(\cdot)\) and \(o_p(\cdot)\) statements for vectors and matrices use Euclidean and spectral norm unless another norm is displayed.
+
+The maintained null model is
+\begin{equation}
+    Y_t
+    =
+    \beta_0X_{t-1}
+    +
+    \sum_{j=0}^{q_0}
+    m_j(W_{t-1})\ind\{k_{j,0}<t\leq k_{j+1,0}\}
+    +
+    U_t,
+    \label{eq:primitive-model}
+\end{equation}
+where
+\[
+    0=k_{0,0}<k_{1,0}<\cdots<k_{q_0,0}<k_{q_0+1,0}=T.
+\]
+Throughout the primitive theory, \(q_0\) is fixed. The true break dates are minimum-spaced: for some fixed \(\epsilon>0\),
+\[
+    \min_{0\leq j\leq q_0}(k_{j+1,0}-k_{j,0})\geq \epsilon T.
+\]
+The coefficient \(\beta_0\) is stable. All structural breaks are in the nuisance component.
+
+For a candidate partition \(\Lambda=(k_1,\ldots,k_q)\), let \(k_0=0\), \(k_{q+1}=T\), and
+\[
+    I_j(\Lambda)=\{t:k_j<t\leq k_{j+1}\},
+    \qquad
+    j_\Lambda(t)=j\ \text{if }t\in I_j(\Lambda).
+\]
+For the same spacing constant, define the admissible candidate set
+\[
+    \mathcal L_q(\epsilon)
+    =
+    \left\{\Lambda=(k_1,\ldots,k_q):
+    0=k_0<k_1<\cdots<k_q<k_{q+1}=T,\ 
+    \min_{0\leq j\leq q}(k_{j+1}-k_j)\geq \epsilon T
+    \right\}.
+\]
+Let
+\[
+    \mu_t=m_{j_{\Lambda_0}(t)}(W_{t-1}),
+    \qquad
+    \bm\mu=(\mu_1,\ldots,\mu_T)'.
+\]
+
+Let \(\bm P\) be the \(T\times K\) sieve matrix with \(t\)-th row
+\[
+    \bm P_K(W_{t-1})'=(p_1(W_{t-1}),\ldots,p_K(W_{t-1})).
+\]
+For a partition \(\Lambda\), let \(\bm D_j(\Lambda)\) be the \(T\times T\) diagonal selector matrix with \(t\)-th diagonal entry \(\ind\{t\in I_j(\Lambda)\}\), \(j=0,\ldots,q\). Define
+\begin{equation}
+    \bm Q_{K,\Lambda}
+    =
+    [\bm D_0(\Lambda)\bm P,\ldots,\bm D_q(\Lambda)\bm P],
+    \qquad
+    \bm M_{K,\Lambda}
+    =
+    \bm I_T-\bm Q_{K,\Lambda}
+    (\bm Q_{K,\Lambda}'\bm Q_{K,\Lambda})^\dagger
+    \bm Q_{K,\Lambda}'.
+    \label{eq:primitive-qm}
+\end{equation}
+The Moore--Penrose inverse makes \(\bm M_{K,\Lambda}\) algebraically defined even when \(\bm Q_{K,\Lambda}'\bm Q_{K,\Lambda}\) is singular. Such singularity can arise if a candidate segment is too short relative to \(K\) or if the selected basis columns are collinear on that segment; the projection remains defined, but the asymptotic regularity used below may fail. The theory therefore relies on minimum-spaced admissible partitions and Gram-stability/full-rank conditions on the relevant candidate sets.
+
+For each \((\beta,\Lambda)\), define
+\begin{align}
+    \widehat{\bm u}(\beta,\Lambda)
+    &=
+    \bm M_{K,\Lambda}(\bm Y-\beta\bm X_{lag}),
+    \\
+    \bm w^c(\Lambda)
+    &=
+    \bm M_{K,\Lambda}\bm w,
+    \\
+    \widehat Z_t(\beta,\Lambda)
+    &=
+    \widehat u_t(\beta,\Lambda)w_t^c(\Lambda).
+\end{align}
+Let
+\[
+    S_T(\Lambda)
+    =
+    T^{-1/2}\sum_{t=1}^T\widehat Z_t(\beta_0,\Lambda),
+    \qquad
+    V_T(\Lambda)
+    =
+    T^{-1}\sum_{t=1}^T\widehat Z_t(\beta_0,\Lambda)^2.
+\]
+
+For a scalar score array \(Z_1,\ldots,Z_T\) satisfying the convex-hull
+condition, let \(\lambda_T\) be the unique solution of
+\[
+    \sum_{t=1}^T\frac{Z_t}{1+\lambda_T Z_t}=0,
+    \qquad
+    1+\lambda_T Z_t>0\quad(t\leq T),
+\]
+and define the twice negative empirical-likelihood log ratio by
+\begin{equation}
+    \ell_T(Z_1,\ldots,Z_T)
+    =2\sum_{t=1}^T\log(1+\lambda_TZ_t).
+    \label{eq:sol-el-definition}
+\end{equation}
+In particular,
+\[
+    \ell_T(\beta,\Lambda)
+    =\ell_T\{\widehat Z_1(\beta,\Lambda),\ldots,
+                    \widehat Z_T(\beta,\Lambda)\}.
+\]
+
+For an interval \([s,e]\), define the null-imposed segment cost
+\[
+    \mathcal C_K(s,e;\beta)
+    =
+    \min_{\bm c\in\R^K}
+    \sum_{t=s}^e
+    \{Y_t-\beta X_{t-1}-\bm P_K(W_{t-1})'\bm c\}^2.
+\]
+For \(\Lambda=(k_1,\ldots,k_q)\), define
+\[
+    RSS_K(\beta,\Lambda)
+    =
+    \sum_{j=0}^q
+    \mathcal C_K(k_j+1,k_{j+1};\beta).
+\]
+All minimizers are measurable selections with a fixed deterministic tie-breaking rule. For known order,
+\[
+    \widehat\Lambda_q(\beta)
+    =
+    \arg\min_{\Lambda\in\mathcal L_q(\epsilon)}
+    RSS_K(\beta,\Lambda),
+    \qquad
+    \widetilde\Lambda=\widehat\Lambda_{q_0}(\beta_0).
+\]
+For unknown order,
+\[
+    \widehat q(\beta)
+    =
+    \arg\min_{0\leq q\leq \bar q}
+    \{RSS_K(\beta,\widehat\Lambda_q(\beta))+\operatorname{pen}_T(q,K)\},
+    \qquad
+    \widehat\Lambda(\beta)=\widehat\Lambda_{\widehat q(\beta)}(\beta).
+\]
+Although the Moore--Penrose inverse makes \(\bm M_{K,\Lambda}\) algebraically defined for arbitrary \(\Lambda\), all theoretical searches are restricted to minimum-spaced admissible partitions \(\mathcal L_q(\epsilon)\); thus no candidate segment is allowed to be asymptotically shorter than the sieve dimension \(K\), and the Gram matrices used in the proofs are nonsingular on the relevant candidate set.
+
+The sieve dimension is allowed to depend on the sample size and is written \(K=K_T\). Throughout, \(K_T\to\infty\), subject to the rate restrictions in Assumptions \ref{ass:prim-bounded}--\ref{ass:prim-sieve} and the local Gram regularity conditions below. The basis is normalized so that its first component is constant, say \(p_1(w)\equiv1\), allowing regime-specific intercept and level shifts to be represented by the block sieve.
+
+For local-power calculations, distinguish the null value used in the statistic from the data-generating slope. The alternative law allows
+\[
+    \beta_T=\beta_0+d_T,
+    \qquad
+    d_T\to0,
+\]
+with data generated under \(P_{\beta_T}\) while the profile empirical likelihood is evaluated at \(\beta_0\). Equivalently,
+\[
+    Y_t-\beta_0X_{t-1}=\mu_t+U_t+d_TX_{t-1},
+\]
+with the same nuisance break partition \(\Lambda_0\). Section \ref{sec:local-alternatives} records the corresponding drift conditions.
+
+\section{Primitive Assumptions}
+
+\begin{assumption}[Primitive stochastic environment]
+\label{ass:prim-stoch}
+The triangular array is defined on a filtered probability space
+\((\Omega,\mathcal A,\{\F_t\}_{t=0}^T,\Pp)\). The variables \(X_{t-1}\), \(W_{t-1}\), \(\bm P_K(W_{t-1})\), and \(w_t=w(X_{t-1})\) are \(\F_{t-1}\)-measurable. The error satisfies
+\[
+    \E(U_t\mid \F_{t-1})=0,
+    \qquad
+    \E(|U_t|^{2+\delta}\mid \F_{t-1})\leq C
+\]
+for some \(\delta>0\) and finite \(C\). The conditional variance \(\sigma_t^2=\E(U_t^2\mid\F_{t-1})\) is bounded above and away from zero.
+\end{assumption}
+
+\begin{assumption}[Score admissibility under full-sample projection]
+\label{ass:prim-score-admissible}
+For the true partition, \(\bm v_0=\bm M_{K,\Lambda_0}\bm w\) satisfies one of the following primitive routes.
+\[
+    \text{Route A: } \bm v_0 \text{ is admissible in the martingale CLT below.}
+\]
+If the full-sample projection is not predictable, assume there is an
+\(\F_{t-1}\)-measurable approximation \(v_{t,0}^\ast\) such that
+\[
+    T^{-1/2}\sum_{t=1}^T U_t(v_{t,0}-v_{t,0}^\ast)=o_p(1),
+    \qquad
+    T^{-1}\sum_{t=1}^T U_t^2\{v_{t,0}^2-(v_{t,0}^\ast)^2\}=o_p(1).
+\]
+\end{assumption}
+
+\begin{assumption}[Bounded weights, nuisance functions, and basis envelope]
+\label{ass:prim-bounded}
+The sieve dimension satisfies \(K=K_T\to\infty\). The first basis element is constant, \(p_1(w)\equiv1\). There are constants \(C_w,C_m<\infty\) and an envelope \(\zeta_K\) such that
+\[
+    \max_{t\leq T}|w_t|\leq C_w,
+    \qquad
+    \max_{0\leq j\leq q_0}\sup_x|m_j(x)|\leq C_m,
+    \qquad
+    \max_{t\leq T}\|\bm P_K(W_{t-1})\|\leq \zeta_K
+\]
+with probability tending to one.
+\end{assumption}
+
+\begin{assumption}[Spacing, smoothness, and break detectability]
+\label{ass:prim-breaks}
+The number \(q_0\) is fixed. For some \(\epsilon>0\),
+\[
+    \min_{0\leq j\leq q_0}(k_{j+1,0}-k_{j,0})\geq \epsilon T.
+\]
+Each \(m_j\) belongs to a common smoothness class \(\mathcal H^s\). If \(q_0\geq1\), then
+\[
+    \Delta_T=\min_{0\leq j<q_0}\|m_{j+1}-m_j\|_{L^2(P_W)}>0,
+    \qquad
+    \frac{T\Delta_T^2}{K\log T}\to\infty.
+\]
+\end{assumption}
+
+\begin{assumption}[Uniform Gram stability]
+\label{ass:prim-gram}
+For the true partition and all candidate partitions in the local neighborhood
+\[
+    \mathcal N_T(r_T)
+    =
+    \{\Lambda:\max_j|k_j-k_{j,0}|\leq C r_T,\ q=q_0\},
+\]
+the eigenvalues of \(T^{-1}\bm Q_{K,\Lambda}'\bm Q_{K,\Lambda}\), restricted to nonzero directions, are bounded away from zero and infinity with probability tending to one.
+\end{assumption}
+
+\begin{assumption}[Sieve approximation and projection bias]
+\label{ass:prim-sieve}
+For each regime \(j\), there is a coefficient vector \(\bm c_{j,K}\) such that
+\[
+    m_j(W_{t-1})
+    =
+    \bm P_K(W_{t-1})'\bm c_{j,K}+r_{j,K,t},
+    \qquad
+    \max_j\|\bm r_{j,K}\|_T=O_p(a_K),
+    \qquad
+    \max_j\|\bm r_{j,K}\|_\infty=O_p(a_K).
+\]
+Let \(\bm r_0\) be the stacked true-partition approximation error. The rates satisfy
+\[
+    T^{-1/2}\bm r_0'\bm M_{K,\Lambda_0}\bm w=o_p(1),
+    \qquad
+    a_K(1+\zeta_K)\to0,
+    \qquad
+    a_K(1+\zeta_K)^2=o(\sqrt T).
+\]
+Also,
+\[
+    \frac{(q_0+1)K}{\sqrt T}\to0,
+    \qquad
+    \zeta_K\sqrt{\frac{(q_0+1)K}{T}}\to0.
+\]
+\end{assumption}
+
+\begin{assumption}[Fixed-order localization target]
+\label{ass:prim-localization-target}
+For known \(q_0\),
+\[
+    \max_{1\leq j\leq q_0}|\widetilde k_j-k_{j,0}|=O_p(r_T),
+    \qquad
+    r_T=o(\sqrt T).
+\]
+This assumption is a target to be derived in Section \ref{sec:break-localization}; it may be used as an input in Section \ref{sec:one-break-bridge}.
+\end{assumption}
+
+\begin{assumption}[Empirical-likelihood convex hull]
+\label{ass:prim-convex}
+For the score array under consideration,
+\[
+    \Pp\{\min_{t\leq T}Z_{t,T}<0<\max_{t\leq T}Z_{t,T}\}\to1.
+\]
+When used for the true partition, \(Z_{t,T}=\widehat Z_t(\beta_0,\Lambda_0)\). When used for the estimated partition, \(Z_{t,T}=\widehat Z_t(\beta_0,\widetilde\Lambda)\).
+\end{assumption}
+
+
+\section{Rigour Audit and Completing Conditions}
+\label{sec:rigour-audit}
+
+Several displays in the original workbook were labelled ``targets.''  They
+are not all consequences of Assumptions \ref{ass:prim-stoch}--\ref{ass:prim-convex}
+as originally written.  The precise gaps are: the predictable approximation
+needs an envelope and variance-replacement condition; local partition
+perturbations need local stability of the sieve bias; logarithmic RSS
+concentration does not follow from only a finite \((2+\delta)\)-moment; and an
+overfitting penalty that merely diverges need not dominate the searched RSS
+gain.  The following conditions make every proof below logically complete.
+They are stated separately so that none of the missing hypotheses is hidden.
+
+Write
+\[
+    d_K=(q_0+1)K,
+    \qquad b_K=1+\zeta_K,
+    \qquad \delta_0=\min\{\delta,2\}.
+\]
+
+\begin{assumption}[Oracle envelope completion]
+\label{ass:sol-oracle-envelope}
+When the predictable-approximation route in Assumption
+\ref{ass:prim-score-admissible} is used, the approximation can be chosen so
+that
+\[
+    \max_{t\leq T}|v_{t,0}^\ast|=O_p(b_K),
+    \qquad
+    T^{-1}\sum_{t=1}^T\sigma_t^2
+       \{(v_{t,0}^\ast)^2-v_{t,0}^2\}=o_p(1).
+\]
+Moreover,
+\begin{equation}
+    b_K^{2+\delta_0}T^{-\delta_0/2}\longrightarrow0.
+    \label{eq:sol-envelope-rate}
+\end{equation}
+If \(\bm v_0\) itself is predictable, take \(v_{t,0}^\ast=v_{t,0}\).
+\end{assumption}
+
+\begin{assumption}[Local sieve-bias stability]
+\label{ass:sol-local-bias}
+In the one-break section, for every fixed \(C<\infty\),
+\begin{equation}
+    \sup_{|k-k_0|\leq Cr_T}
+    T^{-1/2}\left|
+      \bm r_0'\{\bm M_{K,k}-\bm M_{K,k_0}\}\bm w
+    \right|=o_p(1).
+    \label{eq:sol-local-bias}
+\end{equation}
+A sufficient primitive rate, proved in the solution of Lemma
+\ref{lem:wb-bridge-mu}, is
+\begin{equation}
+    \frac{a_K b_K(1+\zeta_K^2)r_T}{\sqrt T}\longrightarrow0.
+    \label{eq:sol-local-bias-sufficient}
+\end{equation}
+\end{assumption}
+
+\begin{assumption}[Local full-rank series regularity]
+\label{ass:sol-local-series}
+In the one-break section, every segment Gram matrix associated with a
+partition satisfying \(|k-k_0|\leq Cr_T\) is nonsingular, and its eigenvalues
+are between \(cT\) and \(CT\), uniformly with probability tending to one.
+Also
+\begin{equation}
+    \zeta_K^2=O(K).
+    \label{eq:sol-regular-envelope}
+\end{equation}
+The last display is the usual normalized-series envelope condition.  It is
+needed for the denominator rate stated in Lemma \ref{lem:wb-bridge-v}; without
+it that rate must be replaced by the larger order
+\(b_K^2\zeta_K^2r_T/T\).
+\end{assumption}
+
+\begin{assumption}[Localization concentration completion]
+\label{ass:sol-localization}
+This assumption is used only in Section \ref{sec:break-localization}.  Given
+the design sigma-field \(\mathcal D_T\), the errors are independent, centered,
+conditionally sub-Gaussian with a common conditional variance \(\sigma^2\).
+Every minimum-spaced one-break sieve matrix has rank \(2K\).  If
+\(h=|k-k_0|\) and
+\(\bm A_k=\bm M_{K,k}-\bm M_{K,k_0}\), then, uniformly over candidates,
+\begin{align}
+    \bm\mu'\bm A_k\bm\mu
+    &\geq c_\Delta h\Delta_T^2-\rho_T(k),
+    &
+    \sup_{k:\,h\geq1}\frac{|\rho_T(k)|}{h\Delta_T^2}&=o_p(1),
+    \label{eq:sol-profile-identification}
+    \\
+    \|\bm A_k\bm\mu\|^2&\leq C hK
+    \label{eq:sol-mean-sensitivity}
+\end{align}
+with probability tending to one.  Condition
+\eqref{eq:sol-profile-identification} is a sample profile-identification
+condition.  It follows, for example, in the exact-sieve case from uniform
+segment Gram bounds and a local empirical jump-energy lower bound; this is
+verified explicitly in the proof of Lemma \ref{lem:wb-rss-drift}.
+\end{assumption}
+
+\begin{remark}[Why the localization completion is necessary]
+The martingale restriction
+\(\E(U_t\mid\mathcal F_{t-1})=0\) does not imply
+\(\E(U_t\mid\mathcal D_T)=0\), because \(\mathcal D_T\) contains future
+regressors and those regressors may reveal \(U_t\).  Also, a finite
+\((2+\delta)\)-moment does not by itself yield a \(\log T\) search bound for a
+quadratic form.  Thus Lemmas \ref{lem:wb-rss-drift} and
+\ref{lem:wb-rss-fluctuation} genuinely require an additional route such as
+Assumption \ref{ass:sol-localization}.
+\end{remark}
+
+\begin{lemma}[Scalar empirical-likelihood expansion]
+\label{lem:sol-scalar-el}
+Let \(Z_{1,T},\ldots,Z_{T,T}\) satisfy the convex-hull condition and suppose
+\[
+    A_T=T^{-1/2}\sum_{t=1}^TZ_{t,T}=O_p(1),
+    \qquad
+    B_T=T^{-1}\sum_{t=1}^TZ_{t,T}^2\geq c+o_p(1)
+\]
+for some \(c>0\), and
+\[
+    \max_{t\leq T}|Z_{t,T}|=o_p(\sqrt T).
+\]
+Then
+\begin{equation}
+    \ell_T(Z_{1,T},\ldots,Z_{T,T})
+    =\frac{A_T^2}{B_T}+o_p(1).
+    \label{eq:sol-scalar-el-expansion}
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+Put
+\(S_1=\sum_tZ_{t,T}\), \(S_2=\sum_tZ_{t,T}^2\), and
+\(M_T=\max_t|Z_{t,T}|\).  The convex-hull condition gives a unique multiplier
+\(\lambda_T\) in the interval on which every \(1+\lambda_TZ_{t,T}\) is
+positive.  Its score equation implies the exact identity
+\[
+    S_1
+    =\lambda_T\sum_{t=1}^T
+      \frac{Z_{t,T}^2}{1+\lambda_TZ_{t,T}}.
+\]
+Consequently,
+\[
+    |S_1|
+    \geq
+    \frac{|\lambda_T|S_2}{1+|\lambda_T|M_T}.
+\]
+After rearrangement,
+\[
+    |\lambda_T|\{S_2-|S_1|M_T\}\leq |S_1|.
+\]
+Now \(|S_1|=O_p(\sqrt T)\), \(S_2\geq(c+o_p(1))T\), and
+\(|S_1|M_T=o_p(T)\).  Hence
+\[
+    \lambda_T=O_p(T^{-1/2}),
+    \qquad
+    |\lambda_T|M_T=o_p(1).
+\]
+Using \((1+x)^{-1}=1-x+x^2/(1+x)\) in the score equation gives
+\[
+    0=S_1-\lambda_TS_2+R_{1T},
+    \qquad
+    |R_{1T}|
+    \leq
+    \frac{\lambda_T^2M_TS_2}{1-|\lambda_T|M_T}.
+\]
+Thus
+\[
+    \lambda_T=\frac{S_1}{S_2}+o_p(T^{-1/2}).
+\]
+Finally, Taylor expansion of the logarithm, uniformly because
+\(|\lambda_T|M_T=o_p(1)\), yields
+\[
+    2\sum_t\log(1+\lambda_TZ_{t,T})
+    =2\lambda_TS_1-\lambda_T^2S_2+R_{2T},
+\]
+where
+\[
+    |R_{2T}|
+    \leq C|\lambda_T|^3M_TS_2=o_p(1).
+\]
+Substituting the expansion for \(\lambda_T\) gives
+\[
+    2\sum_t\log(1+\lambda_TZ_{t,T})
+    =\frac{S_1^2}{S_2}+o_p(1)
+    =\frac{A_T^2}{B_T}+o_p(1),
+\]
+which proves \eqref{eq:sol-scalar-el-expansion}.
+\end{proof}
+
+\section{Deterministic Projection Algebra}
+
+\begin{lemma}[Block projection identities]
+\label{lem:wb-projection}
+For every partition \(\Lambda\),
+\[
+    \bm Q_{K,\Lambda}'\bm M_{K,\Lambda}=\bm0,
+    \qquad
+    \bm M_{K,\Lambda}'=\bm M_{K,\Lambda},
+    \qquad
+    \bm M_{K,\Lambda}^2=\bm M_{K,\Lambda}.
+\]
+Consequently, for every conformable \(\bm c\),
+\[
+    (\bm Q_{K,\Lambda}\bm c)'\bm M_{K,\Lambda}\bm w=0.
+\]
+\end{lemma}
+
+
+\begin{proof}[Detailed solution]
+Abbreviate \(\bm Q=\bm Q_{K,\Lambda}\).  Take a thin singular-value
+decomposition
+\[
+    \bm Q=\bm U_r\bm\Sigma_r\bm V_r',
+\]
+where \(r=\operatorname{rank}(\bm Q)\), the columns of \(\bm U_r\) and
+\(\bm V_r\) are orthonormal, and \(\bm\Sigma_r\) is diagonal with strictly
+positive entries.  Then
+\[
+    \bm Q'\bm Q
+    =\bm V_r\bm\Sigma_r^2\bm V_r',
+    \qquad
+    (\bm Q'\bm Q)^\dagger
+    =\bm V_r\bm\Sigma_r^{-2}\bm V_r'.
+\]
+Therefore
+\[
+    \bm\Pi_{K,\Lambda}
+    =\bm Q(\bm Q'\bm Q)^\dagger\bm Q'
+    =\bm U_r\bm U_r'.
+\]
+This is the orthogonal projector onto \(\operatorname{col}(\bm Q)\).  In
+particular,
+\[
+    \bm\Pi_{K,\Lambda}'=\bm\Pi_{K,\Lambda},
+    \qquad
+    \bm\Pi_{K,\Lambda}^2=\bm\Pi_{K,\Lambda},
+    \qquad
+    \bm\Pi_{K,\Lambda}\bm Q=\bm Q.
+\]
+Since \(\bm M_{K,\Lambda}=\bm I_T-\bm\Pi_{K,\Lambda}\),
+\[
+    \bm M_{K,\Lambda}'=\bm M_{K,\Lambda}
+\]
+and
+\[
+    \bm M_{K,\Lambda}^2
+    =(\bm I_T-\bm\Pi_{K,\Lambda})^2
+    =\bm I_T-2\bm\Pi_{K,\Lambda}+\bm\Pi_{K,\Lambda}^2
+    =\bm M_{K,\Lambda}.
+\]
+Also
+\[
+    \bm Q'\bm M_{K,\Lambda}
+    =\{\bm M_{K,\Lambda}\bm Q\}'
+    =\bm0'.
+\]
+For conformable \(\bm c\) and \(\bm w\), it follows immediately that
+\[
+    (\bm Q\bm c)'\bm M_{K,\Lambda}\bm w
+    =\bm c'\bm Q'\bm M_{K,\Lambda}\bm w=0.
+\]
+\end{proof}
+
+
+\begin{lemma}[Uniform fitted-value and leverage bounds]
+\label{lem:wb-leverage}
+Under Assumptions \ref{ass:prim-bounded} and \ref{ass:prim-gram}, uniformly over \(\Lambda\in\mathcal N_T(r_T)\),
+\[
+    \|\bm M_{K,\Lambda}\bm w\|_\infty=O_p(1+\zeta_K),
+    \qquad
+    \max_{t\leq T}\{\bm Q_{K,\Lambda}(\bm Q_{K,\Lambda}'\bm Q_{K,\Lambda})^\dagger\bm Q_{K,\Lambda}'\}_{tt}
+    =
+    O_p(\zeta_K^2K/T).
+\]
+\end{lemma}
+
+
+\begin{proof}[Detailed solution]
+Write \(\bm Q=\bm Q_{K,\Lambda}\), \(\bm G=\bm Q'\bm Q\), and let
+\(\bm q_t'\) denote row \(t\) of \(\bm Q\).  Because exactly one regime block
+is active in each row,
+\[
+    \|\bm q_t\|=\|\bm P_K(W_{t-1})\|\leq\zeta_K.
+\]
+On the uniform Gram event in Assumption \ref{ass:prim-gram},
+\[
+    \|\bm G^\dagger\|\leq \frac{C}{T},
+    \qquad
+    \|\bm Q\|^2=\lambda_{\max}(\bm Q'\bm Q)\leq CT.
+\]
+Since \(\|\bm w\|\leq C_w\sqrt T\), the least-squares coefficient vector
+\[
+    \widehat{\bm c}_\Lambda=\bm G^\dagger\bm Q'\bm w
+\]
+satisfies
+\[
+    \|\widehat{\bm c}_\Lambda\|
+    \leq \frac{C}{T}\,\|\bm Q\|\,\|\bm w\|
+    \leq C.
+\]
+Thus, uniformly in \(t\) and \(\Lambda\),
+\[
+    |(\bm\Pi_{K,\Lambda}\bm w)_t|
+    =|\bm q_t'\widehat{\bm c}_\Lambda|
+    \leq C\zeta_K,
+\]
+and hence
+\[
+    \|\bm M_{K,\Lambda}\bm w\|_\infty
+    \leq \|\bm w\|_\infty+
+          \|\bm\Pi_{K,\Lambda}\bm w\|_\infty
+    =O_p(1+\zeta_K).
+\]
+For the leverage,
+\[
+    (\bm\Pi_{K,\Lambda})_{tt}
+    =\bm q_t'\bm G^\dagger\bm q_t
+    \leq \|\bm G^\dagger\|\,\|\bm q_t\|^2
+    \leq C\frac{\zeta_K^2}{T}.
+\]
+This is sharper than the displayed target and therefore implies
+\(O_p(\zeta_K^2K/T)\), because \(K\geq1\).  All inequalities hold on a single
+uniform Gram event whose probability tends to one.
+\end{proof}
+
+
+\section{Known-Partition Primitive Wilks}
+
+Set
+\[
+    \bm v_0=\bm M_{K,\Lambda_0}\bm w,
+    \qquad
+    A_T^{(q)}=T^{-1/2}\sum_{t=1}^TU_tv_{t,0},
+    \qquad
+    V_T^{(q)}=T^{-1}\sum_{t=1}^TU_t^2v_{t,0}^2.
+\]
+
+\begin{lemma}[Oracle martingale CLT target]
+\label{lem:wb-oracle-clt}
+Under Assumptions \ref{ass:prim-stoch}, \ref{ass:prim-score-admissible},
+\ref{ass:prim-bounded}, \ref{ass:prim-gram}, and
+\ref{ass:sol-oracle-envelope}, suppose
+\[
+    T^{-1}\sum_{t=1}^T \sigma_t^2v_{t,0}^2\xrightarrow{p}\eta_q^2,
+    \qquad
+    \Pp(\eta_q\geq \sqrt{c_\eta})=1
+\]
+for some \(c_\eta>0\). Then
+\[
+    A_T^{(q)}\xrightarrow{\mathrm{st}}\eta_qZ,
+\]
+where \(Z\sim N(0,1)\) is independent of the limiting sigma-field generating \(\eta_q\).
+\end{lemma}
+
+
+\begin{proof}[Detailed solution]
+Let \(\delta_0=\min\{\delta,2\}\).  First use the predictable route.  Put
+\[
+    X_{t,T}=T^{-1/2}U_tv_{t,0}^\ast.
+\]
+Then \(X_{t,T}\) is a martingale-difference array.  By Assumption
+\ref{ass:sol-oracle-envelope} and the variance-replacement condition,
+\begin{align*}
+    \sum_{t=1}^T\E(X_{t,T}^2\mid\mathcal F_{t-1})
+    &=T^{-1}\sum_{t=1}^T\sigma_t^2(v_{t,0}^\ast)^2\\
+    &=T^{-1}\sum_{t=1}^T\sigma_t^2v_{t,0}^2+o_p(1)
+      \xrightarrow{p}\eta_q^2.
+\end{align*}
+For the conditional Lyapunov term, the conditional moment bound gives
+\begin{align*}
+    \sum_{t=1}^T
+      \E(|X_{t,T}|^{2+\delta_0}\mid\mathcal F_{t-1})
+    &\leq
+      C T^{-(1+\delta_0/2)}
+      \sum_{t=1}^T|v_{t,0}^\ast|^{2+\delta_0}\\
+    &\leq
+      C b_K^{2+\delta_0}T^{-\delta_0/2}
+      =o_p(1).
+\end{align*}
+The martingale triangular-array stable CLT therefore yields
+\[
+    T^{-1/2}\sum_{t=1}^TU_tv_{t,0}^\ast
+    \xrightarrow{\mathrm{st}}\eta_qZ,
+\]
+where \(Z\) is standard normal and independent of the limiting sigma-field
+that contains \(\eta_q\).  Assumption \ref{ass:prim-score-admissible} gives
+\[
+    T^{-1/2}\sum_{t=1}^TU_t(v_{t,0}-v_{t,0}^\ast)=o_p(1).
+\]
+Stable Slutsky therefore gives the asserted limit for \(A_T^{(q)}\).  Under
+Route A the same argument is exactly the admissible martingale CLT postulated
+there, so no replacement is required.
+\end{proof}
+
+
+\begin{lemma}[Oracle denominator LLN target]
+\label{lem:wb-oracle-lln}
+Under the primitive stochastic and score-admissibility assumptions and
+Assumption \ref{ass:sol-oracle-envelope},
+\[
+    V_T^{(q)}-\eta_q^2=o_p(1).
+\]
+\end{lemma}
+
+
+\begin{proof}[Detailed solution]
+Again use the predictable approximation; the direct predictable case is the
+special case \(v_{t,0}^\ast=v_{t,0}\).  Decompose
+\begin{align*}
+    T^{-1}\sum_{t=1}^TU_t^2(v_{t,0}^\ast)^2
+    &=T^{-1}\sum_{t=1}^T\sigma_t^2(v_{t,0}^\ast)^2\\
+    &\quad+T^{-1}\sum_{t=1}^T
+       (U_t^2-\sigma_t^2)(v_{t,0}^\ast)^2.
+\end{align*}
+The first term converges in probability to \(\eta_q^2\) by Assumption
+\ref{ass:sol-oracle-envelope} and the variance convergence in Lemma
+\ref{lem:wb-oracle-clt}.
+
+For the second term, set
+\[
+    D_{t,T}=(U_t^2-\sigma_t^2)(v_{t,0}^\ast)^2,
+    \qquad p=1+\delta_0/2\in(1,2].
+\]
+Then \(D_{t,T}\) is a martingale difference and, using
+\(2p=2+\delta_0\),
+\[
+    \E(|D_{t,T}|^p\mid\mathcal F_{t-1})
+    \leq C|v_{t,0}^\ast|^{2p}.
+\]
+The martingale von Bahr--Esseen inequality gives
+\begin{align*}
+    \E\left|
+      T^{-1}\sum_{t=1}^TD_{t,T}
+    \right|^p
+    &\leq C T^{-p}\sum_{t=1}^T\E|D_{t,T}|^p\\
+    &\leq C b_K^{2+\delta_0}T^{-\delta_0/2}=o(1),
+\end{align*}
+where the usual localization to the event
+\(\max_t|v_{t,0}^\ast|\leq Cb_K\) is understood.  Hence the martingale term is
+\(o_p(1)\).  Finally, Assumption \ref{ass:prim-score-admissible} supplies
+\[
+    T^{-1}\sum_{t=1}^TU_t^2
+       \{v_{t,0}^2-(v_{t,0}^\ast)^2\}=o_p(1),
+\]
+so replacing \(v_{t,0}^\ast\) by \(v_{t,0}\) proves
+\(V_T^{(q)}=\eta_q^2+o_p(1)\).
+\end{proof}
+
+
+\begin{lemma}[Oracle maximum bound target]
+\label{lem:wb-oracle-max}
+Under the primitive moment and leverage conditions and Assumption
+\ref{ass:sol-oracle-envelope},
+\[
+    \max_{t\leq T}|U_tv_{t,0}|=o_p(\sqrt T).
+\]
+\end{lemma}
+
+
+\begin{proof}[Detailed solution]
+Lemma \ref{lem:wb-leverage} gives
+\[
+    \max_{t\leq T}|v_{t,0}|=O_p(b_K).
+\]
+Fix \(C<\infty\) and work on the event
+\(\max_t|v_{t,0}|\leq Cb_K\).  For every \(\varepsilon>0\), the union bound
+and the \((2+\delta_0)\)-moment bound imply
+\begin{align*}
+    \Pp\left(
+      \max_{t\leq T}|U_tv_{t,0}|>\varepsilon\sqrt T
+    \right)
+    &\leq
+      \sum_{t=1}^T
+      \Pp\left(
+        |U_t|>\frac{\varepsilon\sqrt T}{Cb_K}
+      \right)+o(1)\\
+    &\leq
+      C_\varepsilon T
+      \left(\frac{b_K}{\sqrt T}\right)^{2+\delta_0}+o(1)\\
+    &=C_\varepsilon b_K^{2+\delta_0}T^{-\delta_0/2}+o(1)
+      \longrightarrow0.
+\end{align*}
+Thus \(\max_t|U_tv_{t,0}|/\sqrt T\to_p0\).  Equivalently, a sufficient rate
+is
+\[
+    b_KT^{1/(2+\delta_0)-1/2}\to0,
+\]
+which is exactly \eqref{eq:sol-envelope-rate} written after taking a
+\((2+\delta_0)\)-th root.
+\end{proof}
+
+
+\begin{lemma}[Feasible true-partition replacement]
+\label{lem:wb-feasible-replacement}
+Under Assumptions \ref{ass:prim-stoch}, \ref{ass:prim-sieve},
+\ref{ass:prim-bounded}, \ref{ass:prim-gram}, and
+\ref{ass:sol-oracle-envelope},
+\begin{align}
+    T^{-1/2}\sum_{t=1}^T\widehat Z_t(\beta_0,\Lambda_0)
+    &=
+    T^{-1/2}\sum_{t=1}^TU_tv_{t,0}+o_p(1),
+    \\
+    T^{-1}\sum_{t=1}^T\widehat Z_t(\beta_0,\Lambda_0)^2
+    &=
+    T^{-1}\sum_{t=1}^TU_t^2v_{t,0}^2+o_p(1),
+    \\
+    \max_{t\leq T}|\widehat Z_t(\beta_0,\Lambda_0)|
+    &=o_p(\sqrt T).
+\end{align}
+\end{lemma}
+
+
+\begin{proof}[Detailed solution]
+Let \(\bm Q_0=\bm Q_{K,\Lambda_0}\),
+\(\bm\Pi_0=\bm I_T-\bm M_{K,\Lambda_0}\), and
+\(\bm v_0=\bm M_{K,\Lambda_0}\bm w\).  The sieve representation gives
+\[
+    \bm Y-\beta_0\bm X_{lag}
+    =\bm Q_0\bm c_0+\bm r_0+\bm U.
+\]
+By Lemma \ref{lem:wb-projection},
+\[
+    \widehat{\bm u}(\beta_0,\Lambda_0)
+    =\bm M_{K,\Lambda_0}(\bm r_0+\bm U).
+\]
+Define
+\[
+    \bm e_0=\bm M_{K,\Lambda_0}\bm r_0,
+    \qquad
+    \bm h_0=\bm\Pi_0\bm U.
+\]
+Then, componentwise,
+\begin{equation}
+    \widehat Z_t(\beta_0,\Lambda_0)
+    =U_tv_{t,0}+(e_{t,0}-h_{t,0})v_{t,0}.
+    \label{eq:sol-feasible-score-decomp}
+\end{equation}
+
+We first establish the projection-noise bounds rather than assuming them.
+Because each row of \(\bm Q_0\) is predictable, martingale orthogonality and
+the Gram upper bound imply
+\[
+    \|\bm Q_0'\bm U\|=O_p(\sqrt{Td_K}).
+\]
+Indeed, after localization to the Gram event,
+\[
+    \E\|\bm Q_0'\bm U\|^2
+    =\sum_{t=1}^T\E\{\sigma_t^2\|\bm q_{t,0}\|^2\}
+    \leq C\E\operatorname{tr}(\bm Q_0'\bm Q_0)
+    =O(Td_K).
+\]
+Since \(\|(\bm Q_0'\bm Q_0)^\dagger\|=O_p(T^{-1})\),
+\begin{align*}
+    \|\bm h_0\|_T^2
+    &=T^{-1}\bm U'\bm\Pi_0\bm U\\
+    &\leq
+      \frac{C}{T^2}\|\bm Q_0'\bm U\|^2
+      =O_p(d_K/T),
+\end{align*}
+and, row by row,
+\[
+    \|\bm h_0\|_\infty
+    \leq
+    \zeta_K\|(\bm Q_0'\bm Q_0)^\dagger\|
+             \|\bm Q_0'\bm U\|
+    =O_p\left(\zeta_K\sqrt{d_K/T}\right).
+\]
+
+For the approximation term, orthogonal projection is a contraction, so
+\[
+    \|\bm e_0\|_T\leq\|\bm r_0\|_T=O_p(a_K).
+\]
+Furthermore,
+\[
+    \|(\bm Q_0'\bm Q_0)^\dagger\bm Q_0'\bm r_0\|
+    \leq \frac{C}{T}\|\bm Q_0\|\,\|\bm r_0\|
+    =O_p(a_K),
+\]
+which gives
+\[
+    \|\bm e_0\|_\infty
+    \leq \|\bm r_0\|_\infty+\|\bm\Pi_0\bm r_0\|_\infty
+    =O_p\{a_K(1+\zeta_K)\}.
+\]
+Combining these bounds with
+\(\|\bm v_0\|_\infty=O_p(b_K)\),
+\begin{align*}
+    \|(\bm e_0-\bm h_0)\odot\bm v_0\|_T
+    &\leq O_p\left(a_Kb_K+b_K\sqrt{d_K/T}\right)=o_p(1),\\
+    \|(\bm e_0-\bm h_0)\odot\bm v_0\|_\infty
+    &\leq O_p\left(a_Kb_K^2+\zeta_Kb_K\sqrt{d_K/T}\right)
+      =o_p(\sqrt T).
+\end{align*}
+The first conclusion uses Assumption \ref{ass:prim-sieve}; the second uses
+both Assumptions \ref{ass:prim-sieve} and
+\ref{ass:sol-oracle-envelope}.
+
+For the numerator, symmetry and idempotence give an exact cancellation:
+\begin{align*}
+    T^{-1/2}\sum_t\widehat Z_t(\beta_0,\Lambda_0)
+    &=T^{-1/2}(\bm U+\bm r_0)'
+      \bm M_{K,\Lambda_0}^2\bm w\\
+    &=T^{-1/2}\bm U'\bm v_0
+      +T^{-1/2}\bm r_0'\bm v_0\\
+    &=T^{-1/2}\bm U'\bm v_0+o_p(1).
+\end{align*}
+For the denominator, let
+\(\bm d_0=(\bm e_0-\bm h_0)\odot\bm v_0\).  Then
+\begin{align*}
+    \left|
+      T^{-1}\sum_t\widehat Z_t^2
+      -T^{-1}\sum_tU_t^2v_{t,0}^2
+    \right|
+    &\leq
+      2\|\bm U\odot\bm v_0\|_T\|\bm d_0\|_T
+      +\|\bm d_0\|_T^2\\
+    &=o_p(1),
+\end{align*}
+because Lemma \ref{lem:wb-oracle-lln} makes the first norm \(O_p(1)\).
+Finally, \eqref{eq:sol-feasible-score-decomp}, Lemma
+\ref{lem:wb-oracle-max}, and \(\|\bm d_0\|_\infty=o_p(\sqrt T)\) prove the
+maximum assertion.
+\end{proof}
+
+
+\begin{theorem}[Primitive known-partition Wilks target]
+\label{thm:wb-known-wilks}
+Under the primitive assumptions in this section, Assumption
+\ref{ass:sol-oracle-envelope}, the stated variance convergence, and the
+convex-hull condition for \(\widehat Z_t(\beta_0,\Lambda_0)\),
+\[
+    \ell_T(\beta_0,\Lambda_0)\Rightarrow\chi_1^2.
+\]
+\end{theorem}
+
+
+\begin{proof}[Detailed solution]
+Set
+\[
+    A_T=T^{-1/2}\sum_{t=1}^T
+       \widehat Z_t(\beta_0,\Lambda_0),
+    \qquad
+    B_T=T^{-1}\sum_{t=1}^T
+       \widehat Z_t(\beta_0,\Lambda_0)^2.
+\]
+Lemma \ref{lem:wb-feasible-replacement}, followed by Lemmas
+\ref{lem:wb-oracle-clt} and \ref{lem:wb-oracle-lln}, gives the joint limits
+\[
+    A_T\xrightarrow{\mathrm{st}}\eta_qZ,
+    \qquad
+    B_T\xrightarrow{p}\eta_q^2.
+\]
+Because \(\eta_q^2\geq c_\eta\) almost surely, \(B_T\) is bounded away from
+zero with probability tending to one.  Lemmas \ref{lem:wb-oracle-max} and
+\ref{lem:wb-feasible-replacement} give
+\[
+    \max_t|\widehat Z_t(\beta_0,\Lambda_0)|=o_p(\sqrt T).
+\]
+The convex-hull assumption permits application of Lemma
+\ref{lem:sol-scalar-el}; hence
+\[
+    \ell_T(\beta_0,\Lambda_0)
+    =\frac{A_T^2}{B_T}+o_p(1).
+\]
+Stable Slutsky and positivity of \(\eta_q\) imply
+\[
+    \frac{A_T^2}{B_T}
+    \Rightarrow
+    \frac{\eta_q^2Z^2}{\eta_q^2}=Z^2\sim\chi_1^2.
+\]
+This proves the theorem.
+\end{proof}
+
+
+\section{One-Break Estimated-Partition Bridge}
+\label{sec:one-break-bridge}
+
+In this section only, take \(q_0=1\), \(\Lambda_0=(k_0)\), and \(\widetilde\Lambda=(\widetilde k)\). Let
+\[
+    \Delta_M=\bm M_{K,\widetilde\Lambda}-\bm M_{K,\Lambda_0},
+    \qquad
+    \mathcal M_T=\{t:j_{\widetilde\Lambda}(t)\neq j_{\Lambda_0}(t)\}.
+\]
+
+\begin{lemma}[Boundary-set size]
+\label{lem:wb-boundary-size}
+If \(|\widetilde k-k_0|=O_p(r_T)\), then
+\[
+    |\mathcal M_T|=O_p(r_T).
+\]
+\end{lemma}
+
+
+\begin{proof}[Detailed solution]
+Suppose first that \(\widetilde k\geq k_0\).  For
+\(t\leq k_0\), both partitions assign observation \(t\) to the left regime;
+for \(t>\widetilde k\), both assign it to the right regime.  The assignments
+differ exactly for
+\[
+    k_0<t\leq\widetilde k.
+\]
+Thus \(|\mathcal M_T|=\widetilde k-k_0\).  If
+\(\widetilde k<k_0\), the differing observations are exactly
+\(\widetilde k<t\leq k_0\), and again
+\(|\mathcal M_T|=|\widetilde k-k_0|\).  Therefore
+\[
+    |\mathcal M_T|=|\widetilde k-k_0|=O_p(r_T).
+\]
+\end{proof}
+
+
+\begin{lemma}[Nuisance part of partition perturbation]
+\label{lem:wb-bridge-mu}
+Under bounded nuisance functions, bounded weights, uniform Gram stability,
+Assumption \ref{ass:sol-local-bias}, and
+\(|\widetilde k-k_0|=O_p(r_T)\),
+\[
+    T^{-1/2}\bm\mu'\Delta_M\bm w
+    =
+    O_p\!\left(\frac{(1+\zeta_K)r_T}{\sqrt T}\right)+o_p(1).
+\]
+In particular, this term is \(o_p(1)\) if \((1+\zeta_K)r_T/\sqrt T\to0\).
+\end{lemma}
+
+
+\begin{proof}[Detailed solution]
+The original primitive assumptions alone do not control the term generated
+by moving the sieve approximation error from one projection to another;
+Assumption \ref{ass:sol-local-bias} supplies exactly that missing control.
+We now prove the stated rate.
+
+Work first on the event \(\widetilde k=k_0+h\) with \(h\geq0\), and let
+\(H=\{k_0+1,\ldots,k_0+h\}\).  Let \(\bm c_0\) and \(\bm c_1\) be the two
+true-regime sieve coefficients.  Form a coefficient vector for the candidate
+partition by assigning \(\bm c_0\) to its left block and \(\bm c_1\) to its
+right block.  Then
+\[
+    \bm\mu=\bm Q_{K,\widetilde\Lambda}\bm c^{(\widetilde k)}
+            +\bm d_H+\bm r_0,
+\]
+where \(\bm d_H\) is supported on \(H\) and
+\[
+    d_{H,t}=\bm P_K(W_{t-1})'(\bm c_1-\bm c_0),
+    \qquad t\in H.
+\]
+Because, pointwise for \(t\in H\),
+\[
+    \bm P_K(W_{t-1})'(\bm c_1-\bm c_0)
+    =m_1(W_{t-1})-m_0(W_{t-1})
+      -\{r_{1,K,t}-r_{0,K,t}\},
+\]
+Assumptions \ref{ass:prim-bounded} and \ref{ass:prim-sieve} imply
+\(\|\bm d_H\|_\infty=O_p(1)\).  Orthogonality of the candidate block sieve
+therefore gives
+\[
+    \bm\mu'\bm M_{K,\widetilde\Lambda}\bm w
+    =\bm d_H'\bm M_{K,\widetilde\Lambda}\bm w
+      +\bm r_0'\bm M_{K,\widetilde\Lambda}\bm w.
+\]
+At the true partition,
+\[
+    \bm\mu'\bm M_{K,\Lambda_0}\bm w
+    =\bm r_0'\bm M_{K,\Lambda_0}\bm w.
+\]
+Subtracting and using Lemma \ref{lem:wb-leverage},
+\begin{align*}
+    T^{-1/2}|\bm\mu'\Delta_M\bm w|
+    &\leq
+      T^{-1/2}\|\bm d_H\|_1
+      \|\bm M_{K,\widetilde\Lambda}\bm w\|_\infty\\
+    &\quad+
+      T^{-1/2}|\bm r_0'\Delta_M\bm w|\\
+    &=O_p\left(\frac{b_Kh}{\sqrt T}\right)+o_p(1).
+\end{align*}
+The case \(\widetilde k<k_0\) is identical after exchanging the two regimes.
+Since \(h=O_p(r_T)\), the displayed target follows.
+
+For completeness, here is the promised sufficient verification of
+Assumption \ref{ass:sol-local-bias}.  Let
+\(\bm v_k=\bm M_{K,k}\bm w\).  The coefficient-update calculation in the
+proof of Lemma \ref{lem:wb-bridge-u} shows that, for
+\(h=|k-k_0|\leq Cr_T\),
+\[
+    \|\bm v_k-\bm v_{k_0}\|_1
+    =O_p\{h b_K(1+\zeta_K^2)\}.
+\]
+Consequently,
+\[
+    T^{-1/2}|\bm r_0'(\bm v_k-\bm v_{k_0})|
+    \leq
+    T^{-1/2}\|\bm r_0\|_\infty
+               \|\bm v_k-\bm v_{k_0}\|_1
+    =O_p\left(
+       \frac{a_Kb_K(1+\zeta_K^2)h}{\sqrt T}
+      \right),
+\]
+which is uniformly \(o_p(1)\) under
+\eqref{eq:sol-local-bias-sufficient}.
+\end{proof}
+
+
+\begin{lemma}[Stochastic part of partition perturbation]
+\label{lem:wb-bridge-u}
+Under the martingale error, moment, bounded-basis, and uniform Gram
+assumptions, Assumption \ref{ass:sol-local-series}, and
+\(b_Kr_T/\sqrt T\to0\),
+\[
+    T^{-1/2}\bm U'\Delta_M\bm w
+    =
+    O_p\!\left(\zeta_K\sqrt{\frac{K r_T}{T}}\right)+o_p(1).
+\]
+In particular, this term is \(o_p(1)\) if \(\zeta_K\sqrt{K r_T/T}\to0\).
+\end{lemma}
+
+
+\begin{proof}[Detailed solution]
+It is enough to work uniformly on
+\(|k-k_0|\leq Cr_T\), because the localization event has probability tending
+to one for sufficiently large fixed \(C\).  Consider \(k=k_0+h>k_0\) and
+write
+\[
+    A=\{1,\ldots,k_0\},\quad
+    H=\{k_0+1,\ldots,k_0+h\},\quad
+    B=\{k_0+h+1,\ldots,T\},\quad R=H\cup B.
+\]
+For a segment \(J\), put
+\[
+    \bm G_J=\bm P_J'\bm P_J,
+    \qquad
+    \widehat{\bm\gamma}_J=\bm G_J^{-1}\bm P_J'\bm w_J.
+\]
+Assumption \ref{ass:sol-local-series} and bounded \(\bm w\) imply
+\(\|\widehat{\bm\gamma}_J\|=O_p(1)\) for every long segment.  The exact update
+identity
+\[
+    \widehat{\bm\gamma}_{A\cup H}-\widehat{\bm\gamma}_A
+    =\bm G_{A\cup H}^{-1}
+       \bm P_H'(\bm w_H-\bm P_H\widehat{\bm\gamma}_A)
+\]
+gives
+\[
+    \|\widehat{\bm\gamma}_{A\cup H}-
+       \widehat{\bm\gamma}_A\|
+    =O_p\left(\frac{h\zeta_Kb_K}{T}\right).
+\]
+Removing \(H\) from the true right segment gives, by the same algebra,
+\[
+    \|\widehat{\bm\gamma}_{B}-
+       \widehat{\bm\gamma}_{R}\|
+    =O_p\left(\frac{h\zeta_Kb_K}{T}\right).
+\]
+
+The true and candidate residualized weights are segmentwise
+\[
+    \bm v_0=(\bm w_A-\bm P_A\widehat{\bm\gamma}_A,
+             \bm w_R-\bm P_R\widehat{\bm\gamma}_R),
+\]
+\[
+    \bm v_k=(\bm w_{A\cup H}-
+              \bm P_{A\cup H}\widehat{\bm\gamma}_{A\cup H},
+             \bm w_B-\bm P_B\widehat{\bm\gamma}_B).
+\]
+After cancelling the \(\bm w_H\) terms, one obtains the exact decomposition
+\begin{align}
+    \bm U'(\bm v_k-\bm v_0)
+    &= (\bm P_A'\bm U_A)'
+       (\widehat{\bm\gamma}_A-
+        \widehat{\bm\gamma}_{A\cup H})
+       \nonumber\\
+    &\quad +(\bm P_B'\bm U_B)'
+       (\widehat{\bm\gamma}_R-
+        \widehat{\bm\gamma}_{B})
+       \nonumber\\
+    &\quad +(\bm P_H'\bm U_H)'
+       (\widehat{\bm\gamma}_R-
+        \widehat{\bm\gamma}_{A\cup H}).
+    \label{eq:sol-u-bridge-decomp}
+\end{align}
+Because \(\bm P_K(W_{t-1})U_t\) is a vector martingale difference, martingale
+isometry and the Gram bounds yield
+\[
+    \|\bm P_A'\bm U_A\|=O_p(\sqrt{TK}),
+    \qquad
+    \sup_{h\leq Cr_T}\|\bm P_H'\bm U_H\|
+      =O_p(\zeta_K\sqrt{r_T}).
+\]
+The same bound for \(\bm P_B'\bm U_B\) follows by writing it as the fixed
+right-segment sum minus the local \(H\)-sum.  Insert these bounds into
+\eqref{eq:sol-u-bridge-decomp}.  Uniformly for \(h\leq Cr_T\),
+\begin{align*}
+    T^{-1/2}|\bm U'(\bm v_k-\bm v_0)|
+    &=O_p\left(\zeta_K\sqrt{\frac{h}{T}}\right)
+      +O_p\left(\frac{h\zeta_Kb_K\sqrt K}{T}\right)
+      +o_p(1).
+\end{align*}
+The second displayed order divided by
+\(\zeta_K\sqrt{Kh/T}\) equals \(b_K\sqrt{h/T}\).  Under the bridge rate
+\(b_Kr_T/\sqrt T\to0\), this ratio is \(o(1)\), uniformly for
+\(h\leq Cr_T\).  Since \(K\geq1\), the first order is bounded by
+\(\zeta_K\sqrt{Kh/T}\).  Thus
+\[
+    T^{-1/2}\bm U'\Delta_M\bm w
+    =O_p\left(\zeta_K\sqrt{\frac{Kr_T}{T}}\right)+o_p(1).
+\]
+The case \(k<k_0\) is obtained by reversing left and right.  Notice that the
+proof is uniform over deterministic local candidates, so it remains valid at
+the data-selected \(\widetilde k\).
+\end{proof}
+
+
+\begin{lemma}[Denominator perturbation]
+\label{lem:wb-bridge-v}
+Under the conditions of Lemmas \ref{lem:wb-bridge-mu} and
+\ref{lem:wb-bridge-u}, and under \(\zeta_K^2Kr_T/T\to0\),
+\[
+    V_T(\widetilde\Lambda)-V_T(\Lambda_0)
+    =
+    O_p\!\left(
+      \frac{(1+\zeta_K)^2r_T}{T}
+      +
+      \frac{\zeta_K^2Kr_T}{T}
+    \right)+o_p(1)
+    =o_p(1).
+\]
+\end{lemma}
+
+
+\begin{proof}[Detailed solution]
+Put \(\bm v_k=\bm M_{K,k}\bm w\).  We first reduce the feasible denominator
+to the oracle array \(U_t v_{t,k}\), uniformly for
+\(|k-k_0|\leq Cr_T\).  As in the proof of Lemma \ref{lem:wb-bridge-mu},
+\[
+    \bm\mu=\bm Q_{K,k}\bm c^{(k)}+\bm d_H+\bm r_0,
+\]
+where \(\bm d_H\) is supported on the boundary set and is uniformly bounded.
+Writing \(\bm\Pi_k=\bm I_T-\bm M_{K,k}\),
+\[
+    \widehat{\bm u}(\beta_0,k)
+    =\bm U-\bm\Pi_k\bm U+
+      \bm M_{K,k}\bm r_0+\bm M_{K,k}\bm d_H.
+\]
+Hence
+\[
+    \widehat{\bm Z}(\beta_0,k)
+    =\bm U\odot\bm v_k+\bm\rho_k,
+\]
+where
+\[
+    \|\bm\rho_k\|_T
+    \leq \|\bm v_k\|_\infty
+       \left(
+        \|\bm\Pi_k\bm U\|_T+
+        \|\bm M_{K,k}\bm r_0\|_T+
+        \|\bm M_{K,k}\bm d_H\|_T
+       \right).
+\]
+The projection-noise proof used in Lemma
+\ref{lem:wb-feasible-replacement}, now uniformly over local candidates, gives
+\(\|\bm\Pi_k\bm U\|_T=O_p(\sqrt{K/T})\).  Projection contraction gives
+\[
+    \|\bm M_{K,k}\bm r_0\|_T=O_p(a_K),
+    \qquad
+    \|\bm M_{K,k}\bm d_H\|_T=O_p(\sqrt{h/T}).
+\]
+Together with \(\|\bm v_k\|_\infty=O_p(b_K)\), the sieve and bridge rates
+imply
+\begin{equation}
+    \sup_{|k-k_0|\leq Cr_T}\|\bm\rho_k\|_T=o_p(1).
+    \label{eq:sol-rho-local}
+\end{equation}
+Therefore it remains to compare
+\[
+    V_{U,T}(k)=T^{-1}\sum_{t=1}^TU_t^2v_{t,k}^2.
+\]
+
+Let \(h=|k-k_0|\).  The coefficient-update bounds proved in Lemma
+\ref{lem:wb-bridge-u} imply
+\[
+    |v_{t,k}-v_{t,0}|
+    \leq
+    \begin{cases}
+      Cb_K, & t\in\mathcal M_T,\\[2mm]
+      C h\zeta_K^2b_K/T, & t\notin\mathcal M_T.
+    \end{cases}
+\]
+Also \(\max_t(|v_{t,k}|+|v_{t,0}|)=O_p(b_K)\).  Since \(T^{-1}\sum_tU_t^2=O_p(1)\), it remains only to justify the
+boundary quadratic bound.  Put
+\(p=1+\delta_0/2>1\).  Applied to the centered sequence
+\(U_t^2-\E(U_t^2\mid\mathcal F_{t-1})\), the martingale maximal inequality on
+dyadic blocks gives
+\[
+    \sup_{1\leq h\leq Cr_T}
+    \frac{1}{h}\left|
+      \sum_{t\in H_h}
+       \{U_t^2-\E(U_t^2\mid\mathcal F_{t-1})\}
+    \right|=O_p(1),
+\]
+because the block-tail probabilities are bounded by a summable geometric
+series of order \(2^{-j(p-1)}\).  The conditional variances are bounded, so
+uniformly for a boundary interval \(H_h\) of length \(h\leq Cr_T\),
+\[
+    \sum_{t\in H_h}U_t^2=O_p(h).
+\]
+Consequently,
+\begin{align*}
+    |V_{U,T}(k)-V_{U,T}(k_0)|
+    &\leq T^{-1}\sum_tU_t^2
+       |v_{t,k}-v_{t,0}|(|v_{t,k}|+|v_{t,0}|)\\
+    &=O_p\left(\frac{b_K^2h}{T}\right)
+      +O_p\left(\frac{h\zeta_K^2b_K^2}{T}\right)
+      +O_p\left(\frac{h^2\zeta_K^4b_K^2}{T^2}\right).
+\end{align*}
+Assumption \ref{ass:sol-local-series} gives \(b_K^2=O(K)\).  Moreover,
+\(h\zeta_K^2/T=o(1)\) follows from
+\(\zeta_K^2Kr_T/T\to0\).  Consequently,
+\[
+    V_{U,T}(k)-V_{U,T}(k_0)
+    =O_p\left(
+       \frac{b_K^2h}{T}+
+       \frac{\zeta_K^2Kh}{T}
+      \right).
+\]
+This bound is \(o_p(1)\), so
+\(\|\bm U\odot\bm v_k\|_T=O_p(1)\) follows from the true-partition oracle
+LLN.  Now \eqref{eq:sol-rho-local} and the square-difference inequality give
+\[
+    V_T(k)-V_{U,T}(k)=o_p(1)
+\]
+uniformly locally, and the same holds at \(k_0\).  Taking
+\(h=O_p(r_T)\) proves
+\[
+    V_T(\widetilde\Lambda)-V_T(\Lambda_0)
+    =O_p\left(
+      \frac{(1+\zeta_K)^2r_T}{T}
+      +\frac{\zeta_K^2Kr_T}{T}
+    \right)+o_p(1).
+\]
+\end{proof}
+
+
+\begin{theorem}[One-break estimated-partition score equivalence]
+\label{thm:wb-one-break-equivalence}
+Suppose \(q_0=1\), Assumption \ref{ass:prim-localization-target} holds with \(r_T=o(\sqrt T)\), and
+\[
+    \zeta_K\sqrt{\frac{Kr_T}{T}}\to0,
+    \qquad
+    \frac{(1+\zeta_K)r_T}{\sqrt T}\to0,
+    \qquad
+    \frac{\zeta_K^2Kr_T}{T}\to0.
+\]
+If Lemmas \ref{lem:wb-bridge-mu}, \ref{lem:wb-bridge-u}, and \ref{lem:wb-bridge-v} hold, then
+\[
+    S_T(\widetilde\Lambda)-S_T(\Lambda_0)=o_p(1),
+    \qquad
+    V_T(\widetilde\Lambda)-V_T(\Lambda_0)=o_p(1).
+\]
+\end{theorem}
+
+
+\begin{proof}[Detailed solution]
+For every partition \(\Lambda\), symmetry and idempotence imply
+\[
+    S_T(\Lambda)
+    =T^{-1/2}(\bm U+\bm\mu)'
+       \bm M_{K,\Lambda}\bm w.
+\]
+Therefore
+\[
+    S_T(\widetilde\Lambda)-S_T(\Lambda_0)
+    =T^{-1/2}\bm\mu'\Delta_M\bm w
+      +T^{-1/2}\bm U'\Delta_M\bm w.
+\]
+Lemma \ref{lem:wb-bridge-mu} bounds the first term by
+\[
+    O_p\left(\frac{b_Kr_T}{\sqrt T}\right)+o_p(1)=o_p(1),
+\]
+and Lemma \ref{lem:wb-bridge-u} bounds the second by
+\[
+    O_p\left(\zeta_K\sqrt{\frac{Kr_T}{T}}\right)+o_p(1)=o_p(1).
+\]
+This proves the numerator equivalence.
+
+For the denominator, Lemma \ref{lem:wb-bridge-v} gives
+\[
+    V_T(\widetilde\Lambda)-V_T(\Lambda_0)
+    =O_p\left(
+       \frac{b_K^2r_T}{T}+
+       \frac{\zeta_K^2Kr_T}{T}
+      \right)+o_p(1).
+\]
+The second displayed bridge rate makes the second term \(o_p(1)\).  For the
+first term, if \(r_T\geq1\),
+\[
+    \frac{b_K^2r_T}{T}
+    =\frac{1}{r_T}
+      \left(\frac{b_Kr_T}{\sqrt T}\right)^2=o(1).
+\]
+Hence the denominator difference is also \(o_p(1)\).
+\end{proof}
+
+
+\begin{theorem}[One-break primitive estimated-partition Wilks target]
+\label{thm:wb-one-break-wilks}
+Under the assumptions of Theorem \ref{thm:wb-known-wilks}, the convex-hull condition for the estimated-partition score array, and Theorem \ref{thm:wb-one-break-equivalence},
+\[
+    \ell_T(\beta_0,\widetilde\Lambda)\Rightarrow\chi_1^2.
+\]
+\end{theorem}
+
+
+\begin{proof}[Detailed solution]
+Let \(A_T(\Lambda)=S_T(\Lambda)\) and \(B_T(\Lambda)=V_T(\Lambda)\).
+Theorem \ref{thm:wb-one-break-equivalence} gives
+\[
+    A_T(\widetilde\Lambda)=A_T(\Lambda_0)+o_p(1),
+    \qquad
+    B_T(\widetilde\Lambda)=B_T(\Lambda_0)+o_p(1).
+\]
+The known-partition proof gives
+\[
+    A_T(\Lambda_0)\xrightarrow{\mathrm{st}}\eta_qZ,
+    \qquad
+    B_T(\Lambda_0)\xrightarrow{p}\eta_q^2.
+\]
+We must also verify the maximum condition; numerator and denominator
+ equivalence alone would not imply it.  The local representation in the proof
+of Lemma \ref{lem:wb-bridge-v} gives
+\[
+    \widehat{\bm Z}(\beta_0,\widetilde\Lambda)
+    =\bm U\odot\bm v_{\widetilde k}+\bm\rho_{\widetilde k}.
+\]
+The envelope rate implies
+\(\max_t|U_tv_{t,\widetilde k}|=o_p(\sqrt T)\).  For the remainder, the
+uniform projection calculation gives
+\[
+    \|\bm\Pi_{\widetilde k}\bm U\|_\infty
+    =O_p\left(\zeta_K\sqrt{K/T}\right),
+\]
+while the sieve calculation gives
+\[
+    \|\bm M_{K,\widetilde k}\bm r_0\|_\infty
+    =O_p\{a_K(1+\zeta_K)\}.
+\]
+Finally, because \(\bm d_H\) has bounded entries and support of size
+\(O_p(r_T)\),
+\[
+    \|\bm M_{K,\widetilde k}\bm d_H\|_\infty
+    =O_p\left(1+\frac{r_T\zeta_K^2}{T}\right)=O_p(1).
+\]
+Multiplication by \(\|\bm v_{\widetilde k}\|_\infty=O_p(b_K)\), followed by
+the sieve, bridge, and envelope rates, gives
+\(\|\bm\rho_{\widetilde k}\|_\infty=o_p(\sqrt T)\).  Hence
+\[
+    \max_t|\widehat Z_t(\beta_0,\widetilde\Lambda)|=o_p(\sqrt T).
+\]
+The estimated-partition convex-hull condition and Lemma
+\ref{lem:sol-scalar-el} now yield
+\[
+    \ell_T(\beta_0,\widetilde\Lambda)
+    =\frac{A_T(\widetilde\Lambda)^2}
+           {B_T(\widetilde\Lambda)}+o_p(1).
+\]
+Substitution of the two equivalences reduces this ratio to the
+true-partition ratio plus \(o_p(1)\), and Theorem
+\ref{thm:wb-known-wilks} gives the \(\chi_1^2\) limit.
+\end{proof}
+
+
+\section{Break-Date Localization}
+\label{sec:break-localization}
+
+\begin{lemma}[Deterministic RSS drift target]
+\label{lem:wb-rss-drift}
+Under Assumption \ref{ass:sol-localization}, there exists
+\(c_\Delta>0\) such that, uniformly over minimum-spaced one-break candidates
+\(k\),
+\[
+    \E\{RSS_K(\beta_0,k)-RSS_K(\beta_0,k_0)\mid \mathcal D_T\}
+    \geq
+    c_\Delta |k-k_0|\Delta_T^2
+    -
+    o_p(|k-k_0|\Delta_T^2),
+\]
+where \(\mathcal D_T\) denotes the design sigma-field generated by \(X,W\) and the sieve basis.
+\end{lemma}
+
+
+\begin{proof}[Detailed solution]
+The conclusion is not valid from the original martingale assumptions alone;
+we use Assumption \ref{ass:sol-localization}.  Let
+\[
+    \bm y_0=\bm Y-\beta_0\bm X_{lag}=\bm\mu+\bm U,
+    \qquad
+    \bm A_k=\bm M_{K,k}-\bm M_{K,k_0}.
+\]
+Because the profile least-squares cost is the residual quadratic form,
+\[
+    RSS_K(\beta_0,k)=\bm y_0'\bm M_{K,k}\bm y_0.
+\]
+Therefore
+\begin{align*}
+    \Delta RSS_K(k)
+    &=\bm\mu'\bm A_k\bm\mu
+      +2\bm\mu'\bm A_k\bm U
+      +\bm U'\bm A_k\bm U.
+\end{align*}
+Conditional centering and conditional homoskedasticity give
+\[
+    \E\{\Delta RSS_K(k)\mid\mathcal D_T\}
+    =\bm\mu'\bm A_k\bm\mu
+      +\sigma^2\operatorname{tr}(\bm A_k).
+\]
+Every candidate and true one-break sieve matrix has rank \(2K\), so
+\[
+    \operatorname{tr}(\bm A_k)
+    =\operatorname{tr}(\bm M_{K,k})-
+      \operatorname{tr}(\bm M_{K,k_0})=0.
+\]
+The profile-identification condition
+\eqref{eq:sol-profile-identification} now gives
+\[
+    \E\{\Delta RSS_K(k)\mid\mathcal D_T\}
+    \geq c_\Delta|k-k_0|\Delta_T^2
+       -o_p\{|k-k_0|\Delta_T^2\}.
+\]
+
+To see concretely where the linear drift comes from, consider the exact-sieve
+case and \(k=k_0+h>k_0\).  Use the sets \(A,H,B\) from the bridge proof and
+write \(\bm\delta=\bm c_1-\bm c_0\).  The candidate right segment fits
+exactly.  On the candidate left segment, after writing the common coefficient
+as \(\bm c_0+\bm a\), the deterministic loss is
+\[
+    L_h=\min_{\bm a}
+       \{\bm a'\bm G_A\bm a+
+         (\bm a-\bm\delta)'\bm G_H(\bm a-\bm\delta)\}.
+\]
+The minimizer is
+\[
+    \bm a_h=(\bm G_A+\bm G_H)^{-1}\bm G_H\bm\delta,
+\]
+so
+\[
+    L_h
+    =\bm\delta'\bm G_H\bm\delta
+      -\bm\delta'\bm G_H
+       (\bm G_A+\bm G_H)^{-1}
+       \bm G_H\bm\delta.
+\]
+Since \(\bm G_A\succeq cT\bm I_K\) and
+\(\lambda_{\max}(\bm G_H)\leq h\zeta_K^2\),
+\[
+    \bm\delta'\bm G_H
+       (\bm G_A+\bm G_H)^{-1}
+       \bm G_H\bm\delta
+    \leq C\frac{h\zeta_K^2}{T}
+          \bm\delta'\bm G_H\bm\delta.
+\]
+Thus, whenever \(h\zeta_K^2/T=o(1)\),
+\[
+    L_h\geq\{1-o(1)\}
+       \sum_{t\in H}
+       \{\bm P_K(W_{t-1})'\bm\delta\}^2.
+\]
+A local empirical jump-energy bound
+\[
+    h^{-1}\sum_{t\in H}
+       \{\bm P_K(W_{t-1})'\bm\delta\}^2
+       \geq c\Delta_T^2
+\]
+therefore yields the desired \(ch\Delta_T^2\) drift.  Approximation error and
+far-away candidates are precisely what the remainder
+\(\rho_T(k)\) in Assumption \ref{ass:sol-localization} controls.
+\end{proof}
+
+
+\begin{lemma}[RSS stochastic fluctuation target]
+\label{lem:wb-rss-fluctuation}
+Under Assumption \ref{ass:sol-localization}, write
+\[
+    \Delta RSS_K(k)=RSS_K(\beta_0,k)-RSS_K(\beta_0,k_0).
+\]
+Uniformly over minimum-spaced one-break candidates,
+\begin{align*}
+    \left|\Delta RSS_K(k)
+    -\E\{\Delta RSS_K(k)\mid \mathcal D_T\}\right|
+    &=O_p\!\left(\sqrt{|k-k_0|K\log T}\right) \\
+    &\quad +O_p(K\log T).
+\end{align*}
+\end{lemma}
+
+
+\begin{proof}[Detailed solution]
+Continue to write \(\bm A_k=\bm M_{K,k}-\bm M_{K,k_0}\) and
+\(h=|k-k_0|\).  From the expansion in the preceding proof,
+\begin{align}
+    \Delta RSS_K(k)
+    -\E\{\Delta RSS_K(k)\mid\mathcal D_T\}
+    &=2\bm\mu'\bm A_k\bm U\\
+    &\quad+
+      \bm U'\bm A_k\bm U
+      -\E(\bm U'\bm A_k\bm U\mid\mathcal D_T).
+    \label{eq:sol-rss-fluctuation-decomp}
+\end{align}
+Conditional on \(\mathcal D_T\), the first term is sub-Gaussian with variance
+proxy bounded by
+\[
+    C\|\bm A_k\bm\mu\|^2\leq ChK
+\]
+by \eqref{eq:sol-mean-sensitivity}.  Hence, for a sufficiently large constant
+\(C_1\),
+\[
+    \Pp\left(
+      |2\bm\mu'\bm A_k\bm U|>
+      C_1\sqrt{hK\log T}
+      \ \middle|\ \mathcal D_T
+    \right)\leq 2T^{-cC_1^2}.
+\]
+There are at most \(T\) candidate dates, so a union bound gives, uniformly in
+\(k\),
+\[
+    |2\bm\mu'\bm A_k\bm U|
+    =O_p\{\sqrt{hK\log T}\}.
+\]
+
+For the quadratic term, \(\bm A_k\) is symmetric and
+\[
+    \operatorname{rank}(\bm A_k)
+    \leq\operatorname{rank}(\bm\Pi_{K,k})+
+       \operatorname{rank}(\bm\Pi_{K,k_0})
+    \leq4K.
+\]
+Also \(\|\bm A_k\|\leq2\) and
+\(\|\bm A_k\|_F\leq4\sqrt K\).  The conditional Hanson--Wright inequality
+therefore gives, for every \(x>0\),
+\[
+    \Pp\left(
+      |\bm U'\bm A_k\bm U-
+        \E(\bm U'\bm A_k\bm U\mid\mathcal D_T)|
+      >C\{\sqrt{Kx}+x\}
+      \ \middle|\ \mathcal D_T
+    \right)
+    \leq2e^{-cx}.
+\]
+Taking \(x=C_2\log T\) and applying another union bound over all dates gives
+\[
+    \sup_k
+    |\bm U'\bm A_k\bm U-
+      \E(\bm U'\bm A_k\bm U\mid\mathcal D_T)|
+    =O_p\{\sqrt{K\log T}+\log T\}
+    =O_p(K\log T).
+\]
+Combining the linear and quadratic bounds in
+\eqref{eq:sol-rss-fluctuation-decomp} proves
+\[
+    \left|\Delta RSS_K(k)
+    -\E\{\Delta RSS_K(k)\mid\mathcal D_T\}\right|
+    =O_p\{\sqrt{hK\log T}\}+O_p(K\log T)
+\]
+uniformly over the candidate set.  This logarithmic conclusion uses the
+sub-Gaussian completion; it cannot in general be recovered from only the
+finite-moment assumption in Section 2.
+\end{proof}
+
+
+\begin{theorem}[One-break localization theorem target]
+\label{thm:wb-localization}
+If Lemmas \ref{lem:wb-rss-drift} and \ref{lem:wb-rss-fluctuation} hold and the break signal dominates the search fluctuation, then
+\[
+    |\widetilde k-k_0|=O_p(r_T),
+\]
+where \(r_T\) is any sequence satisfying the resulting drift-fluctuation inequality. A sufficient fixed-break target is \(r_T=O_p(K\log T/\Delta_T^2)\), subject to refinement after the fluctuation bound is proved.
+\end{theorem}
+
+
+\begin{proof}[Detailed solution]
+Let
+\[
+    R_T=K\log T,
+    \qquad
+    r_T=R_T\max\{\Delta_T^{-2},\Delta_T^{-4}\}.
+    \label{eq:sol-localization-rate}
+\]
+The sequence \(r_T\) is deterministic; the statement
+``\(r_T=O_p(\cdot)\)'' in the original target should read
+``\(r_T=O(\cdot)\).''  Lemmas \ref{lem:wb-rss-drift} and
+\ref{lem:wb-rss-fluctuation} imply that, with a tight random constant
+\(C_T=O_p(1)\),
+\[
+    \Delta RSS_K(k)
+    \geq c h\Delta_T^2
+      -C_T\{\sqrt{hR_T}+R_T\}
+      -o_p(h\Delta_T^2),
+    \qquad h=|k-k_0|.
+\]
+Fix \(M>0\) and suppose \(h\geq Mr_T\).  By the definition of \(r_T\),
+\[
+    \frac{R_T}{h\Delta_T^2}\leq\frac1M
+\]
+and
+\[
+    \frac{\sqrt{hR_T}}{h\Delta_T^2}
+    =\frac{\sqrt{R_T}}{\sqrt h\,\Delta_T^2}
+    \leq\frac1{\sqrt M}.
+\]
+Choose a deterministic \(C\) so that
+\(\Pp(C_T>C)<\varepsilon\), and then choose \(M\) so large that
+\(C(M^{-1/2}+M^{-1})<c/4\).  On the resulting event, uniformly for
+\(h\geq Mr_T\),
+\[
+    \Delta RSS_K(k)>0
+\]
+for all sufficiently large \(T\).  But the minimizer satisfies
+\[
+    \Delta RSS_K(\widetilde k)
+    =RSS_K(\beta_0,\widetilde k)-RSS_K(\beta_0,k_0)\leq0,
+\]
+because \(k_0\) is an admissible candidate.  Therefore
+\[
+    \Pp\{|\widetilde k-k_0|>Mr_T\}\leq\varepsilon+o(1).
+\]
+Letting first \(T\to\infty\), then \(M\to\infty\), proves
+\(|\widetilde k-k_0|=O_p(r_T)\).
+
+If \(\Delta_T\) is bounded away from zero, then
+\(r_T\asymp K\log T\), equivalently
+\(r_T=O(K\log T/\Delta_T^2)\).  If \(\Delta_T\to0\), the fluctuation bound
+as stated forces the additional \(\Delta_T^{-4}\) term.  The smaller rate
+\(K\log T/\Delta_T^2\) for shrinking jumps requires a refined linear
+fluctuation of order
+\(\Delta_T\sqrt{hK\log T}\).  Finally, the score bridge requires the separate
+check
+\[
+    K\log T\max\{\Delta_T^{-2},\Delta_T^{-4}\}=o(\sqrt T).
+\]
+\end{proof}
+
+
+\section{Unknown-Order Selection}
+
+\begin{assumption}[Penalty-rate target]
+\label{ass:wb-penalty}
+Let \(R_T\) denote the maximal stochastic RSS gain from searching over
+spurious breaks; under Lemma \ref{lem:wb-rss-fluctuation}, one may take
+\(R_T=K\log T\).  The penalty satisfies
+\[
+    \frac{\operatorname{pen}_T(q,K)-\operatorname{pen}_T(q_0,K)}{R_T}
+    \to\infty
+    \quad\text{for }q>q_0,
+\]
+and is small in absolute value relative to the deterministic RSS drift from
+omitting true breaks:
+\[
+    \left|\operatorname{pen}_T(q,K)-\operatorname{pen}_T(q_0,K)\right|
+    =o(T\Delta_T^2)
+    \quad\text{for }q<q_0.
+\]
+These are the rates actually used in Theorem \ref{thm:wb-order}.
+\end{assumption}
+
+\begin{theorem}[Unknown-order consistency target]
+\label{thm:wb-order}
+Under the localization, RSS drift, RSS fluctuation, and penalty-rate targets,
+\[
+    \Pp\{\widehat q(\beta_0)=q_0\}\to1.
+\]
+\end{theorem}
+
+
+\begin{proof}[Detailed solution]
+Let
+\[
+    RSS_q^*=RSS_K\{\beta_0,\widehat\Lambda_q(\beta_0)\},
+    \qquad R_T=K\log T.
+\]
+The RSS drift and search bounds needed for order selection can be written
+uniformly over the fixed set \(0\leq q\leq\bar q\) as
+\begin{align}
+    \min_{q<q_0}(RSS_q^*-RSS_{q_0}^*)
+      &\geq cT\Delta_T^2-O_p(R_T),
+      \label{eq:sol-underfit-gap}\\
+    \max_{q>q_0}(RSS_{q_0}^*-RSS_q^*)
+      &=O_p(R_T).
+      \label{eq:sol-overfit-gain}
+\end{align}
+The first display says that at least one true jump is omitted; the resulting
+deterministic loss is of order \(T\Delta_T^2\).  The second says that an
+extra, spurious split can exploit noise only at the searched stochastic order.
+
+The penalty condition in the original workbook must be sharpened as follows:
+for every \(q>q_0\),
+\[
+    \frac{\operatorname{pen}_T(q,K)-
+          \operatorname{pen}_T(q_0,K)}{R_T}\longrightarrow\infty,
+\]
+and for every \(q<q_0\),
+\[
+    \left|\operatorname{pen}_T(q,K)-
+          \operatorname{pen}_T(q_0,K)\right|
+    =o(T\Delta_T^2).
+\]
+Mere divergence of the overfitting penalty is not enough when
+\(R_T\to\infty\).
+
+For \(q<q_0\), subtract the true-order penalized criterion:
+\begin{align*}
+    &RSS_q^*+\operatorname{pen}_T(q,K)
+      -RSS_{q_0}^*-\operatorname{pen}_T(q_0,K)\\
+    &\qquad\geq
+      cT\Delta_T^2-O_p(R_T)-o(T\Delta_T^2)>0
+\end{align*}
+with probability tending to one, because
+\(R_T=o(T\Delta_T^2)\).  For \(q>q_0\),
+\begin{align*}
+    &RSS_q^*+\operatorname{pen}_T(q,K)
+      -RSS_{q_0}^*-\operatorname{pen}_T(q_0,K)\\
+    &\qquad\geq
+      -O_p(R_T)+
+      \{\operatorname{pen}_T(q,K)-
+        \operatorname{pen}_T(q_0,K)\}>0
+\end{align*}
+with probability tending to one.  Since \(\bar q\) is fixed, a finite union
+bound proves
+\[
+    \Pp\{\widehat q(\beta_0)=q_0\}\to1.
+\]
+A transparent sufficient penalty is
+\[
+    \operatorname{pen}_T(q,K)=q b_T,
+    \qquad
+    K\log T\ll b_T\ll T\Delta_T^2.
+\]
+Such a sequence exists because break detectability gives
+\(K\log T=o(T\Delta_T^2)\); for example,
+\(b_T=\sqrt{(K\log T)(T\Delta_T^2)}\) satisfies the two rate inequalities.
+\end{proof}
+
+
+\begin{corollary}[Unknown-order Wilks]
+\label{cor:wb-unknown-wilks}
+Suppose Theorem \ref{thm:wb-order} and the fixed-order
+estimated-partition Wilks theorem hold.  Then
+\[
+    \ell_T\{\beta_0,\widehat\Lambda(\beta_0)\}\Rightarrow\chi_1^2.
+\]
+\end{corollary}
+
+
+\begin{proof}[Detailed solution]
+Let
+\[
+    E_T=\{\widehat q(\beta_0)=q_0\}.
+\]
+By Theorem \ref{thm:wb-order}, \(\Pp(E_T)\to1\).  On \(E_T\), the definitions
+and the common deterministic tie-breaking rule give
+\[
+    \widehat\Lambda(\beta_0)
+    =\widehat\Lambda_{q_0}(\beta_0)
+    =\widetilde\Lambda.
+\]
+For every continuity point \(x\) of the \(\chi_1^2\) distribution,
+\begin{align*}
+    &\left|
+      \Pp\left[
+        \ell_T\{\beta_0,\widehat\Lambda(\beta_0)\}\leq x
+      \right]
+      -\Pp\left[
+        \ell_T(\beta_0,\widetilde\Lambda)\leq x
+      \right]
+    \right|\\
+    &\qquad\leq \Pp(E_T^c)\to0.
+\end{align*}
+The fixed-order estimated-partition Wilks theorem then yields the claimed
+\(\chi_1^2\) limit.
+\end{proof}
+
+
+\section{Local Alternatives}
+\label{sec:local-alternatives}
+
+\begin{assumption}[Local-law oracle and drift]
+\label{ass:wb-local-oracle}
+Let \(\beta_T=\beta_0+d_T\), \(d_T\to0\), and define
+\[
+    g_{t,T}=d_T(\bm M_{K,\Lambda_0}\bm X_{lag})_tv_{t,0}.
+\]
+Under the local law \(P_{\beta_T}\),
+\[
+    T^{-1/2}\sum_{t=1}^TU_tv_{t,0}\xrightarrow{\mathrm{st}}\eta_qZ,
+    \qquad
+    T^{-1}\sum_{t=1}^TU_t^2v_{t,0}^2\xrightarrow{p}\eta_q^2,
+    \qquad
+    \max_t|U_tv_{t,0}|=o_p(\sqrt T),
+\]
+and
+\[
+    T^{-1/2}\sum_{t=1}^Tg_{t,T}\xrightarrow{p}\eta_q\delta_h,
+    \qquad
+    T^{-1}\sum_{t=1}^Tg_{t,T}^2=o_p(1),
+    \qquad
+    \max_t|g_{t,T}|=o_p(\sqrt T).
+\]
+\end{assumption}
+
+\begin{lemma}[Local shifted-score replacement target]
+\label{lem:wb-local-replacement}
+Suppose Assumptions \ref{ass:prim-sieve}, \ref{ass:prim-bounded},
+\ref{ass:prim-gram}, and \ref{ass:sol-oracle-envelope} continue to hold under
+\(P_{\beta_T}\).  Then
+\begin{align}
+    T^{-1/2}\sum_{t=1}^T
+    \{\widehat Z_t(\beta_0,\Lambda_0)-(U_tv_{t,0}+g_{t,T})\}
+    &=o_p(1),
+    \\
+    T^{-1}\sum_{t=1}^T
+    \{\widehat Z_t(\beta_0,\Lambda_0)^2-(U_tv_{t,0}+g_{t,T})^2\}
+    &=o_p(1),
+    \\
+    \max_t|\widehat Z_t(\beta_0,\Lambda_0)-(U_tv_{t,0}+g_{t,T})|
+    &=o_p(\sqrt T).
+\end{align}
+\end{lemma}
+
+
+\begin{proof}[Detailed solution]
+Under \(P_{\beta_T}\),
+\[
+    \bm Y-\beta_0\bm X_{lag}
+    =\bm Q_{K,\Lambda_0}\bm c_0+
+      \bm r_0+\bm U+d_T\bm X_{lag}.
+\]
+Apply \(\bm M_{K,\Lambda_0}\) and put
+\[
+    \bm e_0=\bm M_{K,\Lambda_0}\bm r_0,
+    \qquad
+    \bm h_0=\bm\Pi_{K,\Lambda_0}\bm U,
+    \qquad
+    \bm x_0^c=\bm M_{K,\Lambda_0}\bm X_{lag}.
+\]
+Then
+\[
+    \widehat{\bm u}(\beta_0,\Lambda_0)
+    =\bm U-\bm h_0+\bm e_0+d_T\bm x_0^c.
+\]
+Multiplying componentwise by \(\bm v_0\) gives the exact identity
+\[
+    \widehat Z_t(\beta_0,\Lambda_0)
+    =U_tv_{t,0}+g_{t,T}+(e_{t,0}-h_{t,0})v_{t,0}.
+\]
+The final term is exactly the same feasibility error as under the null.  The
+proof of Lemma \ref{lem:wb-feasible-replacement} therefore gives
+\[
+    \|(\bm e_0-\bm h_0)\odot\bm v_0\|_T=o_p(1),
+    \qquad
+    \|(\bm e_0-\bm h_0)\odot\bm v_0\|_\infty=o_p(\sqrt T),
+\]
+and the numerator projection cancellation plus the projection-bias condition
+gives its normalized sum as \(o_p(1)\).  This proves the first and third
+displays of the lemma.
+
+For the square replacement, put
+\(a_{t,T}=U_tv_{t,0}+g_{t,T}\) and
+\(d_{t,T}=(e_{t,0}-h_{t,0})v_{t,0}\).  Then
+\[
+    T^{-1}\sum_t
+      \{\widehat Z_t^2-a_{t,T}^2\}
+    =2T^{-1}\sum_ta_{t,T}d_{t,T}
+      +T^{-1}\sum_td_{t,T}^2.
+\]
+Assumption \ref{ass:wb-local-oracle} gives
+\[
+    \|\bm U\odot\bm v_0\|_T=O_p(1),
+    \qquad
+    \|\bm g_T\|_T=o_p(1),
+\]
+so \(\|\bm a_T\|_T=O_p(1)\).  Cauchy--Schwarz and
+\(\|\bm d_T\|_T=o_p(1)\) make both terms on the right \(o_p(1)\), proving the
+second display.
+\end{proof}
+
+
+\begin{theorem}[Local noncentral chi-square target]
+\label{thm:wb-local-power}
+Under Assumption \ref{ass:wb-local-oracle}, Lemma \ref{lem:wb-local-replacement}, the local convex-hull condition, and the estimated-partition bridge under \(P_{\beta_T}\),
+\[
+    \ell_T(\beta_0,\widetilde\Lambda)
+    \Rightarrow
+    \chi_1^2(\delta_h^2).
+\]
+If \(\Pp\{\widehat q(\beta_0)=q_0\}\to1\), the same limit holds for \(\ell_T\{\beta_0,\widehat\Lambda(\beta_0)\}\).
+\end{theorem}
+
+
+\begin{proof}[Detailed solution]
+First work at the true partition.  Lemma \ref{lem:wb-local-replacement} and
+Assumption \ref{ass:wb-local-oracle} give
+\begin{align*}
+    T^{-1/2}\sum_t\widehat Z_t(\beta_0,\Lambda_0)
+    &=T^{-1/2}\sum_tU_tv_{t,0}
+      +T^{-1/2}\sum_tg_{t,T}+o_p(1)\\
+    &\xrightarrow{\mathrm{st}}\eta_q(Z+\delta_h).
+\end{align*}
+For the second moment,
+\begin{align*}
+    T^{-1}\sum_t(U_tv_{t,0}+g_{t,T})^2
+    &=T^{-1}\sum_tU_t^2v_{t,0}^2\\
+    &\quad+2T^{-1}\sum_tU_tv_{t,0}g_{t,T}
+      +T^{-1}\sum_tg_{t,T}^2.
+\end{align*}
+The first term converges to \(\eta_q^2\), and the last is \(o_p(1)\).  By
+Cauchy--Schwarz,
+\[
+    \left|T^{-1}\sum_tU_tv_{t,0}g_{t,T}\right|
+    \leq
+    \left(T^{-1}\sum_tU_t^2v_{t,0}^2\right)^{1/2}
+    \left(T^{-1}\sum_tg_{t,T}^2\right)^{1/2}
+    =o_p(1).
+\]
+The local replacement lemma therefore yields
+\[
+    T^{-1}\sum_t\widehat Z_t(\beta_0,\Lambda_0)^2
+    \xrightarrow{p}\eta_q^2.
+\]
+Moreover,
+\[
+    \max_t|U_tv_{t,0}+g_{t,T}|=o_p(\sqrt T),
+\]
+and the maximum replacement error is also \(o_p(\sqrt T)\).  The local
+convex-hull condition and Lemma \ref{lem:sol-scalar-el} imply
+\[
+    \ell_T(\beta_0,\Lambda_0)
+    \Rightarrow
+    \frac{\eta_q^2(Z+\delta_h)^2}{\eta_q^2}
+    =(Z+\delta_h)^2
+    \sim\chi_1^2(\delta_h^2).
+\]
+
+Under the local-law version of the one-break bridge, the estimated-partition
+numerator and denominator differ from their true-partition counterparts by
+\(o_p(1)\), and the estimated score maximum is \(o_p(\sqrt T)\).  Applying the
+same scalar EL expansion transfers the limit to
+\(\ell_T(\beta_0,\widetilde\Lambda)\).  Finally, on the event
+\(\{\widehat q(\beta_0)=q_0\}\), the unknown-order and fixed-order partitions
+coincide.  If that event has probability tending to one under
+\(P_{\beta_T}\), the same event-transfer argument as in Corollary
+\ref{cor:wb-unknown-wilks} proves the final assertion.
+\end{proof}
+
+
+\section{Master Dependency Checklist}
+
+\begin{center}
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.28\textwidth}
+                >{\raggedright\arraybackslash}p{0.34\textwidth}
+                >{\raggedright\arraybackslash}p{0.28\textwidth}}
+\hline
+Goal & Must prove first & Output when finished \\
+\hline
+Known-partition Wilks & Lemmas \ref{lem:wb-oracle-clt}, \ref{lem:wb-oracle-lln}, \ref{lem:wb-oracle-max}, \ref{lem:wb-feasible-replacement} & Theorem \ref{thm:wb-known-wilks} \\
+One-break bridge & Lemmas \ref{lem:wb-bridge-mu}, \ref{lem:wb-bridge-u}, \ref{lem:wb-bridge-v} & Theorem \ref{thm:wb-one-break-equivalence} \\
+Break localization & Lemmas \ref{lem:wb-rss-drift}, \ref{lem:wb-rss-fluctuation} & Theorem \ref{thm:wb-localization} \\
+Unknown order & Theorem \ref{thm:wb-order} and penalty-rate target & Corollary \ref{cor:wb-unknown-wilks} \\
+Local alternatives & Local oracle, shifted replacement, local bridge & Theorem \ref{thm:wb-local-power} \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection*{Recommended homework order}
+\begin{enumerate}
+    \item Prove deterministic projection algebra and leverage bounds.
+    \item Prove known-partition Wilks from primitive martingale assumptions.
+    \item Prove the one-break partition perturbation bounds.
+    \item Prove profile-RSS break localization.
+    \item Only then work on unknown-order selection and local alternatives.
+\end{enumerate}
+
+\end{document}

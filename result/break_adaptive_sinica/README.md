@@ -1,6 +1,6 @@
 # Break-Adaptive Statistica Sinica Results
 
-This directory contains the reproducible numerical evidence used in Sections 6 and 7 of `writing_samples/profile_sieve_geometric_paper.tex`.
+This directory contains a historical reproducible numerical-evidence pack originally prepared for the noncanonical geometric draft. The current manuscript source of truth is `writing_samples/profile_sieve_bai_perron_theory_workbook.tex`; see `writing_samples/source_notes/noncanonical_manuscript_sources.md` for the legacy manuscript inventory.
 
 ## Reproduction Command
 
@@ -30,7 +30,7 @@ The script also writes manuscript-ready artifacts to:
 
 ## Verification
 
-The current manuscript build was verified with:
+The historical geometric-draft build was verified with:
 
 ```powershell
 pdflatex -interaction=nonstopmode -halt-on-error profile_sieve_geometric_paper.tex

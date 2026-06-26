@@ -1,0 +1,44 @@
+{
+  "source_page_url": "https://sites.google.com/view/agoyal145/",
+  "download_url": "https://docs.google.com/spreadsheets/d/1qwpl2R_DNujpU5YUkk8lacP1tTeMb9iJ/export?format=xlsx",
+  "accessed_at_utc": "2026-06-26T01:56:46.903758+00:00",
+  "raw_file": {
+    "name": "PredictorData2025.xlsx",
+    "path": "W:/Research/semipara sieve/data/raw/goyal_welch/PredictorData2025.xlsx",
+    "size_bytes": 485015,
+    "sha256": "1e4b6527075aa11e176c698c476e981303342fbe3db87f8586e430cc1a7a8a91"
+  },
+  "processed_file": {
+    "name": "goyal_welch_monthly.csv",
+    "path": "W:/Research/semipara sieve/data/processed/goyal_welch_monthly.csv",
+    "exists": true,
+    "rows": 1860,
+    "sha256": "2ae14a0b6a9ecf2a5f977fb7cd87b6d9d930b9273f86f609f271c70f21a913c8"
+  },
+  "workbook": {
+    "sheets": [
+      {
+        "name": "Monthly",
+        "rows": 1860,
+        "columns": 18
+      },
+      {
+        "name": "Quarterly",
+        "rows": 620,
+        "columns": 22
+      },
+      {
+        "name": "Annual",
+        "rows": 155,
+        "columns": 21
+      }
+    ]
+  },
+  "processing": {
+    "panel": "monthly",
+    "dependent_variable": "equity_premium = CRSP_SPvw - Rfree",
+    "default_x": "dp",
+    "default_w": "tms",
+    "lag_convention": "x_lag and w_lag are one-month lags of the cleaned predictor columns."
+  }
+}

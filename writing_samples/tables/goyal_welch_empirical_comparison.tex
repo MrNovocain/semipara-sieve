@@ -1,0 +1,18 @@
+\begin{table}[t]
+\centering
+\caption{Goyal--Welch empirical comparison}
+\label{tab:goyal-welch-empirical-comparison}
+\begin{tabular}{lrrrrl}
+\hline
+Method & $\widehat\beta$ & $t$ / EL & $p$-value & $\widehat q$ & Break dates \\
+\hline
+standard\_predictive\_regression & 0.0039 & 2.509 & 0.012 & 0 & -- \\
+linear\_break\_benchmark & 0.0039 & 2.509 & 0.012 & 0 & -- \\
+no\_break\_sieve\_el & 0.0043 & 1.273 & 0.259 & 0 & -- \\
+one\_break\_profile\_sieve\_el & 0.0043 & 1.273 & 0.259 & 0 & -- \\
+\hline
+\end{tabular}
+\begin{minipage}{0.94\linewidth}
+\footnotesize Notes: This is the paper-facing Goyal--Welch one-break comparison. $W$ is the nuisance covariate; score\_weight is the manuscript lower-case $w_t$ and defaults to a bounded tanh transform. The machine-readable CSV reports $\widehat\rho$ for persistence diagnostics; no Campbell--Yogo or Stambaugh correction is claimed here.
+\end{minipage}
+\end{table}
