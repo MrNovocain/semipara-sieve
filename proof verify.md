@@ -1,6 +1,19 @@
-﻿# Proof Verification Report - Math Only
+# Proof Verification Report - Math Only
 
 Date: 2026-06-24
+
+## 2026-06-27 KKT/L2 Geometry Verification
+
+Verdict: accepted with the local-curvature refinement. The profile step is an
+exact \(L^2(P_T)\) projection KKT problem. The empirical likelihood step is an
+entropy KKT problem on the sample simplex, not a projection problem, but near
+the root its Hessian is the empirical \(L^2(P_T)\) curvature \(P_TZ^2\). The
+population bridge is therefore: sample projection KKT plus EL local curvature
+plus \(L^2(P_T)\to L^2(P)\) convergence. Uniqueness of the population
+normal-score zero identifies \(\beta_0\); Wilks still requires the oracle CLT,
+denominator LLN, and maximum-score localization. All non-stochastic bounds
+should be read as deterministic projection/KKT algebra on high-probability good
+events; stochastic lemmas verify those events and the oracle score limits.
 
 Files checked:
 

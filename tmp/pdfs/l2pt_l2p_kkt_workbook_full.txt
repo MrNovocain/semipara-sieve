@@ -1,0 +1,718 @@
+L2 Geometry Workbook for Profile Sieve EL
+Compressing the Full Model, Projection, Break, and EL Logic
+Solved derivation workbook
+
+Contents
+1 The Whole Argument in One Diagram
+
+2
+
+2 Finite-Sample Hilbert Space: Viewing the Entire Model in L2 (PT )
+2.1 The empirical space . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+2.2 The full finite-sample model . . . . . . . . . . . . . . . . . . . . . . . . . . .
+2.3 Candidate nuisance subspaces . . . . . . . . . . . . . . . . . . . . . . . . . .
+2.4 Orthogonal projection . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+
+2
+2
+3
+3
+3
+
+3 Profiling Is Orthogonal Projection
+3.1 Break search as subspace selection . . . . . . . . . . . . . . . . . . . . . . . .
+
+4
+4
+
+4 Residualized Score Direction
+
+5
+
+5 Known True Partition: Wilks Logic in Geometry
+
+5
+
+6 Omitted Breaks: False Predictivity as a Projection Drift
+
+6
+
+7 Estimated Partition
+
+6
+
+8 EL: Likelihood Around a Geometric Score
+
+7
+
+9 Population Hilbert Space
+9.1 Population object in L2 (P ) . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+9.2 Population nuisance space . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+
+8
+8
+8
+
+10 Population Identification
+
+8
+
+11 Sample-to-Population Bridge
+
+9
+
+12 Full Logic Checklist
+
+10
+
+13 Minimal Final Statement
+
+10
+
+1
+
+1
+
+The Whole Argument in One Diagram
+
+The purpose of this workbook is to rewrite the whole proof logic as Hilbert space geometry.
+The sample space is not first probability; it is first the finite empirical Hilbert space
+L2 (PT ) = (RT , ⟨a, b⟩T = T −1 a′ b).
+The population limit is the Hilbert space
+L2 (P ),
+
+⟨f, g⟩P = E{f g}.
+
+The entire argument is the following chain:
+y = β0 x + µ0 + u
+NK,Λ,T = col(QK,Λ )
+MK,Λ = I − ΠK,Λ,T
+√
+ST (β, Λ) = T ⟨MK,Λ (y − βx), MK,Λ w⟩T
+
+full model in L2 (PT ),
+candidate nuisance subspace,
+orthogonal residual-maker,
+projected score.
+
+EL then uses the scalar products
+Zt (β, Λ) = {MK,Λ (y − βx)}t {MK,Λ w}t
+to form a one-dimensional empirical likelihood. EL is not the Hilbert projection; EL is the
+likelihood wrapper around the projected score.
+Final target. Show that the sample moment
+ΨT (β, Λ) = ⟨MK,Λ (y − βx), MK,Λ w⟩T
+converges to the population moment
+Ψ(β, Λ) = ⟨MΛP (Y − βX), MΛP w⟩P ,
+and, at the true nuisance space, Ψ(β, Λ0 ) = 0 has the unique solution β = β0 .
+
+2
+
+Finite-Sample Hilbert Space: Viewing the Entire
+Model in L2(PT )
+
+2.1
+
+The empirical space
+
+Let
+ΩT = {1, . . . , T },
+
+PT = T
+
+−1
+
+T
+X
+
+δt .
+
+t=1
+
+Every sample vector a = (a1 , . . . , aT )′ is a function aT : ΩT → R, with aT (t) = at . The
+empirical inner product is
+Z
+T
+X
+⟨a, b⟩T = aT bT dPT = T −1
+at bt = T −1 a′ b.
+t=1
+
+2
+
+Thus all variables in the sample are elements of L2 (PT ):
+y, x, w, u, µ0 ∈ L2 (PT ).
+
+2.2
+
+The full finite-sample model
+
+The break-aware model is the vector identity in L2 (PT )
+y = β0 x + µ0 + u,
+where
+µ0,t =
+
+q0
+X
+
+(2.1)
+
+mj (Wt−1 )1{kj,0 < t ≤ kj+1,0 }.
+
+j=0
+
+So the full model says: y lies in the affine set
+β0 x + µ0 + u.
+The inferential problem is to remove µ0 , not by estimating it as a main parameter, but by
+projecting away its nuisance subspace.
+
+2.3
+
+Candidate nuisance subspaces
+
+For a candidate partition Λ = (k1 , . . . , kq ), define the block sieve matrix
+QK,Λ = [D0 (Λ)P , . . . , Dq (Λ)P ].
+The sample nuisance subspace is
+NK,Λ,T = col(QK,Λ ) ⊂ L2 (PT ).
+
+(2.2)
+
+An element of this space has the form
+gT (t) =
+
+q
+X
+
+1{t ∈ Ij (Λ)}PK (Wt−1 )′ cj .
+
+j=0
+
+This is the finite-sample version of a regime-specific nonparametric nuisance function.
+
+2.4
+
+Orthogonal projection
+
+Let ΠK,Λ,T be the L2 (PT )-orthogonal projection onto NK,Λ,T . In coordinates,
+ΠK,Λ,T = QK,Λ (Q′K,Λ QK,Λ )† Q′K,Λ .
+The residual-maker is
+MK,Λ = I − ΠK,Λ,T .
+
+(2.3)
+
+It satisfies the projection identities
+′
+MK,Λ
+= MK,Λ ,
+
+2
+MK,Λ
+= MK,Λ ,
+
+Q′K,Λ MK,Λ = 0.
+
+Workbook task 1. Starting from Π = Q(Q′ Q)† Q′ , verify that M = I − Π is
+symmetric, idempotent, and annihilates the columns of Q.
+3
+
+3
+
+Profiling Is Orthogonal Projection
+
+For a trial value β, define
+zβ = y − βx.
+Profiling the nuisance means finding the closest point to zβ in NK,Λ,T :
+gbβ,Λ = arg min ∥zβ − g∥2T .
+g∈NK,Λ,T
+
+By Hilbert projection,
+gbβ,Λ = ΠK,Λ,T zβ ,
+
+b (β, Λ) = zβ − gbβ,Λ = MK,Λ zβ .
+u
+
+Lemma 1 (Profile normal equation). For every h ∈ NK,Λ,T ,
+⟨b
+u(β, Λ), h⟩T = 0.
+Equivalently,
+b (β, Λ) = 0.
+Q′K,Λ u
+Proof. This is the KKT condition for a least-squares projection in L2 (PT ). If h = QK,Λ a,
+then
+b ′ QK,Λ a = T −1 (Q′K,Λ u
+b )′ a = 0.
+⟨b
+u, h⟩T = T −1 u
+
+3.1
+
+Break search as subspace selection
+
+For fixed β, the profile RSS is
+RSSK (β, Λ) = ∥MK,Λ (y − βx)∥2 = T ∥MK,Λ zβ ∥2T .
+Thus break estimation is not a separate idea geometrically. It is subspace selection:
+b q (β) = arg min dist2 (zβ , NK,Λ,T ).
+Λ
+T
+Λ∈Lq (ϵ)
+
+Unknown order adds a penalty to the same distance:
+qb(β) = arg min{T dist2T (zβ , NK,Λb q (β),T ) + penT (q, K)}.
+q
+
+Workbook task 2. Rewrite every profile-RSS criterion in the manuscript as a
+squared Hilbert distance from y − βx to a candidate nuisance subspace.
+
+4
+
+4
+
+Residualized Score Direction
+
+The raw score weight w ∈ L2 (PT ) may contain nuisance directions. The geometric score
+direction is its nuisance-orthogonal component
+vΛ = wc (Λ) = MK,Λ w.
+Then
+⊥T
+vΛ ∈ NK,Λ,T
+,
+
+⟨vΛ , h⟩T = 0 ∀h ∈ NK,Λ,T .
+
+The sample profiled moment is the Hilbert inner product
+ΨT (β, Λ) = ⟨MK,Λ (y − βx), MK,Λ w⟩T .
+The scaled score is
+ST (β, Λ) =
+
+(4.1)
+
+√
+T ΨT (β, Λ).
+
+Lemma 2 (Finite-sample nuisance cancellation). If g ∈ NK,Λ,T , then
+⟨MK,Λ g, MK,Λ w⟩T = 0.
+Proof. Because g ∈ NK,Λ,T , MK,Λ g = 0. Hence the inner product is zero. Equivalently,
+(Qc)′ MK,Λ w = 0 for every c.
+
+5
+
+Known True Partition: Wilks Logic in Geometry
+
+Set Λ = Λ0 . Decompose the true nuisance into its sieve projection part and approximation
+error:
+µ0 = QK,Λ0 c0 + r0 .
+At β = β0 , the model gives
+y − β0 x = QK,Λ0 c0 + r0 + u.
+Apply M0 = MK,Λ0 and set v0 = M0 w:
+M0 (y − β0 x) = M0 u + M0 r0 .
+Therefore
+ST (β0 , Λ0 ) = T −1/2 u′ v0 + T −1/2 r0′ v0 .
+
+(5.1)
+
+The first term is the stochastic score. The second term is projection bias. The key high-level
+condition is
+T −1/2 r0′ M0 w = op (1).
+Workbook task 3. Starting from y = β0 x + Q0 c0 + r0 + u, derive equation (5.1).
+Circle the only term that must be controlled by approximation rates.
+
+5
+
+6
+
+Omitted Breaks: False Predictivity as a Projection
+Drift
+
+If we use a stable/no-break nuisance space NK,0,T when the true nuisance has breaks, the
+true nuisance vector µ0 generally does not belong to NK,0,T . Let Mst denote the stable
+residual-maker and vst = Mst w. Then
+Mst (y − β0 x) = Mst u + Mst µ0 .
+The stable score is
+STst (β0 ) = T −1/2 u′ vst + T −1/2 µ′0 vst .
+
+(6.1)
+
+The second term
+BT = T −1/2 ⟨T Mst µ0 , vst ⟩T = T −1/2 µ′0 Mst w
+is a geometric projection drift. It is not predictive signal; it is the component of the omitted
+nuisance break that lies in the stable score direction.
+Workbook task 4. Explain false predictivity in one line:
+wrong nuisance subspace ⇒ Mst µ0 ̸= 0 ⇒ BT ̸= 0.
+
+7
+
+Estimated Partition
+
+The estimated break procedure chooses a random subspace
+bT = N b ,
+N
+K,Λ,T
+The feasible score is
+
+√
+SbT (β0 ) =
+
+cT = M b .
+M
+K,Λ
+
+cT (y − β0 x), M
+cT w⟩T .
+T ⟨M
+
+The true-partition score is
+ST0 (β0 ) =
+
+√
+
+T ⟨M0 (y − β0 x), M0 w⟩T .
+
+The estimated-partition Wilks argument is the score-equivalence statement
+SbT (β0 ) − ST0 (β0 ) = op (1),
+
+VbT − VT0 = op (1).
+
+(7.1)
+
+Geometrically, (7.1) says that replacing the true subspace NK,Λ0 ,T by the estimated subspace
+NK,Λ,T
+changes the score only by a negligible amount at the T −1/2 scale.
+b
+Remark 1 (Why this is weaker than operator-norm convergence). It is not necessary to
+cT − M0 ∥op → 0. Break-date errors can make that hard. The theorem only needs
+prove ∥M
+the projected score and its second moment to be asymptotically unchanged.
+
+6
+
+8
+
+EL: Likelihood Around a Geometric Score
+
+The projected scalar array is
+Zt (β, Λ) = {MK,Λ (y − βx)}t {MK,Λ w}t .
+Its empirical mean is the Hilbert moment:
+T −1
+
+T
+X
+
+Zt (β, Λ) = ΨT (β, Λ).
+
+t=1
+
+EL solves
+
+T
+X
+
+max
+
+π1 ,...,πT
+
+log(T πt )
+
+t=1
+
+subject to
+X
+
+πt = 1,
+
+X
+
+πt Zt = 0,
+
+πt > 0.
+
+t
+
+t
+
+The KKT solution is
+T
+X
+
+1
+π
+bt =
+,
+T (1 + λT Zt )
+The EL statistic is
+ℓT (β, Λ) = 2
+
+Zt
+= 0.
+1
++
+λ
+Z
+T
+t
+t=1
+
+T
+X
+
+log(1 + λT Zt ).
+
+t=1
+
+Under the scalar EL expansion,
+ℓT (β0 , Λ) =
+
+ST (β0 , Λ)2
++ op (1),
+VT (Λ)
+
+where
+VT (Λ) = T −1
+
+X
+t
+
+Thus Wilks is obtained by combining:
+1. geometric nuisance cancellation;
+2. score CLT for ST ;
+3. variance consistency for VT ;
+4. scalar EL quadratic expansion.
+
+7
+
+Zt (β0 , Λ)2 .
+
+9
+
+Population Hilbert Space
+
+9.1
+
+Population object in L2 (P )
+
+To express breaks in population geometry, include rescaled time S ∈ (0, 1]. Let
+O = (Y, X, W, S, U )
+be a population random element with law P . The true regime map is
+j0 (S) = j
+
+⇐⇒
+
+τj,0 < S ≤ τj+1,0 .
+
+The population model is the identity in L2 (P ):
+Y = β0 X + µ0 (S, W ) + U,
+
+µ0 (S, W ) =
+
+q0
+X
+
+mj (W )1{τj,0 < S ≤ τj+1,0 }.
+
+(9.1)
+
+j=0
+
+9.2
+
+Population nuisance space
+
+For a population partition Λ, define
+NΛP =
+
+( q
+X
+
+)L2 (P )
+1{S ∈ Ij (Λ)}hj (W ) : hj ∈ L2 (PW )
+
+.
+
+j=0
+
+Let ΠPΛ be the L2 (P )-orthogonal projection onto NΛP , and let
+MΛP = I − ΠPΛ .
+The population profiled residual and score direction are
+uPβ (Λ) = MΛP (Y − βX),
+
+v P (Λ) = MΛP w.
+
+The population moment is
+Ψ(β, Λ) = ⟨uPβ (Λ), v P (Λ)⟩P .
+
+10
+
+Population Identification
+
+At the true population nuisance space NΛP0 , the nuisance belongs to the subspace:
+µ0 (S, W ) ∈ NΛP0 .
+Therefore
+MΛP0 µ0 = 0.
+Using (9.1),
+uPβ (Λ0 ) = MΛP0 (Y − βX)
+= MΛP0 {U − (β − β0 )X}.
+8
+
+(9.2)
+
+Hence
+Ψ(β, Λ0 ) = ⟨MΛP0 U, v0P ⟩P − (β − β0 )⟨MΛP0 X, v0P ⟩P ,
+
+(10.1)
+
+where v0P = MΛP0 w.
+If the orthogonal score is exogenous,
+⟨MΛP0 U, v0P ⟩P = 0,
+and the predictive direction is not absorbed by the nuisance space,
+Γ = ⟨MΛP0 X, v0P ⟩P ̸= 0,
+then
+Ψ(β, Λ0 ) = −(β − β0 )Γ.
+Thus
+Ψ(β, Λ0 ) = 0
+
+⇐⇒
+
+β = β0 .
+
+(10.2)
+
+Workbook task 5. Derive (10.1) from the population model. The only two
+population assumptions needed after projection are exogeneity ⟨M0P U, v0P ⟩P = 0
+and relevance Γ ̸= 0.
+
+11
+
+Sample-to-Population Bridge
+
+The sample moment is
+b = ⟨M b (y − βx), M b w⟩T .
+ΨT (β, Λ)
+K,Λ
+K,Λ
+The population moment is Ψ(β, Λ0 ). The bridge is the uniform convergence statement
+b − Ψ(β, Λ0 )| = op (1).
+sup |ΨT (β, Λ)
+β∈B
+
+This bridge packages the technical assumptions:
+1. empirical Gram stability;
+2. sieve approximation error control;
+3. projection-bias negligibility;
+4. estimated-partition score equivalence;
+5. LLN/CLT for the projected score array;
+6. EL convex-hull and max-score conditions.
+If βbT is an approximate sample root,
+b = op (1),
+ΨT (βbT , Λ)
+then (11.1) gives
+Ψ(βbT , Λ0 ) = op (1).
+By unique population identification, βbT →p β0 .
+9
+
+(11.1)
+
+12
+
+Full Logic Checklist
+
+Layer
+
+Geometric object
+
+Proof target
+
+Finite sample model
+
+y = β0 x + µ0 + u ∈ L2 (PT )
+
+Treat all arrays as Hilbert
+elements.
+
+Nuisance
+
+NK,Λ,T = col(QK,Λ )
+
+Define the subspace to
+remove.
+
+Profiling
+
+MK,Λ = I − ΠK,Λ,T
+
+Normal equations
+Q′ M z = 0.
+
+Score
+
+ΨT = ⟨M (y − βx), M w⟩T
+
+One Hilbert inner
+product.
+
+Known true break
+
+ST = T −1/2 u′ M w + T −1/2 r′ M w
+
+Projection bias is
+negligible.
+
+Omitted break
+
+BT = T −1/2 µ′ Mst w
+
+Wrong subspace creates
+drift.
+
+Estimated break
+
+cT replaces M0
+M
+
+Score equivalence is
+enough.
+
+EL
+
+Zt = (M z)t (M w)t
+
+EL is scalar likelihood
+around ΨT .
+
+Population
+
+Y = β0 X + µ0 (S, W ) + U ∈
+L2 (P )
+
+Limit model in Hilbert
+space.
+
+Identification
+
+Ψ(β) = −(β − β0 )Γ
+
+Unique zero gives β0 .
+
+13
+
+Minimal Final Statement
+
+The full profile-sieve EL argument can be compressed into one geometric statement:
+In L2 (PT ), the model is y = β0 x + µ0 + u. A candidate partition and sieve
+define a nuisance subspace NK,Λ,T . Profiling is orthogonal projection onto this
+subspace, and both the outcome residual and score weight are replaced by their
+⊥T
+components in NK,Λ,T
+. The profiled moment is the inner product
+ΨT (β, Λ) = ⟨MK,Λ (y − βx), MK,Λ w⟩T .
+At the true nuisance space, the nuisance component vanishes under M , leaving
+only projected noise plus approximation error. A wrong nuisance subspace leaves
+a projection drift. EL is then a scalar likelihood for the projected score array. As
+T → ∞, the empirical Hilbert geometry converges to the population geometry
+in L2 (P ), where
+Ψ(β, Λ0 ) = ⟨MΛP0 (Y − βX), MΛP0 w⟩P .
+10
+
+If exogeneity and relevance imply this population moment has the unique zero
+β0 , then the sample procedure recovers the true parameter.
+
+11
+
+

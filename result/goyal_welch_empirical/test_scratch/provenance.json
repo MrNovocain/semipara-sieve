@@ -1,12 +1,12 @@
 {
   "source_page_url": "https://example.test/source",
   "download_url": "https://example.test/export.xlsx",
-  "accessed_at_utc": "2026-06-26T01:57:16.438663+00:00",
+  "accessed_at_utc": "2026-06-26T16:55:46.517565+00:00",
   "raw_file": {
     "name": "PredictorData2025.xlsx",
     "path": "result/goyal_welch_empirical/test_scratch/PredictorData2025.xlsx",
     "size_bytes": 5954,
-    "sha256": "ea0bab36ba3f12ebfd02c9fc3e3af367e935dd42a737ea99b5504638df5608c8"
+    "sha256": "9914c631f68c3a7da809bc7d40f0363794d86f1f99d09682d6c5e8f03d3b688b"
   },
   "processed_file": {
     "name": "goyal_welch_monthly.csv",

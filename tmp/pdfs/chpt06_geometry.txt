@@ -1,0 +1,4204 @@
+                        Chapter 6
+                    GEOMETRY OF DATA
+                         from the private notebook
+                                     of
+                              David Brenner
+
+                         Jan.24 2010, Jan.13 2020
+
+
+
+
+1    elementary basics
+For any chosen (fixed) sample size n 2 N, the data, x1 , . . . , xn , that issue
+from any particular real-valued random variable, X, ought naturally to be
+thought of as the n components of a vector in Rn , because, obviously, all
+one need do is stand them up vertically and put brackets around them so:
+                                    0      1
+                                       x1
+                                    B      C
+                             x = @ ... A .
+                                          xn
+But, in Rn — once within this euclidean framework — one is almost com-
+pelled to a geometric conception of the output from the various generators
+of interest X, Y, X 2 , Y 2 , XY, etc. One naturally inclines to the obvious:
+
+    - who is longer? - who is shorter? - are they at right angles? - what angle
+    do they make? - which one is the closest to another? - which one is
+    very nearly a constant? - to what extent might one data vector be a
+    simple linear combination of some others? etc., etc.
+1       ELEMENTARY BASICS                                                  2
+
+
+1.1        The natural geometry of Rn
+On Rn we define three standard algebraic/geometric devices1
+                                                               n
+               inner product               x·y = x0 y = ⌃ xi yi
+                                                              i=1
+
+                                                    p
+               length (norm)                |x| =       x·x
+
+
+               distance (metric)           d(x, y) = |y x|.
+
+
+
+It is certainly easy to verify that
+
+                   |ax+by|2       =       a2 |x|2 + 2ab x·y + b2 |y|2 .   (1)
+
+
+But, it is only from an elementary consideration of congruent triangles that
+
+
+
+
+we properly understand precisely when two non-zero vectors, x & y are
+mutually orthogonal :
+
+                          x ? y       i↵     |y x| = |y+x|                (2)
+
+
+wherefrom, on squaring both sides of the metric criterion in (2) and then
+expanding each side as in (1), we discover the tidy algebraic reduction
+
+                             x ? y         ,     x·y = 0.                 (3)
+
+
+    1
+        cf. appendix A3 length & angle.
+1   ELEMENTARY BASICS                                                        3
+
+
+The orthogonal projection, y b , of y on any non-zero x is defined by the
+simple requirements (1) that it be a scalar multiple of x, itself, & (2) that
+                       b , be at right angles to x:
+the residual vector, y y
+
+                          b = tx for some t 2 R
+                          y                                                (4)
+                  &         b
+                          y y    ?   x                                     (5)
+
+But, as long as x 6= 0, this automatically provides a unique solution for the
+
+
+
+
+scalar t as
+
+                            x·(y tx) =        0
+                                x·y
+                      )     t =      .                                     (6)
+                                |x|2
+
+In general, two non-zero vectors, x & y, may be said to describe an angle,
+✓ = ✓(x, y), with a unique numerical value, 0  ✓  ⇡. This is because any
+two such vectors automatically span a unique two dimensional subspace of
+Rn that intersects the unit sphere in a unique unit circle, and, by definition,
+✓ is then merely the (unique) value of the shortest arc length along that
+unit circle in travelling (in either direction) between the two unit vectors
+u = x/|x| & v = y/|y|.
+
+We say that the angle ✓ is either acute, perpendicular or obtuse as the
+sign of the scalar t for the orthogonal projection is respectively +1, 0, or 1.
+But, it is obvious from Eqn.(6) that the sign of the coefficient t is perfectly
+identical to the sign of the dot product x·y.
+
+Then, with exactly the original meaning attributable to Euclid (c.300BC),
+yet with every advantage of modern notation, the cosine of ✓ is simply (de-
+1   ELEMENTARY BASICS                                                          4
+
+
+fined as) the ratio: “adjacent”/“hypotenuse”
+
+                                                        y|
+                                                       |b
+                           cos ✓ = sign(x·y)               ,                  (7)
+                                                       |y|
+
+                                b = tx, immediately provides the perfectly
+whereupon, direct substitution, y
+symmetric refinement of the modern textbooks
+                                          x·y
+                             cos ✓ =            .                             (8)
+                                         |x||y|
+
+Pythagorus, itself, is almost trivial:
+
+
+                |y|2 = |b
+                        y + (y       b )|2
+                                     y            =     y |2 + |y
+                                                       |b           b |2
+                                                                    y         (9)
+
+
+but usefully provides three variations on cauchy-schwarz (CS ), x 6= 0 —
+each of which is now so self-evident as almost not to require any verification
+beyond mere substitution:
+
+the cauchy-schwarz inequalities:
+
+
+    CS 1 :       y |  |y|
+                |b               w.eq. i↵           b
+                                                  y=y                        (10)
+
+
+    CS 2 :   |x·y|  |x||y|       w.eq. i↵        y = tx unique t 2 R        (11)
+
+
+    CS 3 : | cos ✓(x, y)|  1       w.eq. i↵          y = tx unique t 2 R.   (12)
+
+
+
+The triangle inequality
+
+
+     |x+y|  |x|+|y|           w. eq.        i↵       y = tx unique t > 0    (13)
+
+
+is got simply by squaring the left hand side and substituting CS 2 (but
+with the crucial di↵erence that for equality the dot product must also be
+positive).
+1       ELEMENTARY BASICS                                                                5
+
+
+1.2        The natural geometry of random variables
+
+Let us suppose, then, that we have two real-valued random processes, X
+& Y , who, for a certain sample size, n, generate data, x & y. And let
+us further have it that n is sufficiently large that on the basis of the law of
+large numbers (LLN ) we are guaranteed that the following limiting averages
+have been achieved (eg. ✏ = 10 4 would give stability to four decimal places).
+
+In that case we may simply re-express the three basic instruments of eu-
+clidean geometry in Rn in terms of their own limiting values:
+
+
+                                     x·y             ⌃ni=1 xi yi    LLN
+        inner product                        =                       ⇡     EXY
+                                      n                  n
+                                                     r
+                                     |x|                x·x        LLN    p
+        length (norm)                p        =                    ⇡          EX 2
+                                       n                  n
+                                   d(x, y)             |y x|       LLN    p
+        distance (metric)            p           =       p          ⇡      E(Y X)2 .
+                                       n                   n
+
+
+The expressions on the right hand side have actual meaning, of course, only
+through the law of large numbers, but, may, in the spirit of Kolmogorov’s
+definition (1933) — of just what precisely constitutes an abstract probability
+space 2 — stand as pure mathematical objects. And thus we proceed:
+
+By definition, L is the vector space of R-valued random variables, X, Y ,
+etc., where the expectation operator, E, may be applied to produce the real
+numbers EX, EY , etc. And by the same definition: E is normed, non-
+negative, linear and continuous — exactly as described in Chpt.5. So here
+we move immediately to the particular sub-space of L where the natural
+geometry of Rn has been reinvested in these X’s & Y ’s:
+
+
+                         L2 = { X 2 L | EX 2 < 1 }                                     (14)
+
+
+
+
+    2
+        Defn.1.1.1 on p.5 of the earlier Chpt.5, reduction to an axiomatic system.
+1   ELEMENTARY BASICS                                                        6
+
+
+
+In L2 we simply define
+
+
+        inner product           hX, Y i =        EXY
+
+                                                 p              p
+        length (norm)             kXk       =        hX, Xi =       EX 2
+
+                                                                p
+        distance (metric)       d(X, Y )    =       kY Xk   =    E(Y X)2 .
+
+
+
+
+But in the land of pure abstraction, to which we have just arrived, there
+are a few technical matters that ought properly to be taken care of before
+we proceed with blissful abandon to enjoy the potential bounty of euclidean
+delight:
+
+(1) It needs to be verified that L2 is, indeed, a sub-vector space of L .
+
+
+Lemma 1.2.1.        X, Y 2 L2     )        X, Y & XY 2 L
+    proof :
+        Obviously
+
+                                  X 2+Y 2
+                     |XY |                      ~
+                                     2
+         and of course, by letting Y = 1 we have as well
+
+                                  X 2+1
+                        |X|                    ~
+                                    2
+
+
+
+Corollary 1.2.1.1.       X, Y 2 L2      )       X+Y 2 L2
+    proof :
+
+                        (X+Y )2  2(X 2+Y 2 )           ~
+1   ELEMENTARY BASICS                                                       7
+
+
+
+(2) One had also better be absolutely certain that hX, Y i = EXY actually
+    satisfies the three abstract properties of being an inner product.
+
+     i) bilinear : ha1 X1 +a2 X2 , Y i = E(a1 X1 +a2 X2 )Y
+                                       = a1 hX1 , Y i+a2 hX2 , Y i
+                     and likewise for Y
+
+    ii) symmetric: hX, Y i = EXY = EYX = hY, Xi
+                                                                     wP 1
+    iii) positive (semi )-definite: hX, Xi = EX 2       0 w. eq. i↵ X = 0
+
+
+                                ⇤      ⇤      ⇤
+
+
+    All but the very last part of the last property are seen to be relatively
+    straightforward in their verification. It is only the last little bit that
+    might require some serious clarification. So, here, for the sake of com-
+    pleteness, we provide two additional results that will fully explain the
+    matter. The reader is advised, however, that simple as each may seem in
+    its own individual way, these two properties pack enormous power, and
+    each is of great general importance in the subsequent development of
+    almost every aspect of abstract probability theory.
+
+
+                                ⇤      ⇤      ⇤
+
+
+Markov & Chebyshev
+
+Take any non-negative random variable, Z       0, any non-negative num-
+ber, t   0, and any non-decreasing function, g : [0, 1) ! [0, 1). Then
+quite obviously
+                         g(t)I(Z t)  g(Z)
+so, on applying E to both sides, one immediately acquires
+
+                            g(t)P (Z       t)  Eg(Z)
+
+allowing us to claim the main result of this section:
+1   ELEMENTARY BASICS                                                   8
+
+
+
+
+Theorem 1.2.1.     Markov’s Inequality (circa 1880 )
+     For any Z    0, t    0 and non-decreasing g : [0, 1) ! [0, 1)
+     we have
+                          Eg(Z)
+          P (Z    t)               8t      0 st      g(t) > 0   ~
+                           g(t)
+
+
+There are some immediate corollaries (the first two so very simple as al-
+most not to bear a formal proof), the most famous of which are usually
+attributed to Chebyshev (1867), but, more fairly, might better perhaps be
+credited (some fourteen years previously) to both him and his friend Bien-
+ayme (1853). Markov, himself, was Chebyshev’s student at the University of
+St. Petersburg and later (1896) his successor as a member of the Academy
+of Sciences.
+
+Consider an arbitrary random variable X in L2 with µ = EX and         2 =
+
+E(X µ)2 , and simply let Z = |X µ| and g(t) = t2 to obtain
+
+
+Corollary 1.2.1.1. Chebyshev I (1853, 1867 )
+     For any X 2 L2 , ✏ > 0
+     we have
+                                                 2
+                         P (|X µ|   ✏)               ~
+                                                ✏2
+
+Or, take Z = |X µ|/ and again g(t) = t2 to find
+
+
+Corollary 1.2.1.2. Chebyshev II (1853, 1867 )
+     For any X 2 L2 , k > 0
+     we have           ✓                ◆
+                         |X µ|                   1
+                     P              k                 ~
+                                                 k2
+
+
+But, the next corollary is one of the more useful of the everyday work-
+ing tools of our subject. And this is the one for which we came!
+1   ELEMENTARY BASICS                                                                  9
+
+
+Corollary 1.2.1.3.         Markov’s Equality
+
+                                                                wP 1
+                           E|X| = 0              ,          X    = 0
+proof :
+                                       E|X|
+          ()) :        P (|X|     1/n)      = 0 8n2N
+                                        1/n
+                  )    P (|X| < 1/n) = 1    8n2N
+                  )        P (|X| = 0) = 1.
+                           wP 1                      wP 1
+          (() :        X    = 0       )          |X| = 0         )     E|X| = 0.   ~
+
+
+                                  ⇤          ⇤       ⇤
+
+
+It is exactly this markov equality that has its immediate application to
+our present concern about the semi-definiteness of our inner product
+
+                                  hX, Y i = EXY.
+
+
+We can now see with ease that
+
+
+                      kXk2 = hX, Xi = EX 2 = 0
+
+                                       wP 1
+                           ,      X2 = 0
+
+                                      wP 1
+                           ,      X    = 0
+
+
+                                  ⇤          ⇤       ⇤
+
+
+
+But, other than such peevishly technical details, the geometry of L2 is an
+essentially faithful copy of the geometry of ordinary euclidean space. In fact,
+invoking the LLN, one could even very properly say that the geometry of
+L2 simply is the geometry of Rn . Let us summarize:
+1   ELEMENTARY BASICS                                                     10
+
+
+
+The geometry of L2
+
+In L2 , just as in Rn , we may characterize orthogonality:
+
+                      X?Y      i↵ kY Xk = kY +Xk                        (15)
+
+
+                               , hX, Y i = EXY = 0.                     (16)
+
+
+And, also just as in Rn , we have an absolutely identical understanding of
+what defines the orthogonal projection, Yb , of one variable, Y , on another,
+X. There are the very same two requirements:
+
+                        Yb = tX for some t 2 R                          (17)
+                  &     Y Yb ? X                                        (18)
+
+
+And, again, this automatically provides a unique solution for the scalar t as
+
+                       E(Y tX)X       =     0
+                           EXY
+                )      t =              provided      EX 2 > 0.         (19)
+                           EX 2
+
+On the strength of the LLN, the idea of an angle, ✓ = ✓(X, Y ), between
+two non-zero random variables makes exactly the same kind of sense as does
+the self-same conception of such an angle between their two respective data
+vectors.
+
+And thus, still with exactly the original meaning of Euclid, the cosine of
+✓ is the ratio: “adjacent”/“hypotenuse”
+
+                                                      kYb k
+                      cos ✓(X, Y ) = sign(EXY )             ,           (20)
+                                                      kY k
+
+which, just as before, provides an elegantly symmetric expression
+                                          EXY
+                      cos ✓(X, Y ) = p                .                 (21)
+                                          EX 2 EY 2
+
+Pythagorus is still the same minor consequence of the mutual orthogonality
+1   ELEMENTARY BASICS                                                    11
+
+
+of any projection and its own residual:
+
+
+              kY k2 = kYb + (Y Yb )k2 = kYb k2 + kY Yb k2              (22)
+
+
+and we thereby obtain the very same three variations on cauchy-schwarz
+
+                                                   wP 1
+    CS 1 :     kYb k  kY k        w.eq. i↵    Y = Yb                   (23)
+
+                                                          wP 1
+    CS 2 : (EXY )2  EX 2 EY 2          w.eq. i↵    Y = tX unique t 2 R (24)
+
+                                                    wP 1
+    CS 3 :   | cos ✓(X, Y )|  1    w.eq. i↵    Y = tX unique t 2 R.    (25)
+
+
+and, of course, the triangle inequality
+
+                                                   wP 1
+     kX+Y k  kXk+kY k         w. eq.     i↵   Y = tX unique t > 0.     (26)
+2   THE DESCRIPTIVE GEOMETRY OF DATA                                       12
+
+
+
+
+2     The descriptive geometry of data
+2.1   means, standard deviations & variances
+In L2 we measure the distance between any two variables X & Y as
+                                            p
+                  d(X, Y ) = kX Y k =         E(X Y )2 .
+
+
+So, in particular, we can measure how distant is any given X from any
+specified constant t 2 R
+                                           p
+                      d(X, t) = kX tk =      E(X t)2 .
+
+
+But this is quite obviously a function of the parameter t 2 R and it is per-
+fectly straightforward to find the value of t at which it is minimized — in
+other words, to find the particular constant that is closest to the given ran-
+dom variable X:
+
+By simply completing the quadratic
+                 f (t) = d(X, t)2 = E(X t)2
+
+
+                       =    t2   2tEX + EX 2                             (27)
+
+
+                       = (t EX)2 + EX 2 (EX)2 .
+we immediately see that d(X, t) is minimized exactly at the mean value of
+X: t = µ = EX.
+
+The minimum distance, itself — the actual distance between the random X
+and its closest constant EX — is referred to as the standard deviation of X
+                         def n               p
+              = (X) = d(X, EX) =                E(X EX)2                (28)
+
+                                                     p
+                           = d(X, µ) = kX µk =           E(X µ)2
+in any-and-all the various ways of writing it.
+2       THE DESCRIPTIVE GEOMETRY OF DATA                                               13
+
+
+
+In an obvious way, the standard deviation, (X), in measuring how far a
+given random variable deviates from being its own closest constant, EX,
+measures exactly what we mean by the amount of variability in that ran-
+dom variable.
+
+        It is easy to verify that the amount of variability (in the above sense)
+        is completely una↵ected by relocation (i.e. moving the variable to a new
+        location by merely adding some constant, a, to it):
+
+
+                                  (a+X) =          (X).                              (29)
+
+
+        On the other hand, simply rescale the variable by some scale factor, b,
+        and we find that the variability is appropriately rescaled in exactly the
+        same degree:3
+
+                                  (bX) = |b| (X).                                    (30)
+
+
+        And, of course, from Markov’s Equality, we have the fundamental reduc-
+        tion that if the variability is zero, then the random variable is not actu-
+        ally random at all
+
+
+                          (X) = 0 , E(X EX)2 = 0
+                                                                                     (31)
+                                                wP 1
+                                       , X       = EX.
+
+
+
+We define centred versions of the various random variables X, Y, . . . as
+Ẋ = X EX, Ẏ = Y EY, . . . — centred X, centred Y , etc. It
+should be obvious that the expected value of any centred random variable is
+automatically zero: E Ẋ = E Ẏ = · · · = 0.
+
+
+    3
+    Just as one ought to expect (actually, ought to require) of something that is designed
+to measure an amplitude — in this case the amplitude of variability that we have called
+the standard deviation.
+2       THE DESCRIPTIVE GEOMETRY OF DATA                                                14
+
+
+Thus we have it that the standard deviation of any random variable X
+is simply the length of the centered X:
+                                   p          p
+            (X) = kẊk =             E Ẋ 2 =  E(X EX)2 .        (32)
+
+And even though it is, perhaps, quite obvious, we should also note that the
+variability in the centred variable is exactly the same as in its original:
+
+                                    (Ẋ) =       (X).                                 (33)
+
+That, of course, must be so since the centring operation is merely a matter
+of a special choice of relocation, as provided by (29) in general.
+
+
+
+
+So, mean and standard deviation are two fundamental numerical charac-
+teristics of any random variable in L2 . They give an idea, respectively, of
+the basic location and general scale of that variable4 . However, owing sim-
+ply to the square-root operation involved in the very definition of standard
+deviation — an entirely unavoidable square-root, mind you, which, by the
+theorem of pythagorus, is intrinsic to the very meaning of distance and
+therefore at the core of our particular measure of distributional width — it
+has become common to present this measure of variational width/amplitude
+in its square, merely in order to avoid the slight mathematical aggravation
+of working directly with that pesky little operation. And this is the sin-
+gular rational at all for why one even bothers to define what is, ever-after,
+referred to as the variance 5 of a random variable. (It, itself, is not even an
+idea. It, one may not at all unfairly say, is merely the square of an idea.)
+So, let us understand very clearly at the outset, that it is only for the sake
+of convenience and mathematical tractability that we have the following.
+
+
+
+
+    4
+     Presently, we shall consider the entirely parallel notion(s) of medians and ranges, as
+these apply universally to include all R-valued random variables — are not limited to L2 .
+   5
+     It is a bit odd that in the literature of our subject one hears far more reference to
+variance than to the standard deviation from which it derives — of which it is merely an
+artifact; but this very preponderance of reference, itself, may be chocked up to habit —
+an artifactual tendency of the literature.
+2   THE DESCRIPTIVE GEOMETRY OF DATA                                                     15
+
+
+One defines the variance of X to be the square of the standard deviation
+— equivalently: the square of the distance6 between X and its own mean
+value:
+                      def n                or
+            varX        =          (X)2    =    E Ẋ 2       =   E(X EX)2 .            (34)
+
+
+But then, synonymously and obversely, we may otherwise appreciate the
+standard deviation to be got directly as the square root of this variance
+                                   p
+                         (X) =       varX.                              (35)
+
+
+In this way of expressing things, we have, of course, equivalent to (31) —
+and, again, by Markov’s Equality — that
+                                                              wP 1
+                 varX          0      w. eq.       i↵        X = EX                    (36)
+
+
+while obviously we may also restate equations (29) & (30) simply by squaring
+and combining to say that, for any constants a & b
+
+                            var(a + bX) = b2 varX.                                     (37)
+
+
+By direct substitution of t = EX in (27), one may certainly have the brute
+computational fact as well that
+
+                              varX = EX 2                (EX)2                         (38)
+
+
+but which, itself, may be usefully understood to imply yet another version
+of (31), (36)7
+                                                                 wP 1
+              (EX)2  EX 2                w. eq.        i↵    X = EX.                  (39)
+
+
+
+   6
+     Someone asks you how far it is from Toronto to Barrie and with almost no hesitation
+you reply, “Why ... It’s almost exactly 10,000 kilometers squared !”
+   7
+     An expression some readers may recognize as a very special case of the so-called Jensen
+inequality — about which more later, Appdx.10.
+2   THE DESCRIPTIVE GEOMETRY OF DATA                                        16
+
+
+
+
+So, standard deviation measures amplitude of variability and variance mea-
+sures its square. We will maintain this duality of expression throughout,
+relying on the reader merely to remain cognizant.
+
+
+
+
+2.2   covariance & correlation
+With standard deviation to measure variability, suppose we consider the
+variability in the sum of two random variables, X+Y . It is natural to ask
+if the variability in such a sum is either more or less than the variability in
+either one of them separately. The answer, it turns out (not very surpris-
+ingly), depends very much on how the two are related:
+
+    For instance, if Y = X, then X+Y = 0 and, with (0) = 0, there is
+    obviously no variability at all in the sum. On the other hand, if Y = X,
+    then X+Y = 2X and so the variability in the sum is, (2X) = 2 (X),
+    exactly twice that in the individual contribution.
+
+More generally, the triangle inequality applied to the centred variables gives
+
+              (X+Y ) = kẊ+ Ẏ k
+                         kẊk+kẎ k =         (X)+ (Y )                  (40)
+                          wP 1
+            w. eq. i↵   Y = ↵+ X           unique ↵ 2 R &     >0
+
+
+The exact standard deviation of the sum may, of course, be computed ex-
+plicitly — this perhaps, most easily done in the square, as the variance of
+the sum:
+
+           var(X+Y )     =       (X+Y )2
+                        = kẊ+ Ẏ k2
+                        = kẊk2 +2E Ẋ Ẏ +kẎ k2                         (41)
+                                    2                   2
+                        =        (X) +2E Ẋ Ẏ + (Y )
+                        = varX +2E(X EX)(Y EY )+var Y.
+2   THE DESCRIPTIVE GEOMETRY OF DATA                                                    17
+
+
+We see immediately how it is that the variance of a sum is not necessarily
+precisely the sum of the variances; variance is not a linear operation; it is,
+rather, a quadratic operation.
+
+The cross product term that arises in the above quadratic expansion of
+the variance of a sum is referred to as the covariance of the two variables
+in question. It is, of course, simply the inner product of the two centred
+variables:
+                            def n                  or
+             cov(X, Y )       =      E Ẋ Ẏ       = E(X EX)(Y EY ).                   (42)
+
+But, immediately ones sees ‘inner product’ one should just as immediately
+think ‘angle’.
+
+In this connection, then, we define the correlation/correlation coefficient of
+X & Y simply to be the cosine of the angle between the centred X & Y :
+
+                        def n                      or  E Ẋ Ẏ
+             ⇢(X, Y )     =         cos ✓(Ẋ, Ẏ ) = p                                 (43)
+                                                      E Ẋ 2 E Ẏ 2
+                             cov(X, Y )                         cov(X, Y )
+                          = p                            =                 .
+                              varXvarY                           (X) (Y )
+
+And, here, we need only quote cauchy-schwarz to begin to understand the
+essential merit in these new objects, covariance and correlation:
+
+                              p                                      wP 1
+         |cov(X, Y )|            varXvarY              w.eq. i↵ Y = ↵+ X              (44)
+
+
+         or, equivalently
+
+                                                         wP 1
+         |⇢(X, Y )|  1              w.eq. i↵ Y = ↵+ X.                                (45)
+
+
+                                    ⇤          ⇤        ⇤
+
+
+As a relatively minor exercise, one may easily verify that (for                6= 0)
+
+
+                ⇢(↵ + X, Y ) = (| |/ )⇢(X, Y )                                         (46)
+2   THE DESCRIPTIVE GEOMETRY OF DATA                                           18
+
+
+                               ⇤        ⇤     ⇤
+
+
+In any case, in either way of saying it, (44) or (45), it is clear that covariance
+and/or correlation contain(s) important information about the potential
+linear dependence of random variables. In fact, we can be a great deal more
+incisive in expressing this:
+
+2.3       the simple linear model
+
+Proposition 2.3.1.      the simple linear model
+
+           Given any two R-valued rand. variables, X & Y, in L2
+           there exist unique scalars ↵ & and a unique random variable Z
+           such that
+                     Y =↵+ X +Z          w. EZ = 0 = ⇢(Z, X).
+
+proof :
+
+    For every pair of constants, s & t, we may construct the random variable
+    Z = Y s tX, allowing that, in reverse, we may then re-write
+
+                               Y = s + tX + Z.
+
+    The ‘di↵erence’ variable depends, of course, on both s and t and may
+    be so denoted as Z = Zst . But we want to find the specific values s = ↵
+    and t =     for which the two stated (orthogonality) conditions hold.
+    Accordingly, then, we find
+
+                                   EY       = ↵ + EX
+                           cov(X, Y ) =           varX
+
+    which — provided varX > 0, so that X is not merely a constant —
+    supplies the required unique solution for ↵, & (therefore) Z. ~
+
+
+                               ⇤        ⇤     ⇤
+
+
+    The simple di↵erence variable, Z = Y ↵      X, is known in the litera-
+    ture on the subject by various names. For some, it is called the ‘error’
+2    THE DESCRIPTIVE GEOMETRY OF DATA                                            19
+
+
+     term, meant to suggest perhaps that the relationship between X and Y
+     really is linear — all but for some sort of random ‘mistake’ in the mea-
+     surement process. For others, it is called a random perturbation, some-
+     thing that takes an otherwise perfect linear relationship and somehow
+     contaminates it. For now though, perhaps, it might be best for us to
+     refer to it as exactly what it actually is: a simple di↵erence variable,
+     or (somewhat more technically) a residual variable — in other words,
+     exactly what is left over after expressing the linear dependence of the
+     variables. To start with, we need to understand that ↵ + X is precisely
+     that linear expression in X that is the very (i.e. very) closest to Y :
+
+
+
+
+    Figure 1: Simple linear model: Y = ↵ + X + Z, w. EZ = 0 = ⇢(X, Z)
+
+
+Corollary 2.3.1.1.       kY    ↵       Xk  kY      s     tXk       8 s, t 2 R
+                                   w. eq. i↵ s = ↵, t = .
+proof :
+          kY   s   tXk2 = kY       ↵    X + (↵    s) + (         t)Xk2
+
+
+                        = kY       ↵    Xk2 + k(↵       s) + (     t)Xk2 .   ~
+2       THE DESCRIPTIVE GEOMETRY OF DATA                                                20
+
+
+
+A determined reader may, in fact, have the converse to this corollary8 be-
+cause if we start from the assumption that
+
+                kY     ↵        Xk  kY         s     tXk      8 s, t 2 R
+
+then, by squaring both sides and expanding the right hand side around
+↵ + X, and then shifting things around a bit, we obtain
+
+                2E(Y        ↵       X) (↵    s) + (      t)X
+
+                                    k(↵    s) + (       t)Xk2       8 s, t 2 R.
+
+But, replace ↵       s by ±s,        t by ±t and substitute Y         ↵      X = Z and
+we have
+
+                 ±2E(s + tX)Z  ks + tXk2                    8 s, t 2 R.
+
+But, again, replace s by 2s/n & t by 2t/n and make appropriate cancellations
+to have
+
+          |E(s + tX)Z|  ks + tXk2 /n                 8 s, t 2 R & n 2 N.
+
+And now by merely taking the limit as n ! 1 we conclude that the left
+hand side must therefore, in fact, have been zero all the while, for every
+value of s and t:
+
+                           E(s + tX)Z = 0             8 s, t 2 R.
+
+So, on the utterly trivial substitutions (s, t) = (1, 0) & (s, t) = (0, 1) we
+arrive back to the elementary conditions of orthogonality from which we
+started
+
+            EZ = 0 = EZX = cov(Z, X) = ⇢(Z, X).                                    ~
+
+
+
+    8
+      Actually the argument presented here is very standard, but it might be found a great
+deal easier to follow when we consider the abstract general linear model a few sections
+from now. In the present situation the specific details of the simple linear model may tend
+to mask the main idea, making the whole thing seem not so very simple — too many ↵’s,
+  ’s, s’s and t’s. But it is.
+2   THE DESCRIPTIVE GEOMETRY OF DATA                                       21
+
+
+
+It remains only for us finally to express exactly how the correlation ⇢(X, Y )
+may be understood directly to measure the degree of linear dependence be-
+tween the variables X & Y . The answer is pure geometry:
+
+
+the perfect geometry of correlation:
+
+From the simple linear model
+
+             Y   = ↵+ X +Z            w.   EZ = 0 = ⇢(Z, X)              (47)
+
+the correlation between Y and its closest linear expression ↵ + X is got
+simply by taking advantage of the orthogonality conditions
+
+            cov(↵ + X, Y ) = var(↵ + X)                0                 (48)
+
+And thus, letting ⌫ = EY = E(↵+ X), we have explicitly that (all but for
+sign, Eqn.(46), p.17)
+
+
+                    |⇢(X, Y )| = ⇢(↵ + X, Y )
+                                   (↵ + X)
+                               =                                         (49)
+                                      (Y )
+                                 k↵ + X ⌫k
+                               =
+                                     kY ⌫k
+
+by which it is made clear that |⇢(X, Y )| does, indeed, measure exactly the
+proportion of variability in Y that is attributable to its linear dependence
+on X.
+
+
+On the same orthogonality conditions, we adduce two fundamental quadratic
+(pythagorian) expressions
+
+
+
+                      kY k2 = k↵ + Xk2 + kZk2                            (50)
+
+                      varY   = var(↵ + X) + varZ                         (51)
+2   THE DESCRIPTIVE GEOMETRY OF DATA                                         22
+
+
+but, the second of these may be reduced as
+
+                           varY   = var(↵ + X) + varZ
+                                          2
+                                  =           varX + varZ                   (52)
+
+                                  = ⇢(X, Y )2 varY + varZ
+
+to show that
+
+                    kZk2     =    varZ =           1   ⇢(X, Y )2 varY       (53)
+
+which, on taking the square root, may be understood more directly, and
+quite literally, to give the relative distance between Y and its closest linear
+expression in X, ↵ + X, versus Y and its closest constant, ⌫ = EY :
+
+
+               kY     ↵   Xk                    (Z)        p
+                                      =                =    1   ⇢(X, Y )2   (54)
+                    kY ⌫k                       (Y )
+
+Thus (49) and (54), each in its way, express exactly how it is that correlation
+measures the linear dependence between two variables.
+
+
+It is, nevertheless, important to make some commentary here because there
+are (at least) two issues that really ought to be considered in the interpre-
+tation of Eqns.(49) & (54):
+     (1) While it is fair to think that equation (49) tells us directly (either
+on a scale from 0 to 1 or as a percentage from 0 to 100%) the ‘amount’ of
+the linear contribution of the variable X to the variable Y — which in a
+very specific way of course it does, since the equation is certainly impeccably
+correct — it is very important to bear in mind that the only reason that
+it works is because of the structural equation, Prop.2.3.1./Eqn.(47), that
+expresses an explicit connection between ↵ + X and Y . There are, after
+all, thousands upon thousands of variables that could easily have a ratio of
+standard deviation to that of Y just as high as, or even higher than, the
+ratio (↵ + X)/ (Y ) of eqn. (49), but that bear no conceivable connection
+whatsoever, physical or otherwise, to the variable Y , and so the ratio, in
+and of itself, would be meaningless except for the structural connection.
+     (2) The other problem (if it is a problem) is simply that the ratio in
+2   THE DESCRIPTIVE GEOMETRY OF DATA                                         23
+
+
+question, no matter what else it may be, is merely a ratio of standard de-
+viations and so all it really tells us is whether or not ↵ + X is almost as
+close as Y itself is to Y ’s own mean value. Some may find this to be less
+than what they had hoped for in what purports to be a direct measure of
+linear dependence.
+     So for these two reasons we may very well finally prefer Eqn.(54) simply
+because in Eqn.(54) the actual physical connection between ↵ + X and Y
+(the structural relation itself) is built right into the actual expression where
+it is recorded as the literal distance (Z) = kY ↵            Xk.
+2   THE DESCRIPTIVE GEOMETRY OF DATA                                        24
+
+
+2.4   A simple example
+How d’yuh like them apples!
+
+Understanding the simple relationship between one experimental variable
+and another is often the primary objective of a given study. Simply plot-
+ting a sample of the joint outcomes for such variables may indeed suggest
+a simple dependence of one on the other — linear, quadratic or perhaps
+something altogether fancier. To keep things simple, suppose that we have
+data from two variables X and Y and that we wish to consider the degree
+to which they may reasonably be portrayed as lying along a straight line of
+the general form y = ↵ + x:
+
+For example, it is generally thought that the percentage of apples attacked
+by worms is greater on trees bearing a smaller crop.
+
+        Let X = size of crop (measured in baskets-full)
+        and Y = percentage of wormy fruit.
+
+
+           X:     8,   6, 11, 22, 14, 17, 18, 24, 19, 23, 26, 40
+           Y : 59, 58, 56, 53, 50, 45, 43, 42, 39, 38, 30, 27
+
+
+If we plot these data in the x-y plane (Fig. 2), we see immediately the ten-
+dency of this particular sample of 12 points to fall roughly along a straight
+line. The basic ‘roughness’ of the plot is not surprising; this is the hallmark
+of randomness.
+
+Accordingly, we consider the di↵erence Z = Y (↵ + X), where the vari-
+able Z may thus be thought to account for the (random) failure of the data
+to lie perfectly on the indicated line. But, if we then simply rewrite this as
+Y = ↵ + X + Z, then Z may be interpreted as a kind of random error term
+that contaminates an otherwise perfect linear relationship.
+
+On the structural assumption that EZ = 0 = ⇢(X, Z), Prop.2.3.1 and its
+corollary provide that we obtain unique values for the abscissa, ↵, and the
+slope, , for which the standard deviation, = (Z), of the residual /‘error’,
+Z = Y      (↵ + X), is minimized — in other words, the so-called ‘error’,
+Z, is maximally controlled. But in that case, natural /empirical estimates
+of the parameters, ↵, & , are the easily got analogues, ↵  b, b & b, of the
+2   THE DESCRIPTIVE GEOMETRY OF DATA                                          25
+
+
+
+
+              Figure 2: percent of wormy fruit vs. size of crop
+
+empirical distribution (in this case for n = 12):
+
+             b = cov(X,             ⌃n1 (xi x)(yi y)
+                  c         v arX =
+                        Y )/d
+                                        ⌃n1 (xi x)2
+             b = EY
+             ↵   b     bEX
+                         b     = y bx
+For the given data:
+              ⌃xi = 228       ⌃x2i = 5256         ⌃x2i        12x2 = 924
+               x = 19       ⌃x2i /12 = 438         bx2 = 77
+
+
+              ⌃yi = 540       ⌃yi2 = 25522          ⌃yi2       12y 2 = 1222
+               y = 45       ⌃yi2 /12 = 2126.83           by2 = 101.83
+
+
+                      ⌃xi yi = 9324      ⌃xi yi    12xy =        936
+                      ⌃xi yi /12 = 777      bxy =        78
+2   THE DESCRIPTIVE GEOMETRY OF DATA                                         26
+
+
+and thus
+            b = bxy /b2 =         1.01     &      b = 64.25.
+                                                  ↵
+                      x
+
+On the basis of equation (49), we obtain, as well, an empirical estimate for
+the proportion of the variability in Y that is attributable to ↵ + X:
+
+                                c
+                              cov(X, Y)       |bxy |
+                      ⇢b =   p             = p
+                               vd
+                                arX vd
+                                     arY       bx by
+                                  78
+                         =   p              = .88
+                               77 ⇥ 101.83
+
+Clearly the linear expression ↵ + X accounts for the majority of the vari-
+ation in Y — one may even say the vast majority of it.
+
+On the other hand, as per Eqn.(54), we find that
+                           p
+                             1 ⇢b2 = .47
+
+which is certainly to say that the ‘error’ variable Z is somewhat less than
+half as variable (i.e. 47% as much) as was Y :
+                            p
+                  b(Y ) =     101.83 = 10.1 ⇡ kY EY k
+           while   b(Z) = .47 ⇥ 10.1 = 4.8 ⇡ kY             ↵     Xk
+
+but, in a much more directly geometric understanding the very same thing of
+course, Eqn.(54) explicitly says: Y is 53% closer to the linear approximation
+↵ + X than it is to its own mean value ⌫.
+
+
+
+
+So, in summary, the simple linear model of Prop.2.3.1./Eqn (47) provides a
+(linear) representation for any given variable, Y , in terms of any particular
+other, X, while Corollary 2.3.1.1. tells us that that representation is uniquely
+optimal in the sense of euclidean distance. Equation (49) then supplies a
+direct numerical measure of just how well this model actually manages to
+express the dependence of Y on X, while equation (54) tells us just how much
+of an improvement the linear representation is over the primitive closest
+constant model.
+3   MULTIVARIATE GENERALIZATIONS                                                   27
+
+
+3    multivariate generalizations
+The multivariate generalization of means, variances, covariances and so
+forth may be almost trivially dispensed with by saying once and for all that,
+by definition, the expected value of any multiply indexed array, X = (Xt , t 2
+T ), of R-valued random variables is exactly and simply the corresponding
+multiply indexed array of univariate expected values:
+                             defn
+                        EX     =        (EXt , t 2 T ).                           (55)
+
+
+And, thus, for instance, the expected value of a random vector, X, in Rn is,
+simply by this definition, got as
+                 0      1         0       1        0     1
+                    X1              EX1               µ1
+                 B      C defn B          C say B        C
+    EX = E @ ... A = @ ... A = @ ... A = µ                             (56)
+                    Xn                      EXn             µn
+
+or, in the case of a random matrix, X, in Rm
+                                           n
+                    0                 1
+                       X11 · · · X1n
+                    B ..    ..     .. C = or
+        EX = E @ .             .    . A      E X 1, . . . , X n
+                        Xm1 · · · Xmn
+                                                                                  (57)
+                    0                              1
+                        EX11       · · · EX1n
+             defn   B    ..        ..      .. C or
+              =     @     .            .    . A =         EX 1 , . . . , EX n .
+                        EXm1       · · · EXmn
+
+The same will be thus with the so-called tensors: triply indexed arrays,
+quadruply indexed arrays, and so on, and so on.
+
+But there is more going on here than immediately meets the eye; consider
+in greater detail the situation with random vectors for instance:
+
+For any X, random in Rn , take linear combinations s0 X = ⌃ni=1 si Xi and
+t0 X = ⌃ni=1 ti Xi in R1 , for various s, t 2 Rn , and consider their covariance
+                             n      n
+       cov(s0X, t0X) =       ⌃ ⌃ si tj cov(Xi , Xj )
+                             i=1 j=1
+                              n n
+                         =   ⌃ ⌃ si tj ij = s0 ⌃ t             8 s, t 2 Rn        (58)
+                             i=1 j=1
+3   MULTIVARIATE GENERALIZATIONS                                                                28
+
+
+which is quite evidently a simple quadratic form in s and t with, what is
+referred to as, the variance/covariance matrix of X given by
+                                    0                 1
+                                         11 · · · 1n
+                                    B              .. C
+         varX = ⌃ = ⌃X = @ ...               ..
+                        or
+                                                .   . A
+                                                    n1    ···       nn
+                                                                                               (59)
+                              0                                                   1
+                                        var X1    · · · cov(X1 , Xn )
+                     defn     B            ..     ..          ..      C
+                      =       @             .         .        .      A
+                                    cov(Xn , X1 ) · · ·    var Xn
+
+where, pairwise, we have an obvious symmetry
+
+              ij   = cov(Xi , Xj ) =               ji    8 i, j = 1, . . . , n.                (60)
+
+so that, in purely matrix notation, we may have it a bit more elegantly that
+                      defn
+              varX = E(X                  EX)(X          EX)0 = ⌃.                             (61)
+
+We might notice at this time some elementary computational analogues to
+what we already have in the univariate case. For instance, in the univariate
+                                                                                               defn
+case, we often take computational advantage of the simple fact that varX =
+               but also
+E(X EX)2 = EX 2 (EX)2 . The multivariate analogue can be just
+as useful:
+                             defn
+                   varX      =          E(X       EX)(X         EX)0
+                          but also
+                              =         EXX 0      EXEX 0 .                                    (62)
+                                                                                      linear
+On this it is thus made clear that, for any linear transform, A : Rn ! Rm ,
+multivariate means and variances transform in the semi-obvious way:
+
+                              EAX = AEX = Aµ                                                   (63)
+                                                           0              0
+                    and      varAX = AvarXA = A⌃A
+
+and, in particular, for any linear functional t0 X, any t 2 Rn
+
+                              E t0X = t0EX = t0µ                                               (64)
+                                    0         0                 0
+                   and      var t X = t varXt = t ⌃ t
+3   MULTIVARIATE GENERALIZATIONS                                                 29
+
+
+In any case, the reader can’t help but see now that (58), in fact, defines an
+inner product (pseudo, of course) on Rn with gramian which is exactly this
+variance/covariance matrix, ⌃ = ( ij ):
+                               or
+                        hs, t i = hs, t i⌃ = s0 ⌃ t.                            (65)
+Obviously bilinear and symmetric, the positive-semi-definiteness is got on
+the simple observation that
+          ht, t i = cov(t0X, t0X) = var t0X         0
+            with equality if and only if at least one of the components
+               of X = (X1 , . . . , Xn )0 is a linear function of the others:
+                                            wP 1
+                    i.e. 9 a 6= 0 st a0X = a0µ.
+But, we can go this one better: we can diagonalize: we can write ⌃ = UDU 0
+with U 2 O+ n and D = diag (unique when |⌃| > 0), where        = ( 1, . . . , n)
+consists in the eigenvalues of ⌃ ordered from largest to smallest. And if we
+do this we get a transform, a rotation, of the original variable
+                           Y = U 0X
+such that (1) all the components Y1 , . . . , Yn are uncorrelated, and (2) they
+are graded in the sense that, as i = 1, . . . , n, they contribute less and less
+variation to the entity that collectively they represent (as a vector):
+                                       0                 1
+                                             1        0
+                                       B         ..      C
+                     var Y = D = @                  .    A
+                                             0          n
+
+the most ‘important’, in this regard, being Y1 , the next being Y2 , and so
+on, down to the least, represented in Yn . In the literature these Y1 , . . . , Yn
+are known as the principle components of the original sampling vector X.
+
+For what it is worth, we can certainly appreciate that the variability in linear
+combinations t0 X of X is maximized when u = t/|t| is the first column of
+the orthogonal transform U (cf. A6 : the linear algebra that matters, p.19):
+                      t0 ⌃t             t0Dt
+                  sup    0  =       sup   0
+                  t2Rn t t          t2Rn t t
+
+                               =    sup u0Du =       sup p0
+                                    |u|=1           p01 = 1
+                                                     p 0
+
+                               =     1    = u01 ⌃u1 = varY1
+3   MULTIVARIATE GENERALIZATIONS                                             30
+
+
+and, likewise, minimized when t/|t| is the last column
+
+                               t0 ⌃t
+                       infn          =       n       = u0n ⌃un .
+                      t2R       t0 t
+It is in the sense of these (uncorrelated) principle components that one comes
+to understand how the total variation in a vector-valued random variate, X,
+may be held to be fully comprised in the sum of the individual contribu-
+tions varY1 + varY2 + · · · + varYn = 1 + 2 + · · · + n = tr D = tr ⌃ where
+Y = U 0X is the particular ‘rotation’ such as to reveal this inherent structure.
+
+
+                                  ⇤          ⇤         ⇤
+
+
+Now suppose that we have X random in Rm and Y random in Rn , and
+consider the conjoined /compound vector (some people refer to it as ‘parti-
+tioned’) formed of X and Y stacked one on top of the other
+                        ✓    ◆
+                          X
+                                2 Rm+n                                (66)
+                          Y
+
+This object has, of course, its own inner and outer products with itself
+                    ✓     ◆
+           X 0, Y 0   X
+                              = X 0X + Y 0Y 2 R                          (67)
+                      Y
+
+and
+        ✓       ◆                        ✓                     ◆
+            X       X 0, Y 0                 XX 0 XY 0
+                                  =                                2 Rm+n   (68)
+            Y                                Y X0 Y Y 0               m+n
+
+
+
+Consider now the linear combinations s0 X and t0 Y as well as their connec-
+tion to each other in respect of covariance and correlation.
+                                                 m    n
+                    cov(s0X, t0Y ) =             ⌃ ⌃ si tj cov(Xi , Yj )    (69)
+                                                 i=1 j=1
+
+We see, of course, that this too defines a quadratic form in s and t.
+
+For the distinct advantage of notational brevity, we may then also define
+the obvious generalization of the covariance operation for pairs of vector-
+valued variables:
+3   MULTIVARIATE GENERALIZATIONS                                                             31
+
+
+
+                             defn                                  say
+          cov(X, Y )         =       E(X     EX)(Y        EY )0    = ⌃XY                 (70)
+                                    0                              1
+                                 cov(X1 , Y1 ) · · · cov(X1 , Yn )
+                               B      ..       ..         ..       C
+                             = @       .           .       .       A
+                                 cov(Xm , Y1 ) · · · cov(Xm , Yn )
+
+
+                          but also
+                              =         EXY 0       EXEY 0                               (71)
+for which it is certainly clear that we automatically have
+                             cov(Y , X) = cov(Y , X)0                                    (72)
+and as well, from Eqns.(62, 63), the tidy reductions
+              varX = cov(X, X)                  &     varY = cov(Y , Y ).                (73)
+
+                                                               linear               linear
+And we note here as well, that for, any A : Rm ! Rr and B : Rn ! Rs ,
+this multivariate covariance also, therefore, transforms in the most obvious
+way as
+                      cov(AX, BY ) = Acov(X, Y )B 0                                      (74)
+which, for linear functionals s0X and t0 Y , specializes to
+                       cov(s0X, t0 Y ) = s0cov(X, Y )t.                                  (75)
+
+
+But altogether thus it is that we arrive to an appropriately ‘partitioned’
+version of the variance/covariance matrix for the conjoined vector (66)
+
+          ✓       ◆           ✓                                ◆
+              X                       varX    cov(X, Y )
+    var               =                                                                  (76)
+              Y                     cov(Y, X)   varY
+
+                                    ✓                 ◆   ✓                     ◆
+                      also              XX 0 XY 0             EXEX 0 EXEY 0
+                      =        E                                                         (77)
+                                        Y X0 Y Y 0            EY EX 0 EY EY 0   .
+3   MULTIVARIATE GENERALIZATIONS                                          32
+
+
+
+
+    Now, it turns out to be extraordinarily (almost embarrassingly) easy
+    to generalize the whole idea of the simple linear model. In what follows,
+    instead of a single random variable, X, and its various linear combina-
+    tions, s + tX, we shall simply consider a hypothetical vector space of
+    random variables, W (potentially infinite dimensional), yet with the
+    same possibility of an optimal representation for Y in terms of some
+    ‘best’ W 2 W.
+
+    Within this very straightforward generalization is contained an immense
+    amount of consequence for the entire subject (i.e. probability theory
+    and statistics). So, turn the page :
+4       THE GENERAL LINEAR MODEL                                                   33
+
+
+4        the general linear model
+
+                       borel
+R        = {X:⌦ !R}                   the collection of all R-valued r.v.’s
+L        = { X : E|X| < 1 }           all R-valued r.v.’s w. finite 1st moment
+                         2
+L2 = { X : EX < 1 }                   all R-valued r.v.’s w. finite 2nd moment
+
+                        L2 < L < R
+
+An L2 prediction space is any (sequentially) closed vector sub-space, W < L2 ,
+                                                                       closed
+of random variables that contains the constants: 1 2 W < L2 . And the
+best predictor of Y in W is simply the (unique) element Yb in W that is
+closest9 to it.
+
+
+
+
+Figure 3: Best predictor of Y in W:
+
+                    Yb 2 W st kY        Yb k  kY     Wk 8 W 2 W
+
+
+    9
+        Therefore, such words as “best” and “closest” are purely terminological.
+4   THE GENERAL LINEAR MODEL                                               34
+
+
+The first order of business here is to generalize Corollary 2.3.1.1 p.19, be-
+cause this will be the basic driving force behind almost everything else.
+
+    Recall that the orthogonal complement of W is simply that vector sub-
+    space, W? , of all the random variables that are at right angles to every-
+    thing in W itself :
+
+                   W? = { V 2 L2 | EV W = 0 8 W 2 W } .                   (78)
+
+
+    It is clear that W \ W? = (0) because W 2 W \ W? implies that W
+    must be self-orthogonal, which then simply means that EW 2 = 0 which
+                             wP 1
+    is the same as to say W = 0.
+
+
+Definition 4.0.1. orthogonal projection
+    The orthogonal projection of Y on W — denoted Yb = op(Y |W) — is the
+    (wP 1-unique) random variable Yb
+             st
+                     Yb 2 W & Y Yb 2 W? .
+
+
+    We see that Yb is uniquely determined because, if there were two, possi-
+    bly di↵erent, W1 , W2 2 W with Y W1 , Y W2 2 W? then it would
+                                                        wP 1
+    follow that W1 W2 2 W \ W? and hence that W1 = W2 .
+
+    It should be clear that this creates a map, say P , from L2 onto the
+    vector sub-space W (modulo wP1-equivalence, of course):
+
+                         P : L2 ! W
+                              Y 7 ! Yb
+                        by                                                (79)
+                             P Y = Yb = op(Y |W).
+
+
+    And, furthermore, it should be just as clear that P is wP 1-linear,
+     wP 1-idempotent & self-adjoint: (easy exercises)
+                                wP 1
+        linear :   P (aX +bY ) = aP X +bP Y        8 X, Y 2 L2
+                              wP 1
+        idempotent:     PW = W 8 W 2 W
+        self-adjoint:   hP X, Y i = hP X, P Y i = hX, P Y i   8 X, Y 2 L2 .
+4   THE GENERAL LINEAR MODEL                                                  35
+
+
+    We also see, of course, the almost trivial fact that, just because 1 2 W
+
+                                     E Yb = EY.                             (80)
+
+
+    But the reader should also notice that once we have the orthogonal pro-
+    jection, P , onto W we will then automatically have the complementary
+    orthogonal projection, Q = I P , onto the orthogonal complement W? :
+
+                             Q : L 2 ! W?
+                                     Y 7 ! Y Yb
+                            by                                              (81)
+                                 QY = Y P Y = Y Yb .
+
+
+    In any case, we ultimately arrive to the famous result that, just exactly
+    as the geometry of figure 3. above would suggest, orthogonal projection
+    is perfectly identical to minimum distance estimation — the grand gen-
+    eralization of corollary 2.3.1.1, p.20: (Yet look how much easier to verify!)
+
+
+Proposition 4.0.1. orthogonal projection & minimum distance
+
+            Yb = op(Y |W)        ,   Yb 2 W st kY Yb k = inf kY W k
+                                                         W 2W
+
+proof :
+
+    ()) : kY W k2 = kY Yb k2 + kYb W k2                ~
+
+
+    (() : kY W k2 = kY Yb k2 + 2E(Y Yb )(Yb W ) + kYb W k2
+            and thus we have
+                2E(Y Yb )(Yb W )  kYb W k2             8W 2W
+            which, merely because W is a vect. sp., allows the substitution
+            Yb W ! ±2W/n so that
+              ±E(Y Yb )W  kW k2 /n               8 W 2 W, n 2 N
+            or, equivalently
+               |E(Y Yb )W |  kW k2 /n            8 W 2 W, n 2 N
+            and, therefore finally, by taking the limit as n ! 1
+               E(Y Yb )W = 0            8W 2W            ~
+4   THE GENERAL LINEAR MODEL                                                  36
+
+
+
+    And it is simply by this result that we are able to establish the actual
+    existence of the orthogonal projection:
+
+
+Proposition 4.0.2. existence of orthogonal projection in L2
+proof :
+
+    Let          =     inf kY W k2 .
+                      W 2W
+
+    Then, by the very definition of what is an infimum, there will
+    be a sequence Wn , n 2 N, in W with kY Wn k2 # .
+
+    Now, the parallelogram law provides that for any U & V in L2
+
+                     kU V k2 + kU +V k2 = 2 kU k2 + kV k2
+
+    so, with U = Y     Wn and V = Y     Wm , we obtain
+
+     kWn Wm k2 + 4kY         (Wn +Wm )/2k2 = 2 kY            Wn k2 + kY   Wm k2
+
+    which, if m  n, ultimately reveals that Wn , n 2 N is cauchy in the L2
+    metric with
+
+                      kWn Wm k2  4 kY              W m k2      .
+
+    Since L2 is complete as a metric space and W is closed, there will auto-
+    matically exist W0 2 W with kWn W0 k ! 0. It is then easy to verify
+    that W0 = Yb is, indeed, the minimum distance estimator of Y in W. ~
+
+    But a statistician has another way of expressing the relationship between
+    any given random variable, Y , and its orthogonal projection, Yb . In order
+    best to appreciate the numerical/statistical/predictive advantage con-
+    ferred in the orthogonal projection, we arrive to the following algebraic/
+    structural representation.
+
+
+Proposition 4.0.3.       the general linear model
+                                           closed
+            For any Y 2 L2 and 1 2 W < L2
+            there are unique Yb 2 W and Z 2 W?
+            st       Y = Yb + Z    w.   EZ = 0 = ⇢(Z, W ) 8 W 2 W.
+4   THE GENERAL LINEAR MODEL                                                 37
+
+
+proof :
+
+    The reader will quickly see that there is essentially nothing to prove
+    here since it is quite evident that the requirements
+                           EZ = 0 = ⇢(Z, W ) 8 W 2 W
+    are nothing but another way in which, much more simply, to say
+                           Z = Y Yb 2 W?
+    In other words, quite obviously Yb = op(Y |W), and both the existence
+    and the uniqueness are already established. ~
+
+    But, from the statistical point-of-view, there is yet one more way to
+    appreciate the structural connection between Y & Yb :
+
+Proposition 4.0.4. maximum correlated estimator
+       Y = Yb + Z w. Yb 2 W, Z 2 W?
+   , Yb 2 W st ⇢(Yb , Y ) = sup ⇢(W, Y ) w. E(Y Yb ) = 0 = ⇢(Y Yb , Yb )
+                                  W 2W
+proof :
+    ()): First we note that for Yb = op(Y |W) we get
+                       cov(Yb , Y )   cov(Yb , Yb )   (Yb )
+         ⇢(Yb , Y ) =               =               =           0
+                        (Yb ) (Y )     (Yb ) (Y )     (Y )
+        so that it is only a matter of cauchy-schwarz to see that for
+          any other W 2 W we will have
+                         cov(W, Y )   cov(W, Yb )        (Yb )
+           ⇢(W, Y ) =               =             
+                          (W ) (Y )    (W ) (Y )         (Y )
+                          wP 1
+            w.eq. i↵    W = ↵ + Yb unique ↵ 2 R &        > 0. ~
+
+
+    ()): In the converse, if we now suppose Ye 2 W
+         st ⇢(Ye , Y ) = sup ⇢(W, Y ) w. E(Y Ye ) = 0 = ⇢(Y Ye , Yb )
+                           W 2W
+
+                                  (Ye )     (Yb )
+           then   ⇢(Ye , Y ) =          =           )   (Ye ) =   (Yb )
+                                  (Y )      (Y )
+                                   wP 1
+           while, by the above, Ye = ↵ + Yb unique ↵ 2 R &          > 0.
+                                            wP 1
+           whereupon      = 1, ↵ = 0 ) Ye = Yb . ~
+4   THE GENERAL LINEAR MODEL                                               38
+
+
+
+
+    To summarize: we have characterized Yb 2 W in four distinct ways:
+
+         i)    Yb = op(Y |W)
+         ii)   kY Yb k is minimal over W
+        iii)Y = Yb + Z w. EZ = 0 = ⇢(Z, W ) 8 W 2 W
+        iv) ⇢(Yb , Y ) is maximal over W w. E(Y Yb ) = 0 = ⇢(Y Yb , Yb )
+
+
+    while the co-relationship between Y & Yb may properly be appreciated
+    as an expression of pythagorus:
+
+           kY EY k2 = kYb EY k2 + kY Yb k2
+
+                                            kYb EY k       (Yb )
+               with          ⇢(Yb , Y ) =            =
+                                            kY EY k        (Y )
+                        q
+                                               kY Yb k       (Z)
+                  &      1 ⇢(Yb , Y )2 =               =          .
+                                              kY EY k        (Y )
+
+
+
+
+nested sub-spaces:
+
+    As a minor note (but something that can prove useful in the sequel),
+    if V < W and Q is the orthogonal projection onto V, while P is the
+    orthogonal projection onto W, then it is easy to verify [ESP 6.5, p.90]
+                                 wP 1       wP 1
+                             P Q = QP = Q.
+    Details to the reader.
+5        CONDITIONAL EXPECTATION                                                        39
+
+
+5         Conditional Expectation
+5.1         Conditioning in a euclidean environment
+
+In L2 conditional expectation is simply orthogonal projection.
+
+Recall that the geometry of L2 is exactly the euclidean geometry of Rn :
+
+In this connection, for any two random variables X, Y 2 L2 we may consider
+a sample of arbitrary size n 2 N from each, n-tuples x, y 2 Rn , so that, on
+(any version of) the LLN (as say the SLLN ), the euclidean nature of L2
+is expressed through its inner product which, is simply the standard inner
+product of Rn , itself
+                                                wP 1
+                            hX, Y i = EXY        ⇡ x·y/n,
+but
+p reckoned   against the growing length of the 1-vector (for which |1| =
+         p
+  1·1 = n), an inflation factor put there to compensate for the ever-
+expanding universe in respect of the ever-increasing dimension n.
+
+The actual landscape, the topography of both L2 & Rn , is then delineated
+in norms
+                      p      wP 1           p     p
+             kXk = EX 2 ⇡ |x|/|1| = x·x/ n
+and in angles
+                                     EXY         wP 1                   x·y
+                cos ✓(X, Y ) = p                  ⇡ cos ✓(x, y) =             .
+                                    EX 2 EY 2                          |x||y|
+
+In other words, in L2 there is (by this connection) exactly the same under-
+standing of length, angle, shape and structure as there is in Rn ; and we may
+have, thereby, an identical comprehension of objects in either environment,
+L2 or Rn, that might otherwise have been mistaken for mere analogy.
+
+But, in this regard, conditional expectation could not be simpler:
+
+Given an arbitrary distribution (⌦, F, P ) and borel measurable Z : ⌦ ! R
+Definition 5.1.1. ForanyZ in L2 and G < F, the conditional expectation
+             of Z given G, Zb = E(Z | G), is defined to be the wP 1-unique
+             orthogonal projection of Z on L2 (G).10
+    10
+         whence no more than a special instance from the previous section with W = L2 (G).
+5   CONDITIONAL EXPECTATION                                                40
+
+
+And thus, for any Z 2 L2 there are precisely two defining facts for Zb
+
+                i) Zb 2 L2 (G)    &      ii) Z Zb 2 L2 (G)?              (82)
+
+
+Of course, the second fact may be re-worked in various ways, equivalently
+to say
+
+                       Z Zb ? g   8 g 2 L2 (G)                           (83)
+                            b = 0
+                     , E(Z Z)g          8 g 2 L2 (G)                     (84)
+                                b
+                     , EZg = E Zg     8 g 2 L2 (G)                       (85)
+
+which may, in turn, be thoroughly reduced to the level of indicator functions
+                             b G = 0
+                      , E(Z Z)I                  8G2G                    (86)
+                                 b G
+                      , EZIG = E ZI             8 G 2 G.                 (87)
+
+And it also pays to notice that, since, in this section, we start from the
+premise that Z and Zb are both in L2 , we may even weaken the stipulation
+8 g 2 L2 (G), in equations (84) and (85), merely to say 8 g 2 hGi; this is
+simply because, no matter what g in the whole of hGi is utilized, EZg and
+  b will continue to agree, whether finite, infinite or even non-existent; and
+E Zg
+so we can relax (84) and (85) very generally to say
+                             b = 0
+                      , E(Z Z)g                8 g 2 hGi                 (88)
+                                b
+                      , EZg = E Zg             8 g 2 hGi.                (89)
+
+One acquires here, as well, the so-called Theorem of Total Expectation
+
+                       E Zb = EE(Z | G) = EZ                             (90)
+
+which is got immediately on the trivial substitution g = I⌦ = 1 in any of
+equations (83), (84) or (85), and may, therefore, be understood to be no
+more than a minor aspect of the definition itself. We shall see, however,
+(a few paragraphs hence) an alternative (operational) way to define condi-
+tional expectation—in terms of the properties that one might feel it ought
+to have—that features this particular property as a central predicate in the
+very formulation.
+5   CONDITIONAL EXPECTATION                                                  41
+
+
+
+
+              Figure 4:       Zb = E(Z|G) as orthog proj in L2
+
+
+
+
+minimum distance
+
+In any inner product space, minimum distance is the same as
+orthogonal projection.
+
+So the following result merely reiterates Prop.4.0.1 in our particular context;
+but, for clarity of exposition, it is well that we make every such observation
+completely explicit, especially since for us, the measure of distance, properly
+got as the square-root of an expected value
+                                               p
+                     d(X, Y ) = kX Y k =         E(X Y )2
+is commonly re-expressed in the square, a notational device for which the
+reader may not as yet feel perfect accommodation. So, here is the theorem
+of record (which is, of course, really no more than a reiteration of Prop.4.0.1,
+p.35, of the previous section in the particular case where W = L2 (G)):
+
+
+Theorem 5.1.1. conditional expectation & minimum distance
+            For any Z in L2
+            Zb = E(Z | G) ,           b 2 =
+                                  E(Z Z)           inf      E(Z g)2
+                                                 g2L2 (G)
+5   CONDITIONAL EXPECTATION                                                   42
+
+
+    proof :
+
+    ()): Here we need only notice that, because of orthogonality,
+         for any g in L2 (G)
+                                       b 2 + E(Zb g)2
+                         E(Z g)2 = E(Z Z)
+
+              so, of course, then it follows that
+                           b 2  E(Z g)2
+                       E(Z Z)                         8 g 2 L2 (G)
+
+              which clinches the result in this direction.      ~
+
+
+    ((): Now if, conversely, we start from the assumption that
+                           b 2  E(Z g)2
+                       E(Z Z)                         8 g 2 L2 (G)
+
+              then, on expanding the right hand side of this inequality
+              and rearranging, we discover
+                          b Zb g)  E(Zb g)2
+                     2E(Z Z)(                                8 g 2 L2 (G)
+
+              which, because L2 (G) is a vector space, is neither more
+              nor less general than to say
+                              b  Eg 2
+                         2E(Z Z)g                   8 g 2 L2 (G).
+
+              But, ultimately (and on the same grounds),
+              on replacing g by ±2g/n, we adduce
+                       b
+                  |E(Z Z)g|  Eg 2/n          8 g 2 L2 (G) & 8 n 2 N
+
+              and this, in the limit as n goes to 1, reveals the left hand
+              side to be identically 0 as required. ~
+
+One has as well, of course, such obvious extra consequences of orthogonality
+as an automatically guaranteed reduction in norm and standard deviation
+                          b  kZk &
+                         kZk                   b 
+                                              (Z)        (Z)                 (91)
+
+and we shall develop further on such matters presently.
+
+For the moment, however, let us attend to the more serious matter of actual
+5   CONDITIONAL EXPECTATION                                                  43
+
+
+existence for this object Zb — that there actually is something about which
+even to pursue additional study. (Prop.4.0.2, p.36)
+
+
+Existence
+
+Take the (square) minimum distance
+                        2
+                            =      inf      E(Z g)2
+                                 g2L2 (G)
+
+and choose any sequence gn , n 2 N , in L2 (G) such that
+                     E(Z        gn )2 #      2    as n ! 1.
+This sequence, it turns out, is cauchy, and here’s why.
+
+Recall (or otherwise quickly verify) the parallelogram law
+
+                  kU V k2 + kU +V k2 = 2(kU k2+kV k2 )
+
+where U and V denote arbitrary random variables in L2 .
+
+If we then make the simple substitutions
+
+                    U = Z gm                 &    V = Z gn
+
+we find directly that
+
+        kgm gn k2 + k2Z (gm +gn )k2 = 2 kZ gm k2 +kZ gn k2
+
+which (on taking m  n) may be re-developed to say
+
+            kgm gn k2 + 4kZ (gm +gn )/2k2                4kZ gm k2 .
+
+But, as L2 (G) is, indeed, a vector space (so that g = (gm+ gn )/2 is definitely
+one of its elements), and as 2 represents the very minimum (squared)
+distance of any such g from Z, we may further proceed from this to say
+
+                    kgm gn k2               4 kZ gm k2    2
+                                                               .
+
+So the sequence certainly is cauchy. But now, since L2 (G) is complete as an
+inner product space (in other words, a Hilbert space), there will automati-
+                                       b right there inside L2 (G); to wit
+cally exist a (wP 1-unique) limit, say Z,
+                                       b 2 ! 0
+                                  E(gn Z)
+5   CONDITIONAL EXPECTATION                                               44
+
+
+and it follows immediately (using cauchy-schwarz ) that also
+                                      b ! 0
+                          E(Z gn )(gn Z)
+
+and, thus — as a minor exercise involving simple expansion about gn —
+that, ultimately, we have an exact equality
+                                 b 2 =
+                             E(Z Z)           2
+
+
+                                     b thus obtained, satisfies exactly the
+so that (in light of Theorem 5.1.1) Z,
+two requirements of being the desired object: and therefore it is. ~
+
+
+
+
+Now clearly almost anything that may be said about orthogonal projection
+in general — minimum distance, maximum correlation, and so forth — will
+automatically apply directly to any special instance. [ref. summary, p.38]
+
+But suppose that in the particular case of conditional expectation we re-
+consider the whole enterprise from an altogether di↵erent point of view —
+an operational point of view; suppose that here, very much as ultimately
+we had done with ‘ordinary’ expectation, we now take the somewhat loftier
+view of conditional expectation as a functional to be applied on a certain
+prescribed domain of random variable space (in this case L2 ). Consider first
+some of the more obvious elementary properties (as on pp.34, 35 & 37 of
+the previous section). There are no real surprises:
+5   CONDITIONAL EXPECTATION                                                        45
+
+
+5.2     Elementary properties
+
+In regarding the assignment of conditional expectation as a transformation
+acting on L2 we may write (modulo-wP 1, of course)
+
+                            E( · | G) : L2             !       L2 (G)
+                                                Z 7 !          Zb
+
+by which we have immediately that it is
+                          wP 1
+    (0) normed :      gb = g
+
+                   Z\
+                       wP 1                                         c wP 1
+    (1) linear :              c
+                    +W = Zb + W                        &            gZ = g Zb
+                                 wP 1                               wP 1
+    (2) non-negative:       Z           0        )             Zb          0
+                                 wP 1                          wP 1
+    (3) continuous:       Zn ! Z                 )         Zbn ! Zb
+
+
+Properties (0) and (1) are so very easy to verify as almost not to bear
+the bother, while, for (2) it is helpful to have the following working tool:
+
+                          wP 1
+Lemma 5.2.1.          Z          0      ,       Ef Z       0        8 f 2 hFi+
+    The proof of this lemma is trivial, of course, in the forward direction,
+    while, in reverse, one need only appreciate that, with f = I(Z  0),
+    one has immediately that EZ is both non-negative and non-positive
+    and therefore identically 0, so that (by Markov’s equality) we will have
+        wP 1
+    Z    = 0 and, thereby, take the result.                         ~
+
+Thus, to secure (2) one need only observe that
+
+                   Eg Zb = EgZ              0     8 g 2 hGi+ .                 ~
+
+For (3) we need but consider the case of non-negative increasing sequences
+                                                  wP 1
+                                     0  Zn          "     Z
+
+for which (on the strength of (1) & (2)) the conditional sequence, Zbn , n 2 N,
+will also be non-negative and increasing (at least in the wP 1 sense). We
+5   CONDITIONAL EXPECTATION                                                          46
+
+
+then simply take Zb to be the (wP 1-finite) limit of this conditional sequence,
+after which, we merely verify that Z,b so-constructed, does, indeed, satisfy
+the requirements of being E(Z|G). But this amounts to an easy double
+application of the monotone convergence theorem (MCT )
+
+                        EgZn       "   EgZ           8 g 2 hGi+
+                        Eg Zbn     "   Eg Zb         8 g 2 hGi+
+
+followed by the observation that (by definition) we have perfect equality
+along the entire course of both sequences
+
+                          Eg Zbn   =      EgZn         8n2N
+
+and, thus, ultimate equality for their limits
+
+                     Eg Zb     =   EgZ         8 g 2 hGi+ .       ~
+
+
+
+Now the four particular properties (0)-(3) obviously represent little more
+than an elaborated form of essentially identical properties enjoyed by the
+(original) expectation operator. It is clear, in fact, that most anything we
+have said, or ever could have said, about conditional E is inherited directly
+from (ordinary) E, itself. So exactly what is actually essential about all
+this ought, perhaps, better to be understood. It turns out, in fact, that
+one might just as well have chosen, in the first place, to have characterized
+the conditional operator on the deceptively simple basis of only two of its
+elementary properties:
+
+For any operator, E( · | G) : L2       ! L2 (G), define (OP ), (E ) and (T )
+
+orthogonality (OP ):         Z E(Z | G)    ?     g    8 Z 2 L2    &   8 g 2 L2 (G)
+                                   wP 1
+equivariance (E ):     E(gZ | G) = gE(Z | G)            8 Z 2 L2      &   8 g 2 L2 (G)
+
+total expectation (T ):         EE(Z | G) = EZ            8 Z 2 L2
+
+The main point of all this here is that, in L2 , rather than representing
+it as orthogonal projection (OP ), conditional expectation could just as well
+have been defined, at the outset, simply to be an equivariant operator (E )
+that enjoys the law of total expectation (T ): (OP ) , (E ) + (T )
+5   CONDITIONAL EXPECTATION                                                 47
+
+
+
+For some this functional characterization may be regarded as the only proper
+justification of the very terminology ‘conditional’, even if for others the en-
+tire matter might seem a bit over-blown and pedantic. But either way, the
+whole thing is easily dispensed with in two lines as follows:
+
+
+                     Eg Zb = EgZ 8 g 2 L2 (G), Z 2 L2
+
+
+                                   ,
+
+                      c wP
+                      gZ
+                           1
+                         = g Zb 8 g 2 L2 (G), Z 2 L2
+                      and E Zb = EZ 8 Z 2 L2 .
+
+
+
+
+5.3   Conditional probability
+
+We need only mention conditional probability as a special case. Probability
+is, of course, no more than expectation applied to indicator functions. Con-
+ditional probability is, likewise, no more than conditional expectation applied
+to indicator functions, in which it is merely a matter of notation to have it
+that, for any X : ⌦ ! X
+                            nota
+           P X 2 A | G) = E IA (X) | G)           8 A 2 A < (X)
+
+with the slightly curious upshot that therefore
+                     wP 1
+       P X 2 A | G) = IA (X)          8 A 2 A st X 1(A) = (X 2 A) 2 G.
+
+
+Obviously in this restriction, the elementary properties (0) through (3) for
+conditional expectation re-present immediately as the usual similar proper-
+ties for conditional probability.
+5   CONDITIONAL EXPECTATION                                                            48
+
+
+5.4    Conditioning in L = L1
+
+In L = L1 conditional expectation is got in the limit.
+
+
+Definition 5.4.1. For any Z in L and G < F, the conditional expectation
+of Z given G, Zb = E(Z | G), is defined to be the wP 1-unique limit of the
+conditional expectation of the truncated variables Zn = ZI(|Z|  n) in L2 .
+                defn                                             defn
+      E(Z | G) =       lim E ZI(|Z|  n) | G            ;     Zb = lim Zbn            (92)
+                       n!1                                              n!1
+
+
+Simply because conditional expectation shares essentially identical elemen-
+tary properties with ordinary expectation, a conditional version of the stan-
+dard result about absolute values,
+
+                           |EZ|            E|Z|
+
+may also be got as an essentially identical application of those very same
+properties:
+
+                                          wP 1                           wP 1
+Proposition 5.4.1.         |E(Z G)|  E(|Z| G)                    ;    b 
+                                                                      |Z|       d
+                                                                                |Z|
+    proof
+
+    We simply apply E( · G) to the trivial system
+
+                               |Z|          Z             |Z|
+
+    to obtain
+                                     wP 1          wP 1
+                             d
+                             |Z|            Zb              d
+                                                              |Z|
+    exactly as required.      ~
+
+
+Corollary 5.4.1.1.           b  E|Z|
+                           E|Z|
+
+
+And thus, for any Z 2 L1 , very like we had in L2 , there are two essential
+defining facts for Zb = E(Z G)
+
+      i) Zb 2 L1 (G)     &                     b
+                                   ii) EZg = E Zg           8 g 2 hGi                 (93)
+5   CONDITIONAL EXPECTATION                                                          49
+
+
+5.5    Conditioning in Lp
+By the very way in which we came to Zb in the first place, it is basic that
+for any Z in L2 so also is Zb in L2 , and that, therefore, on the simple
+orthogonality of Z Zb to Zb we have
+                                            b 2 + E Zb2 ,
+                                 EZ 2 = E(Z Z)                                      (94)
+
+so that, automatically, we enjoy the tidy reduction
+
+                                         E Zb2  EZ 2 .                             (95)
+
+
+Now, except for what we might call the Euclidean aspect of the matter (i.e.
+the geometry of Pythagorus with the algebraic advantages of orthogonality),
+this L2 result pretty much generalizes to Lp for every p 1, but to see this
+requires a somewhat more sophisticated approach.
+
+    First recall property (2), p.45, that
+                                  wP 1                         wP 1
+                              Z          0        )       Zb          0             (96)
+
+    This little result, itself, follows almost instantly on the defining conditions
+        b because (of course) we may simply invoke the characterization
+    for Z,
+                      wP 1
+                  Z          0        ,           EZf     0 8f 2 hFi+
+immediately to see that for Zb we will thereby have
+                               b = EZg
+                             E Zg                  0 8g 2 hGi+ .
+
+
+So here is the result in Lp :
+
+Proposition 5.5.1.            For p          1,       Z 2 Lp      )       Zb 2 Lp
+
+                             and, in fact           b p  E|Z|p .
+                                                  E|Z|
+    Proof :
+
+    For p = 1, of course, we already have the result, so let us take it that
+    p > 1. In that case, consider first, a non-negative Z    0 and, for each
+    n 2 N, define truncated conditionals
+                                         b Zb  n).
+                                   Zbn = ZI(
+5   CONDITIONAL EXPECTATION                                             50
+
+
+    Note that, because p 1 > 0 and because of the defining conditions for
+    b we will then have
+    Z,
+
+                      E Zbnp = E ZbZbnp 1 = EZ Zbnp 1
+
+    and all this will hold for every n 2 N.
+
+    But, considering the fact that
+                             1 p 1
+                               +   = 1,
+                             p   p
+    with
+
+                            q = p/(p       1) > 1
+
+    we may apply Hölder’s Inequalty [Chpt.5, p.35] to obtain
+
+                       E Zbnp  (EZ p )1/p (E Zbnp )1/q
+
+    whereupon we find
+
+                        E Zbnp  EZ p        8n2N
+
+    from which is got (on the MCT ) the desired result for non-negative Z
+
+                               E Zbp  EZ p .
+
+    Finally, we need only observe, that, since (quite obviously)
+
+                               |Z|  Z  |Z|,
+
+    we will have directly
+                                 wP 1      wP 1
+                            |Z|  Zb  d
+                            d          |Z| ,
+
+    which merely says [exactly as in Prop.5.4.1, p.48]
+                                    wP 1
+                                b  d
+                               |Z|  |Z|
+
+    and from which follows the entire thing as advertised
+                                p
+                      b p  Ed
+                    E|Z|     |Z|  E|Z|p .                ~
+5   CONDITIONAL EXPECTATION                                              51
+
+
+5.6   Two observations on ultimate generality
+
+(1) Notation vs ultimate generality.
+
+It turns out that, in the realm of ultimate abstraction, whether one con-
+ditions on a random variable, X, or on a sub- -algebra, G, is yet another
+matter of purely personal taste; neither, it turns out, is more general than
+the other; they are perfectly equivalent:
+
+Let Z denote an arbitrary R-valued random variable with finite first mo-
+ment (finite expected value)
+
+                            Z : ⌦/F ! R/borel.                         (97)
+
+Then, suppose, on the one hand, that one has the random variable
+
+                                X : ⌦/F ! X/A.                         (98)
+
+— it being understood that this specifically entails X 1 (A) < F — while,
+on the other hand, simply take any
+
+                                    G < F.                             (99)
+
+In either case one has a meaning for the conditional expectation. In the
+first instance, Zb = E(Z|X) = bh(X) is the wPX 1-unique function of X
+determined by the requirement(s)
+                       b
+                     E Zh(X) = EZh(X)           8 h 2 hAi             (100)
+
+where hAi denotes the set of all A-measurable R-valued functions on X
+
+                      hAi = { h : X/A ! R/borel }.                    (101)
+
+But, for conditioning on G, Zb = E(Z|G) is simply the wP 1-unique G-
+measurable function on ⌦ satisfying
+                           b = EZg
+                         E Zg                8 g 2 hGi                (102)
+
+Now, in the first case, since
+
+            g 2 hX 1 (A)i       ,   9 h 2 hAi   st g = h(X)
+
+we see that conditioning on X is the same as conditioning on G = X 1 (A).
+5   CONDITIONAL EXPECTATION                                                52
+
+
+But, in the other eventuality (with the appearance of greater generality),
+given any G < F, simply (if perhaps a bit strangely), take X = ⌦ and A = G,
+and define the function X point-wise on ⌦ to ⌦ as non other than the trivial
+identity
+               X : ⌦/F ! ⌦/G          given by X(!) = !,
+immediately to see that conditioning on G = X 1 (G) is precisely all that is
+meant by conditioning on X — neither more nor less.
+
+But, also in the category of ultimate generality, think of the following as
+well.
+
+(2) The faux necessity of a finite first moment.
+
+As we have seen, if E|Z| < 1, then the defining equations (85), (87), (89)
+or (93) will automatically provide that whatever the value of EZ, so too the
+value of E Zb
+                                 E Zb = EZ
+But, when EZ does not even exist, this requirement may be circumvented
+entirely. Equations (85), (87), (89) and/or (93) are not the only way in
+which a conditional expected value might come to exist — can make perfect
+sense. Indeed, even when Z is such that its expected value fails altogether to
+exist, Zb may not only exist, but may turn out to be very well behaved indeed.
+
+Consider the following very simple example:
+                                                     d
+Take any X, Y IID N (0, 1) and form Z = Y /X = Y /|X|. We know, of
+course, that Z is cauchy and, quite as apparently, that its mean value is
+non-existent (as infinity minus infinity). But what about Z conditioned on
+X? Here we find the happy, simple result, so blatantly obvious, that Z given
+X has the regular conditional distribution of a N (0, X 2 ), whereby, imme-
+diately, the conditional expected value of it is most definitely a thing that
+is:
+                             Zb = E(Z|X) = 0.
+Zb is just plain 0 (wP 1, of course), and, in strong contrast to the so-called
+law of total expectation, we have a living example of the fact that sometimes
+it can happen that
+            E Zb = EE(Z|X) = 0         while      EZ = undefined.
+5   CONDITIONAL EXPECTATION                                                 53
+
+
+5.7        statistical independence
+
+Given any distribution (⌦, F, P ) satisfying Defn.1.1.1 in Chpt.5, and recall-
+ing Defn.2.0.1, Chpt.3, p.11, we may now reconsider exactly what it means
+for one random variable, X, to be statistically independent of another, Y ,
+or, more simply, but perfectly equivalently, what it means for one sub- -
+algebra, G < F, to be statistically independent of another, H < F:
+
+Definition 5.7.1.      statistical independence
+      For any X : ⌦/F ! X/A and Y : ⌦/F ! Y/B we say that
+                                                      ?Y
+      X is statistically independent of Y — denoted X ?                   (103)
+      i↵    P X 2A Y 2B = P X 2A        8 A 2 A, B 2 B w. P Y 2 B > 0.
+                        or
+      For any two G, H < F we say that
+                                                      ?H
+      G is statistically independent of H — denoted G ?                   (104)
+      i↵      P (G|H) = P (G)   8 G 2 G, H 2 H w. P (H) > 0.
+
+
+And with only a slight bit of extra attention to the technical limitations
+imposed in the present axiomatic development, but otherwise almost ex-
+actly as in Chpt.3 on p.11, one may almost immediately see how it is that
+X? ?Y , Y ?                                 ?H , H?
+              ? X, or, alternatively, how G ?           ? G.
+
+It should be obvious as well how it is that in terms of -algebras the defini-
+tion for random variables could just as nicely have been expressed:
+                ?Y
+               X?      , X 1(A) ?
+                                ?Y       1
+                                         (B).                             (105)
+There is also the extremely important invariance property under completely
+arbitrary transformation:
+            For any   : X/A ! U/C and        : Y/B ! V/D                  (106)
+                 ?Y
+                X?      )        ? (Y ).
+                             (X) ?
+
+
+But in the present context, perhaps the most interesting fact about statis-
+tical independence lies in its relationship to conditional expectation:
+                                 wP 1
+       ?Y
+      X?         , E g(X) Y       = Eg(X) 8 g 2 hAi w. g(X) 2 L2 .        (107)
+The reader is invited to consider the details in ESP.6.23, p.102 below.
+6        CONDITIONAL DISTRIBUTIONS                                                    54
+
+
+6         Conditional distributions
+6.1         bivariate distributions
+In general, given any distribution/probability space
+
+                                 ! ⇠ (⌦, F, P )
+
+and any two random variables, X and Y , defined on ⌦ to X and ⌦ to Y,
+respectively
+
+                               X : ⌦ ! X and          Y :⌦ !Y
+
+with corresponding events11
+
+                                A <     (X)    and   B <      (Y )
+
+we may obviously consider the bivariate random variable (X, Y ) as a func-
+tion in its own right, mapping directly to the product sample space X⇥Y
+
+                              (X, Y ) : ⌦ ! X⇥Y.                                    (108)
+
+(X, Y ) is said to be jointly distributed on the product space, X⇥Y.
+
+It is easy to see, for instance, that all the product events A⇥B for every
+A 2 A and B 2 B will be in the induced -algebra, (X, Y ), of the jointly
+distributed (X, Y ). To verify this, we need only note that
+
+         (X, Y ) 1 (A⇥B) = { ! | (X (! ), Y (! )) 2 A⇥B } = X 1(A)Y         1
+                                                                             (B) 2 F.
+
+But then, as always, since the inverse image of any -algebra, wrt any func-
+tion, is automatically, itself, a -algebra, it will follow directly that the
+induced -algebra (X, Y ), must, at least, contain the smallest -algebra
+that contains all the product events, A⇥B:
+
+Definition 6.1.1. The product -algebra — denoted A⌦B — also known
+     as the kolmogorov -algebra, is the smallest -algebra that contains
+       all the product events, A⇥B for A 2 A, B 2 B :
+
+                            A⌦B =       A⇥B | A 2 A, B 2 B .                        (109)
+
+    11
+         recall that (X) = { A ⇢ X | X 1(A) 2 F } gives the induced -algebra of X
+                and FX = { C = X 1(A) | A 2 (X) } = X 1 (X) , etc.
+6        CONDITIONAL DISTRIBUTIONS                                                55
+
+
+    And, of course, we will then certainly have it that
+
+                                 A⌦B <        (X, Y ).                       (110)
+
+
+
+                           *    *     *                      *    *      *
+
+
+         It is well to note here that the algebra generated by the product sets
+         (the smallest algebra that contains them) is simply the collection of
+         all finite disjoint unions of them. This is because the product sets,
+         themselves, comprise what is called a semi-algebra:12
+
+                  (1) intersections: A⇥B \ C⇥D = AC⇥BD
+                  (2) complements: (A⇥B)c = Ac⇥B + A⇥B c + Ac⇥B c .
+
+
+
+                           *    *     *                      *    *      *
+
+Now, in respect of the given joint distribution for (X, Y ), suppose that, for
+any determination of the various conditional probabilities, for each A 2 A,
+we let
+                                                   defn
+                    gA (Y ) = P ( X 2 A | Y ) = E( IA (X) | Y ).             (111)
+
+By definition of course, for each such A this provides a borel-measurable
+function
+
+                                    gA : Y ! R.                              (112)
+
+Suppose further that, for each A 2 A and each y 2 Y, we then also adopt
+the (conjugate) notation(s)
+
+                      Py (A) = P ( X 2 A | Y = y ) = gA (y).                 (113)
+
+Then, in general, we should be very cautious: for we ought not automatically
+to presume that, for each fixed y 2 Y, the particular determination
+
+                               Py : A ! R                                    (114)
+                                     A 7 ! Py (A)
+    12
+         For additional discussion refer to the early pages of Chpt.7.
+6        CONDITIONAL DISTRIBUTIONS                                                          56
+
+
+will be an actual probability measure. When it is, it is referred to as a regu-
+lar determination, and we will discuss this in more detail in Subsec6.5 ahead.
+
+But for now at least (and, once again, by the very definition of conditional
+expectation), we will certainly be guaranteed that, for every A⇥B 2 A⌦B
+
+             P(X,Y ) (A⇥B) = EIA (X)IB (Y ) = EgA (Y )IB (Y ).                        (115)
+
+
+In any case, all this begs the obvious question: in a process of reverse en-
+gineering, would it not, in an almost obvious way, be possible to utilize
+Eqns. (111), (113) & (115) to provide a means by which to construct a joint
+distribution? — the obverse process in which we “mix together” a given
+collection of conditional distributions for X | Y = y, y 2 Y, distributed on
+sample space X wrt some given distribution for Y distributed on sample
+space Y, thus to construct/re-construct the joint distribution for (X, Y )?
+This, among other things (and with merely a change in notation: ✓ instead
+of Y ), is, e↵ectively, the bayesian project,13 and this we consider next:
+
+
+6.2         mixtures & the bayesian construction
+
+Consider an arbitrarily indexed collection of random variables, say
+
+                            Xy ⇠ dPy (x) on X/A,              y2Y                     (116)
+
+distributed on a common (but, otherwise, entirely abstract) space X with
+its (also, entirely abstract) collection of events A.
+
+One may ask under what circumstances it might be permissible to regard
+the indexed collection in Eqn.(116) as an expression of the conditional dis-
+tribution(s) of (a single) X given the various possible outcomes from some
+random variate Y, distributed on sample space Y with -algebraic event
+space B.
+
+The answer, it turns out, depends only on the structure of B in respect
+of the random variates Xy — and not at all on any specific distribution for
+Y imposed on B.
+    13
+         What Ash refers to as the product measure theorem, ref. R. B. Ash, Real Analysis
+          & Probability, 1972, N.Y., Academic Pr., pp.96-108.
+6        CONDITIONAL DISTRIBUTIONS                                                             57
+
+
+
+In fact, consider any such assignment
+
+                                   Y ⇠ dQ(y) on Y/B                                     (117)
+
+defined on Y with collection of events B.
+
+And, for each fixed A 2 A, define the R-valued functions
+
+                                  gA : Y ! [0, 1]                                       (118)
+                                       y 7 ! Py (A).
+
+
+Then it is both necessary and sufficient that the functions gA be borel mea-
+surable wrt B:
+
+Because, in that case, it turns out (Theorem 6.2.1, ahead), the assignment
+
+                    P (A⇥B) = EgA (Y )IB (Y )            8 A 2 A, B 2 B                 (119)
+
+uniquely determines a joint distribution, P , for a (bivariate) random variable
+(X, Y ) on the product sample space X⇥Y with events in the (Kolmogorov)
+product -algebra A⌦B = A⇥B|A 2 A, B 2 B , for which
+
+                 P ( X 2 A | Y = y ) = Py (A)          8 A 2 A and 8 y 2 Y.             (120)
+
+
+
+
+In order to have the functions in Eqn.(118) (simultaneously) measurable
+wrt B, we simply require that it be a large enough -algebra to contain all
+inverse images of all the various gA ’s of the standard borel -algebra on the
+real line:14
+                        [
+                            gA 1 (borel) < B                            (121)
+                                A2A
+
+In what follows, this turns out to be precisely the only limitation on the sorts
+of variables Y that may legitimately be used in “mixing” a given collection
+of variables Xy , y 2 Y thus to have a valid jointly distributed variable (X, Y )
+for which P (X 2 A|Y = y) = P (Xy 2 A) 8 A 2 A, y 2 Y.
+    14
+         In fact for simultaneous measurability this is obviously neither more nor less than
+          the necessary & sufficient condition.
+6    CONDITIONAL DISTRIBUTIONS                                                58
+
+
+
+
+To verify the result as stated in Eqns. (119) & (120), we proceed in simple
+stages:
+
+
+First, consider any C 2 A ⌦ B. The (horizontal) section of C at any partic-
+ular point y 2 Y is defined as
+                       or
+                  C(y) = Cy = { x 2 X | (x, y) 2 C }.
+
+
+    It is obviously possible for C(y) to be empty for some values of y 2 Y.
+
+    Notice that
+
+              [1           1
+               1 Cn (y) = [1 Cn (y),       C c (y) = C(y)c ,   etc.
+
+    and, in particular, that
+                                ⇢
+                                    A , y2B
+                    A⇥B(y) =
+                                    ? , y2
+                                         /B.
+
+We then easily have
+
+
+Lemma 6.2.1.           C(y) 2 A      8 C 2 A⌦B, y 2 Y
+proof :
+
+       Let C =        C 2 A⌦B | C(y) 2 A
+          and simply note that C is a -alg containing
+          all the product sets. ~
+
+
+And thus, for each C 2 A⌦B, we may legitimately consider the function
+
+                      hC : Y 7 ! [0, 1]                                 (122)
+
+       defined by
+
+                       hC (y) = Py (Cy )   8 y 2 Y.                     (123)
+6   CONDITIONAL DISTRIBUTIONS                                            59
+
+
+
+But then next we get
+
+
+
+Lemma 6.2.2.          hC borel measurable wrt B
+
+proof :
+
+    Let C =        C 2 A⌦B | hC borel mble
+      For C = A⇥B we need only note that hC = gA IB ,
+      while, for any finite disjoint union C = ⌃n1 Ck , we get
+      a corresponding disjoint union of the sections
+          C(y) = ⌃n1 Ck (y), thus to find hC = ⌃n1 hCk
+      by which we have alg A⇥B | A 2 A, B 2 B        < C.
+    But it is also clear that C is closed wrt limits :
+      i.e.     if Cn ! C and Cn 2 C 8 n 2 N
+      then, for every y 2 Y, we immediately have
+             Cn (y) ! C(y) ) hCn (y) ! hC (y)
+      whereby, hC borel mble, and, therefore, C 2 C.
+    And by direct application of the monotone class theorem
+      (A9) we immediately conclude that C = A⌦B. ~
+
+And so we acquire the required joint distribution, P , on the product space
+
+                         P : A⌦B ! [0, 1]                             (124)
+
+      defined explicitly by
+
+                     P (C) = EhC (Y )    8 C 2 A⌦B.                   (125)
+
+
+
+    So, finally, this is all properly summarized and verified
+    in the following theorem — yet another theorem that
+    takes longer to say than it does to prove :
+6   CONDITIONAL DISTRIBUTIONS                                                   60
+
+
+
+
+Theorem 6.2.1. mixture distributions/product probability theorem
+
+          Given any collection of random variables Xy ⇠ X, A, Py , y 2 Y
+           and a single random variable Y ⇠ Y, B, Q        on the index set Y
+          there is a unique joint distribution   X⇥Y, A⌦B, P
+              defined by P (C) = EhC (Y )        8 C 2 A⌦B
+                 where hC (y) = Py (Cy )     8 y 2 Y , C 2 A⌦B
+                 st
+                      for any (X, Y ) ⇠ X⇥Y, A⌦B, P
+                      we will have
+                       P (X 2 A | Y = y) = Py (A)   8A2A
+                  &     P (Y 2 B) = Q(B)         8B2B
+    , For every A 2 A, the R-valued function
+                gA : Y ! R with gA (y) = Py (A)       8y2Y
+                  is borel-measurable wrt B.
+
+proof :
+
+    ()) : The forward direction is true by definition. ~
+
+
+    (() : Taking full advantage of Lemma 6.2.2 we quickly determine
+              that P is, in fact, a probability measure:
+              (1) normed : C = X⇥Y ) hC (Y ) = 1 ) P (C) = 1.
+              (2) finitely additive: For any finite disjoint union C = ⌃n1 Ck
+                  we get C(Y ) = ⌃n1 Ck (Y ), thus to find P (C) = ⌃n1 P (Ck ).
+              (3) continuous: Cn " C ) Cn (Y ) " C(Y ) ) P (Cn ) " P (C).
+              Then, by taking any (X,Y ) ⇠ X⇥Y, A⌦B, P
+              we need only note that for C = A⇥B ) hC (Y ) = gA (Y )IB (Y )
+              immediately to have Eqn.(119) on p.57 and thus the whole result. ~
+6        CONDITIONAL DISTRIBUTIONS                                                     61
+
+
+6.3        fubini/Tonelli
+Whereas Theorem 6.2.1 describes the construction of a bivariate probabil-
+ity measure on a product -algebra by the iterative procedure represented
+in Eqns.(113, 115), the theorem of Guido Fubini & Leonida Tonelli15 is the
+natural extension of this construction (on indicator functions) to an iterated
+integral for R-valued measurable functions, f : X⇥Y ! R, in general:
+
+In the same way as we define the various sections of any given bivariate set
+C ⇢ X⇥Y, here we consider sections of an arbitrary (extended) real-valued
+function on the product space: for any f : X⇥ Y ! R, the (horizontal )
+section of f at any particular point y 2 Y is defined as
+
+               fy : X ! R for which fy (x) = f (x, y) 8 x 2 X.                     (126)
+
+    This amounts, of course, to nothing more than (what might better be
+    described as) partial evaluation of the function f . It is an almost trivial
+    observation that partial evaluation respects all the usual point-wise oper-
+    ations on fuctions:
+
+             sums    ⌃k1 fi y = ⌃k1 fiy ,        products   ⇧k1 fi y = ⇧k1 fiy
+             abs. value |f |y = |fy | ,       max ,    min and pointwise limits
+              fn ! f        )    fny ! fy ,     etc.
+                  Note the sp. case (IC )y = IC(y) .
+
+Lemma 6.3.1.                For any y 2 Y :     f mble ) fy mble
+
+proof :
+                    borel
+         For any B ⇢ R (actually, any subset), we need only note
+          fy 1 (B) = f 1(B)(y ) .
+         The result then follows directly by Lemma 6.2.1. ~
+
+And very much as we did in the previous section, for each y 2 Y, this lemma
+allows us to evaluate Ey fy (X). Thus, for any measurable f : X⇥Y ! R we
+may define the “projection”:
+
+
+    15
+     Fubini, G. (1907), ”Sugli integrali multipli”, Rom. Acc. L. Rend. (5) 16 (1): 608-614
+     Tonelli, L. (1909), ”Sull’integrazione per parti”, Atti della Accademia Nazionale dei
+     Lincei (5) 18 (2): 246-253
+6   CONDITIONAL DISTRIBUTIONS                                                  62
+
+
+
+
+          fb : Y ! R                                                        (127)
+      by the assignment
+               ⇢
+       b          Ey fy (X) when Ey fy (X) exists
+      f (y) =                                              for each y 2 Y. (128)
+                      0          when not
+
+          0                                                            1
+              Note that the integral notation of Leibniz
+          B                                                         C
+          B
+          B
+                                  R                                 C
+                                                                    C
+          B        Ey fy (X) =        f (x, y)dPy (x)               C
+          B                         X                               C
+          B                                                         C
+          B                                                         C
+          @ is perfectly acceptable, but merely a notational nicety A
+             and individual preference.
+
+
+
+Lemma 6.3.2.          f mble/A⌦B        )   fb mble/ B
+proof :
+    For any C 2 A⌦B, we need only note IbC = hC , so that, for any
+    simple function s = ⌃k1 ci ICi , it is completely clear that sb = ⌃k1 ci hCi .
+    Then, for any non-negative f    0, measurable wrt A⌦B, we simply
+    choose 0  sn " f thus to have 0  sbn " fb. ~
+
+
+We arrive to the main result:
+
+
+Theorem 6.3.1.           Fubini/Tonelli
+                   f integrable wrt P   ) fb integrable wrt Q
+                   and                        Z
+                    Ef (X, Y ) = E fb(Y ) =       Ey fy (X) dQ(y).
+
+      0                                                         1
+        In the Leibniz notation of integrals this becomes
+      B the familiar “double integral”                          C
+      B R                       R ✓R                    ◆       C
+      @                                                         A
+           f (x, y) dP (x, y) =          f (x, y)dPy (x) dQ(y).
+                                 Y     X
+6   CONDITIONAL DISTRIBUTIONS                                             63
+
+
+proof :
+
+    To start with, it is simply by construction (of P ) that
+    for any C 2 A⌦B
+               EIC (X, Y ) = E IbC (Y ) = EhC (Y )
+    where                                          Z
+           hC (y) = Py (Cy ) = Ey IC(y)(X) =          dPy (x)
+                                                 C(y)
+                    Z                      Z
+                  =    IC(y) (x) dPy (x) =   IC (x, y) dPy (x)
+    so that it is no more than merely notational thus to have it
+    that                         Z
+             EIC (X, Y ) =   Ey IC(y)(X) dQ(y)
+                           Z ✓Z                   ◆
+                         =       IC (x, y) dPy (x) dQ(y)
+
+    and it is thereby made clear that Thm.6.2.1, p.60, & Eqn.(125),
+    p.59, are, for the simple case of indicator functions, exactly the
+    result that we now seek merely to extend to more general functions.
+                                 k
+    But now let s(x, y) = ⌃ ci ICi(x, y) be any simple function over
+                                 1
+    A⌦B. Then, noting that sy (X) = ⌃k1 ci ICi (y) (X), we determine
+               sb(y) = Ey sy (X) = ⌃k ci IbC (y)
+                                         1     i
+
+    (which is obviously integrable) thus immediately to find
+    that the theorem extends to any such s exactly as required
+                             k                     k
+             Es(X, Y ) = ⌃ ci EICi (X, Y ) = ⌃ ci E IbCi (Y )
+                         1                      1
+                                      Z
+                       = E sb(Y ) =     Ey sy (X) dQ(y)
+                         Z ✓Z                  ◆
+                       =        s(x, y)dPy (x) dQ(y).
+
+    The further extension to non-negative measurable functions is
+    just as quick: for any f (x, y) 0 choose 0  sn (x, y) " f (x, y),
+    so that, we get 0  sbn " fb(y) as in Lemma 3.0.4, and therefore
+           Ef (X, Y ) = lim Esn (X, Y ) = lim E sbn (Y ) = E fb(Y ). ~
+                         n!1                  n!1
+6   CONDITIONAL DISTRIBUTIONS                                                 64
+
+
+      Now, in general, we may break up any measurable function into
+      its positive and negative parts f = f +      f
+      where, individually, we will have, by the above result for non-
+      negative functions
+               Z                      Z ✓Z                 ◆
+                   +                         +
+                 f (x, y) dP (x, y) =      f (x, y) dPy (x) dQ(y)
+               Z                      Z ✓Z                 ◆
+        and      f (x, y) dP (x, y) =      f (x, y) dPy (x) dQ(y).
+
+      So, if either of these are finite, as say for example the first, then
+      it would follow, in that case, that the non-negative function
+                          Z
+                                              wQ1
+               g(y) =       f +(x, y) dPy (x) < 1
+      must needs be wP 1-finite in respect of the measure Q.
+      In either case, therefore, we arrive to the result
+      Z
+        f (x, y) dP (x, y)
+              Z                       Z
+                  +
+          =      f (x, y) dP (x, y)     f (x, y) dP (x, y)
+              Z ✓Z                   ◆          Z ✓Z                  ◆
+                      +
+          =         f (x, y) dPy (x) dQ(y)            f (x, y) dPy (x) dQ(y)
+              Z ✓Z                              ◆
+                      +
+          =          f (x, y) f (x, y) dPy (x) dQ(y)
+              Z ✓Z                   ◆
+          =          f (x, y) dPy (x) dQ(y). ~
+
+
+
+Corollary 6.3.1.1.    conditioning-on-a-mixture
+                                               Z
+       E f (X, Y ) Y = y = E f (X, y) Y = y =    f (x, y) dPy (x)
+       with the obvious special case when f (x, y) = g(x) 8 (x, y)
+                                     Z
+                E g(X) Y = y =         g(x) dPy (x).
+
+    In the corollary it is made perfectly clear that to condition X on Y
+    is as if simply to hold Y constant — the specific importance of this
+    ultimately residing in its immediately practical application to
+    conditional-equality-in-distribution.
+6   CONDITIONAL DISTRIBUTIONS                                                65
+
+
+6.4   independent product distributions
+      & the classical fubini-tonelli theorem
+Now, in what is clearly no more than a special case of the application of the
+previous two sections, suppose here that we are given any two distributions
+
+                    (X, A, P )    and   (Y, P, Q).                        (129)
+
+Then, in respect of the mixture distribution theorem on p.60 and Fubini on
+pp.62-3, by merely setting
+
+                         Py = P     8y2Y                                  (130)
+
+we may immediately appreciate that, thusly, there will automatically exist
+a random variable, (X, Y ), jointly distributed on the product space
+
+                           (X⇥Y, A⌦B)                                     (131)
+
+for which
+
+            P (X, Y ) 2 A⇥B      = P (A)Q(B)         8 A 2 A, B 2 B.      (132)
+
+
+That such exists, of course, is simply because, in this particular instance,
+the functions gA , A 2 A, as originally defined on p.57, Eqn.(118), are all just
+plain constant (so trivially measurable) on the Y space
+
+                    gA (y) = P (A)        8y2Y                            (133)
+
+so that for the joint distribution, as properly determined in Eqn.(119), p.57,
+we find an almost trivial reduction where, for any A 2 A and B 2 B
+
+             P (X, Y ) 2 A⇥B      = EgA (Y )IB (Y ) = EP (A)IB (Y )
+                              = P (A)EIB (Y ) = P (A)Q(B)
+
+and for which, therefore, the above given distributions, Eqn.(129), are the
+respective marginals with
+
+               P (X 2 A) = P (A)    and   P (Y 2 B) = Q(B).
+
+The joint distribution, so determined, is referred to as the independent prod-
+uct of P and Q — denoted P ⌦ Q — whence altogether, on this simple
+construction, we get the, so-called, independent product distribution,
+6   CONDITIONAL DISTRIBUTIONS                                                66
+
+
+
+
+              (X, Y ) ⇠ (X⇥Y, A⌦B, P ⌦Q)
+                            ,                                             (134)
+                                                   ? Y.
+              X ⇠ (X, A, P ) , Y ⇠ (Y, P, Q) and X ?
+
+
+But then, it is simply on the product probability theorem that, for any more
+general event C 2 A⌦B
+                                Z ✓Z                 ◆
+            P (X, Y ) 2 C =          IC (x, y)dP (x) dQ(y)              (135)
+
+while, by an obvious symmetry in all of this in respect of P and Q, we have,
+of course as well, a perfectly identical expression in reverse
+                                 Z ✓Z                ◆
+            P (X, Y ) 2 C =            IC (x, y)dQ(y) dP (x).          (136)
+
+
+So, finally, by the ordinary process of extension (in the full expression of
+fubini/tonelli ) as applied here in the specifically limited case of this inde-
+pendent product, we arrive to a (smaller) version of Theorem 6.3.1, much
+more resembling that which, historically, was what they did:
+
+Theorem 6.4.1.       the “classical” fubini/tonelli theorem
+                                                ?Y ,
+           Given any X ⇠ dP (x), Y ⇠ dQ(y) w. X ?
+             if E|f (X, Y )| < 1 then
+                                   Z ✓Z               ◆
+                  Ef (X, Y ) =          f (x, y)dP (x) dQ(y)
+                                   Z ✓Z               ◆
+                               =        f (x, y)dQ(y) dP (x).
+
+
+
+    We note here that it is almost only for the obvious pattern in the expres-
+    sion of this classical result, for this reason alone, that, in the leibniz /
+    radon-nikodym style (cf. p.73, Eqn.(168)) of denoting things, we adopt
+    the following notation for an independent product distribution
+                                       nota
+             (X, Y ) ⇠ dP⌦Q(x, y) = dP (x)dQ(y)
+                  or, even more tersely,                                  (137)
+                                   nota
+                (X, Y ) ⇠ dP⌦Q = dP dQ.
+6   CONDITIONAL DISTRIBUTIONS                                               67
+
+
+6.5   Conditional Regularity
+        & The Fully Generalized Bayes Theorem
+
+In the previous sections we considered the standard procedure for the con-
+struction of a joint distribution from component parts. In this final sec-
+tion we will examine the whole thing exactly in reverse: for a given jointly
+distributed random variable, we will now investigate the possibility of sep-
+arating it component-wise, the possibility of deconstruction. It is only in
+the complete forth and back of construction/deconstruction — of mixing &
+separating — that finally the entire bayesian project is fully realized.
+
+So, in this section, we start from some already given (or already constructed)
+jointly distributed random variable
+
+                        (X, Y ) ⇠ dP(x, y)                               (138)
+
+on some arbitrarily contrived product space (X⇥Y, A⌦B), where (in the
+various ways of writing the same thing, of course) we already have it that,
+for any A 2 A and any B 2 B
+
+       P (X 2 A, Y 2 B) = P (X, Y ) 2 A⇥B         = EIA (X)IB (Y )
+                           Z
+                        =     dP(x, y).                                  (139)
+                                A⇥B
+
+But simply on this, the so-called marginal distributions for the individual
+coordinate variables are immediately available to us as
+                                            say
+             P (X 2 A) = EIA (X)IY (Y ) = P (A)         8A2A
+                                            say
+         &   P (Y 2 B) = EIX (X)IB (Y ) = Q(B)          8B2B             (140)
+
+which, merely as a matter of notation (and entirely at one’s discretion), may
+just as well be abbreviated, in the radon-nikodym style, to say
+
+                   X ⇠ dP (x)    &    Y ⇠ dQ(y)                          (141)
+
+on the respective individual spaces (X, A) & (Y, B).
+
+Then, allowing no more than the very definition of conditional expectation,
+and in respect of the particular notation for the special case of conditional
+probability (which, itself, is merely a special terminology for conditional ex-
+pectation applied to indicator functions) we will automatically have, in each
+6   CONDITIONAL DISTRIBUTIONS                                              68
+
+
+case, the following additional variations and elaborations in the original ex-
+pression Eqn.(115), p.56, for the given joint distribution:
+
+For any/every A 2 A and B 2 B
+
+             EIA (X)IB (Y ) = EP (X 2 A|Y )IB (Y )
+                              Z
+                            =    P (X 2 A|Y = y)dQ(y)                   (142)
+                              Z B
+
+                            =    gA (y)dQ(y)
+                                  B
+
+
+where, for each specified A 2 A, the function
+                     defn                    say
+              gA (y) = P (X 2 A|Y = y) = Py (A)             8y2Y        (143)
+
+is (again by the very way in which it simply exists as conditional expec-
+tation for each such fixed A 2 A) borel measurable, while, on the other
+hand, for each fixed y 2 Y, the function Py , so obtained, may or may not
+automatically be counted on to give a well-defined probability measure on A.
+
+In exactly the same way, of course, by simply reversing the roles of X and
+Y we may just as generally have it that for the very same joint distribution
+
+             EIA (X)IB (Y ) = EP (Y 2 B|A)IA (Y )
+                              Z
+                            =    P (Y 2 B|X = x)dP (x)                  (144)
+                              Z A
+
+                            =    fB (x)dP (x)
+                                  A
+
+
+where this time, for each B 2 B, we get the borel measurable function
+                     defn                    say
+             fB (x) = P (Y 2 B|X = x) = Qx (B)              8x2X        (145)
+
+yet where, just as above, and just as unfortunately, it may also not be
+guaranteed for any particular fixed x 2 X that Qx provides a well-defined
+probability measure on B.
+
+But, as we do well know, the various functions gA and fB are (uniquely)
+determined by the conditions that define them, even if only up to sets of
+measure 0 on their respective sample spaces, Y and X. So, when it is the
+6   CONDITIONAL DISTRIBUTIONS                                               69
+
+
+case that there do exist versions of them such that Py and Qx do in fact
+provide probability measures at every y and every x we may count ourselves
+very fortunate, indeed. In such a case as that we may then very properly
+speak of conditional distributions:
+
+
+Definition 6.5.1. conditional regularity
+       A jointly distributed random variable, (X, Y ) is said to be
+       conditionally regular i↵ there exist versions of its
+       conditional probabilities such that, for every x 2 X and y 2 Y,
+       the set functions Qx and Py are all probability measures.
+       And, in that case, we may denote this in summary by writing
+            Y |(X = x) ⇠ dQx and X|(Y = y) ⇠ dPy ,
+       referring then to each respectively as being either
+         the conditional distribution of Y given X = x, or
+         the conditional distribution of X given Y = y.
+
+
+The upshot of all this is to the fact that, when a jointly distributed random
+variable is conditionally regular, then its joint distribution may be presented
+in three di↵erently appearing, but entirely equivalent, ways:
+
+                                        X|(Y = y) ⇠ dPy , y 2 Y
+      (X, Y ) ⇠ dP(x, y)       ⌘
+                                        Y ⇠ dQ
+                                                                         (146)
+                                         Y |(X = x) ⇠ dQx , x 2 X
+                               ⌘
+                                         X ⇠ dP
+
+This, in e↵ect, is the fully generalized form of the elementary bayes’ theo-
+rem, where, for any A 2 A and B 2 B, the product probability theorem of
+sub-section 6.2 (Theorem 6.2.1, p.60) allows full expression in the integral
+notation of Leibniz as a double integral in the two distinctly alternative ways
+                                   Z ✓Z           ◆
+           P (X 2 A, Y 2 B) =              dPy (x) dQ(y)                  (147)
+                                    B    A
+                                   Z ✓Z           ◆
+                               or
+                               =           dQx (y) dP (x)
+                                    A    B
+
+
+while, in ultimate generality, the fubini /tonelli theorem then provides that,
+by direct extension, for any function g 2 hA⌦Bi for which Eg(X, Y ) exists,
+6    CONDITIONAL DISTRIBUTIONS                                             70
+
+
+the expected value may be computed iteratively in either of those two same
+ways
+                            Z ✓Z                ◆
+             Eg(X, Y ) =          g(x, y)dPy (x) dQ(y)                (148)
+                             Z ✓Z               ◆
+                         or
+                         =        g(x, y)dQx (y) dP (x).
+
+
+One thing that is clear from this is that whenever we have such conditional
+regularity it will follow that to condition any function Z = (X, Y ) on either
+of the component variables, X or Y , it is as if merely to hold that variable
+constant in the expression, as for instance
+
+    P (Z 2 C|X = x) = P ( (X, Y ) 2 C|X = x) = P ( (x, Y ) 2 C|X = x). (149)
+
+And this, as we know, can work to very great advantage in computations
+based on conditional-equality-in-distribution.
+
+
+Now, at this point, one could proceed to investigate general conditions under
+which such regularity obtains, thus to justify an equally general application
+of the bayesian form. One instance is when both the spaces, X and Y, happen
+to be complete separable metric spaces and the two respective -algebras, A
+and B, are generated on the open sets of each. However, for most statistical
+application and/or theory, the following will usually prove to be more than
+sufficient to the purpose.
+
+
+6.6     conditional densities
+
+Suppose then that, as commonly occurs in practice, there are two -finite
+measures, µ and ⌫, such that our joint distribution is absolutely continuous
+with respect to the product, µ⌦⌫. The radon-nikodym theorem, as discussed
+in the next section, immediately supplies a density:
+
+                   dP(x, y) = f (x, y)dµ(x)d⌫(y).                       (150)
+
+But in that case, almost just as immediately, each marginal distribution is
+found to be absolutely continuous with respect to its corresponding compo-
+6   CONDITIONAL DISTRIBUTIONS                                          71
+
+
+nent measure:
+                                                  Z
+       P (X 2 A) = EIA (X)IY (Y ) =      dP (x)                      (151)
+                                        A
+                   Z ✓Z               ◆         Z
+                 =       f (x, y)d⌫(y) dµ(x) =    p(x)dµ(x)
+                      A       Y                                  A
+
+so that
+
+                  dP (x) = p(x)dµ(x)                                 (152)
+
+with
+                          Z
+                 p(x) =           f (x, y)d⌫(y)       8x2X           (153)
+                              Y
+
+while likewise
+                                                  Z
+       P (Y 2 B) = EIB (Y )IX (Y ) =    dQ(x)                        (154)
+                   Z ✓Z               ◆B       Z
+                 =       f (x, y)dµ(x) d⌫(y) =   q(x)d⌫(y)
+                      B       X                                  B
+
+so that
+
+                  dQ(y) = q(y)d⌫(x)                                  (155)
+
+with
+                          Z
+                 q(y) =       f (x, y)dµ(x)           8 y 2 Y.       (156)
+                              X
+
+
+
+
+And as to the conditionals, we find a very similar result, where, for any
+A 2 A and B 2 B
+                           Z ✓Z                ◆
+       EIA (X)IB (Y ) =          f (x, y)dµ(x) d⌫(y)
+                            B A
+                           Z ✓Z                ◆
+                                 f (x, y)
+                       =            ⇤
+                                          dµ(x) q(y)d⌫(y)           (157)
+                            B A q (y)
+                           Z ✓Z              ◆
+                       =         py (x)dµ(x) q(y)d⌫(y)
+                           ZB A
+                       =     gA (y)q(y)d⌫(y) = EgA (Y )IB (Y )
+                                    B
+6   CONDITIONAL DISTRIBUTIONS                                             72
+
+
+where, for each y 2 Y, we may define, somewhat arbitrarily
+                              ⇢
+                       ⇤         q(y) , q(y) > 0
+                      q (y) =                                          (158)
+                                  1 , q(y) = 0
+
+so that the function gA : Y ! [0, 1) defined by
+                               Z
+                     gA (y) =     py (x)dµ(x)                          (159)
+                                  A
+
+with
+                                 f (x, y)
+                     py (x) =               8x2X                       (160)
+                                  q ⇤ (y)
+provides a version of the conditional probability such that it may properly
+be said that, for every y 2 Y, and for every A 2 A
+                                        Z
+                   P (X 2 A|Y = y) =      py (x)dµ(x)                 (161)
+                                            A
+
+and therefore that, for every y 2 Y, X has a regular conditional distribution
+given (Y = y) that is absolutely continuous with respect to the measure µ so
+that, quite explicitly, for each such y
+
+                    X|(Y = y) ⇠ py (x)dµ(x)                            (162)
+
+with
+                              f (x, y)
+                  py (x) =                  8 x 2 X.                   (163)
+                               q ⇤ (y)
+
+In exactly the same way, of course, for every x 2 X, Y has a regular condi-
+tional distribution given (X= x) that is absolutely continuous with respect
+to the measure ⌫ such that, for each x
+
+                   Y |(X = x) ⇠ qx (y)d⌫(y)                            (164)
+
+with the obvious counterparts to Eqns. (158) through (161) so that
+                              f (x, y)
+                   qx (y) =                 8 y 2 Y.                   (165)
+                               p⇤ (x)
+7        DENSITIES & RADON-NIKODYM                                                            73
+
+
+7         Densities & Radon-Nikodym
+Given any distribution/probability space (⌦, F, P ) and any R-valued X in L,16
+we define
+
+                              : F ! [ 1, 1]                                                 (166)
+                                          Z
+                       by    (A) = EXIA =   XdP                  8 A 2 F.
+                                                    A
+
+The random variable X is referred to as a density/integrand for the -
+additive set-function, , on F, while the function , itself, is known as the
+indefinite integral of X with respect to P .
+
+This may be variously denoted
+                                                 Z
+                                = EXI(·) =                 XdP                              (167)
+                                                     (·)
+
+or, more simply, and with the quite specific intention of conveying the phys-
+ical interpretation of ‘density’, by
+
+                                     d      = XdP.                                          (168)
+
+- One should verify immediately that is, indeed, -additive:
+        This is easily done if X is non-negative by a direct application of
+        the monotone convergence theorem (MCT ), and then in general
+        by factoring X into its positive and negative parts.
+
+         - One should also observe that          uniquely determines X, in the
+           precise sense that:
+                                                                   wP 1
+                                  XdP = Y dP               ,     X = Y.                     (169)
+
+                                     wP 1
+         - Also note that i) X              0   ,              0 [measure]
+                                     wP 1
+                      &     ii) X           0, EX = 1          ,          = prob. measure
+
+    16
+         Recall that L consists in all of the R-valued random variables (F-measurable functions)
+         X: ⌦ ! R for which EX 2 R. More simply put, we have merely ruled out only those
+         X 0s for which both EX + = 1 and EX + = 1.
+7   DENSITIES & RADON-NIKODYM                                                    74
+
+
+    - Finally, verify that P (N ) = 0 )        (N ) = 0.
+         Easy to see if X is an indicator function and thus if X = S
+         is a simple function, etc.
+
+This last property is known as absolute continuity — denoted          ⌧ P.
+
+Deceptive in its simplicity, absolute continuity essentially characterizes
+as an indefinite integral:
+
+
+7.1     -additive set-functions/signed measures
+Suppose is -additive on F to R = [ 1, 1]. With only this one identified
+property, such a set-function is simply referred to as a signed measure —
+denoted 2 ⌃:
+      For any mutually disjoint An , n 2 N in F
+                    1           1
+                    ⌃ An = ⌃          (An ).                                 (170)
+                   n=1          n=1
+
+Obviously, if is non-negative (     0) it is a measure — 2 ⌃+
+and if it is normed ( (⌦) = 1) as well, it is a probability measure —        2 P.
+
+There are three ‘trivial’ cases for which       is simply a constant function:
+                  (A) = c 8 A 2 F       ,      c = ±1, 0,
+and we (may safely) ignore these in what follows.
+
+The reader will easily verify the following elementary properties:
+
+    0) nullity:      (?) = 0.
+
+    1) f-additivity:     (⌃ni=1 Ai ) = ⌃ni=1 (Ai ).
+
+    2) negative-additivity:      A⇢B )           (B) = (B A)+ (A).
+
+          with additional consequences:
+               i)  (B) finite ) (A) finite
+              ii)  (A) = ±1 ) (B) = ±1
+             iii) ±1 cannot both be in the range of :
+                  i.e. because, if so, then (A) = +1 & (B) =             1
+                            ) (A [ B) = +1 = 1. ~
+7   DENSITIES & RADON-NIKODYM                                                75
+
+
+    3) continuity:     i) from below: An " A ) (An ) ! (A).
+                           two cases: | (An )| < 1 8 n & | (An )| = 1 9 n
+                      ii) from above: An # A, (Ano ) finite for some no
+                                                 ) (An ) ! (A).
+
+
+Proposition 7.1.1.         extreme value theorem (EVT )
+
+              9 C, D 2 F    st     (C)  (A)  (D) 8 A 2 F
+
+proof :
+
+    Suppose      (A) < +1 8 A 2 F [otherwise replace           by    ]
+    and let     o = sup    (A). Then choose An 2 F st     (An ) "    o.
+                    A2F
+
+    For each n 2 N let ⇧n denote the partition generated by Ai , i = 1, . . . , n
+    with An = alg(Ai , i = 1, . . . , n) = alg(⇧n ) = (⇧n ).
+
+
+    Clearly the An ’s get larger and larger i.e. A1 < · · · < An < An+1 < · · ·
+
+
+    Now simply take Dn as the union of all the -positive elements in ⇧n
+    and note two elementary facts:
+                (1) (ADn )       0 8 A 2 An (local non-negativity)
+           & (2) (A)  (Dn ) 8 A 2 An (local maximum)
+
+
+    In that case, the global maximum is achieved on
+                                    1
+                D = lim Dn = \ [ Dk
+                                   n=1 k n
+    and to see this we need only note that
+
+
+        [ Dk = Dn + Dn+1 Dnc + · · · + Dk Dnc · · · Dkc 1 + · · ·
+          k n                             |     {z      }
+                                              2 Ak
+    whence (An )  (Dn )     [ Dk forcing the result. ~
+                                         k n
+
+
+     The minimum will likewise be attained by some C 2 F on the simple
+     observation that        may be used in place of . ~
+7   DENSITIES & RADON-NIKODYM                                                   76
+
+
+
+
+The EVT is crucial for the Jordan-Hahn decomposition that now follows:
+
+
+    For any B 2 F we define the restriction of                     to B
+                     B :F     ! [ 1, 1]
+              by
+                     B (A) =      (AB)     8A2F
+
+
+    further defining B 2 F to be positive (negative) with respect to
+                i↵
+                     B      0 (     B     0) i.e. is a measure.
+
+
+
+Proposition 7.1.2.                hahn decomposition
+
+                   9 H 2 F w. H positive & H c negative
+                     i.e.      (AH c )  0  (AH)              8A2F
+                   so that         =     H +    Hc .
+
+proof :
+
+    Either           1 < (C) or           (D) < 1.
+
+
+    If        (D) < 1, take H = D.              (otherwise take H = C c )
+
+
+    Then           (AD) < 0 )            (D) = (AD) + (Ac D) < (Ac D) a contrad.
+    and        (ADc ) > 0 )             (D) < (D) + (ADc ) < (D+ADc ) a contrad. ~
+
+
+
+Define the variations:
+                                   +
+    upper variation:                   (A) = sup (X) , lower variation:     (A) =    inf   (X)
+                                               X⇢A                                   X⇢A
+                                                       +
+          &    total variation: | | =                      +   .
+7   DENSITIES & RADON-NIKODYM                                                                                    77
+
+
+Proposition 7.1.3.                jordan decomposition
+                                  +
+                                      =    H    &       =        Hc
+                                  whereby
+                                                +
+                                           =               .
+
+proof :
+
+    For any A 2 F, since                    (AH c )  0  (AH),
+    we find that
+                (AH c )              (AH c )+ (AH)                  (AH)
+    or, what is the same thing
+                H c (A)              (A)          H (A).
+    But then, for any X ⇢ A, we get the result
+                H c (A)              H c (X)        (X)            H (X)          H (A).    ~
+
+
+
+Thus, overall, any -additive set-function may be expressed as a simple
+di↵erence of two measures, one of which is finite.
+
+
+
+
+    We say that               is concentrated on B                   i↵        | |(B c ) = 0.
+                          note: A ⇢ B c )                      (A) = 0
+
+
+    We say that           1 and           2 are mutually singular — denoted                     1 ?      2
+               i↵       9 B st            | 1 |(B c ) = 0 = | 2 |(B)|.
+
+
+    It is entirely straightforward to verify the following:
+               +
+          0.        ?     .
+          1. For any two hahn decomp.’s H1 , H2 :                         | |(H1 H2 ) = 0.
+                                                                          +
+          2.   = µ 1 µ 2 , µ 1 , µ2             0      ,        µ1            = µ2       =µ         0.
+                                                                                       +
+          3.   = µ 1 µ 2 , µ 1 ? µ 2 , µ 1 , µ2                 0     ,        µ1 =        & µ2 =            .
+7   DENSITIES & RADON-NIKODYM                                                            78
+
+
+      We say that    is of bounded variation i↵ | | < 1 — denoted                       2 BV.
+
+        0.   2 BV     , | (A)| < 1 8 A 2 F
+        1. |c | = |c|| | & | 1 + 2 |  | 1 | + | 2 |.
+        2. BV is a normed linear space using the norm k k = | |(⌦).
+        3. For any     2 BV 9 ! P1 ? P2 , c1 , c2         0 st     = c 1 P1 c 2 P2 .
+
+
+
+
+7.2      -finiteness
+
+Definition 7.2.1. A measure µ is said to be              -finite — denoted µ < 1
+                                                 1
+             i↵   9 An n 2 N in F st ⌦ = [ An & µ(An ) < 1 8 n 2 N
+                                                n=1
+
+              while, more generally,        is -finite    i↵     | | is -finite.
+
+
+    It should be clear that, without any loss in generality, the An ’s may
+    be chosen to be either mutually disjoint or increasing.
+
+    And thus, letting µi = µAi denote the individual restrictions i 2 N,
+    we may variously represent any µ < 1 as:
+                                      1
+        i) (Ai ’s disjoint)       µ = ⌃ µi w. µi < 1 & µi ? µj 8 i 6= j (171)
+                                      i=1
+
+
+      or ii) (Ai ’s increasing) µ = lim µi w. µi < 1 & µi " .                          (172)
+                                     i!1
+
+
+    But then, since any non-zero finite measure is simply a positive constant
+    times a probability measure, we may ultimately represent an arbitrary
+    | | < 1 as countable linear combination of (mutually singular) proba-
+    bility measures with coefficients all the same sign but one:
+                              1
+                         = ⌃ c i Pi       w. c0 ci  0.                                (173)
+                              i=0
+7   DENSITIES & RADON-NIKODYM                                                                      79
+
+
+7.3       absolute continuity
+
+Definition 7.3.1. We say that 1 is absolutely continuous wrt                                   2
+                    — denoted     1 ⌧ 2
+                   i↵ | 2 |(A) = 0 ) 1 (A) = 0.
+
+              We then say              1 is equivalent to          2   — denoted     1 ⌘   2
+                                  i↵      both        1 ⌧      2   &     2 ⌧    1.
+
+
+
+    It is obvious that ⌧ is transitive and reflexive on ⌃, so that ⌘ is an
+    equivalence relation.
+
+    It should be perfectly clear that                      ⌘| |
+
+    and, therefore, that
+
+              1 ⌧   2     , | 1| ⌧            2       ,       1 ⌧ | 2|      , | 1 | ⌧ | 2 |.
+
+
+    It is straightforward to see that
+
+                    1 ?       2   &     1 ⌧       2       ,        1 = 0.
+
+
+
+
+Proposition 7.3.1. any                  -finite           is equivalent to a probability P
+proof :
+
+          To see this, simply write as above
+                    1
+                = ⌃ ci Pi w. c0 ci  0.
+                    i=0
+                                                  1
+          Then, for any pi              0 w. ⌃ pi = 1, let
+                                              i=0
+                        1
+               P = ⌃ p i Pi
+                        i=0
+          where we deliberately choose pi > 0 , ci 6= 0. ~
+
+
+
+    And finally, let us note that there is, in fact, an ✏- formulation of
+    absolute continuity — which is essentially uniform continuity —
+    but it requires a finiteness condition as follows:
+7        DENSITIES & RADON-NIKODYM                                                 80
+
+
+Proposition 7.3.2.                 If | | < 1
+                    then           ⌧µ     ,     8✏>0 9      >0
+                                                st µ(A) <    ) | |(A) < ✏.
+proof :
+         ()): Suppose 9 ✏o > 0 st 8 n 9 An w. µ(An ) < 1/2n but | |(An ) > ✏o .
+                Then, for A = lim An we find µ(A)  lim(1/2n 1 ) = 0
+                while | | [ Ak           | |(An ) > ✏o 8 n ) | |(A)    ✏o > 0. ~
+                             k n
+
+
+         ((): If µ(A) = 0 but | (A)| > 0, simply take ✏ = | (A)|/2 to find a
+                contradiction. ~
+
+
+         There is a simple counter example to this formulation when | | < 1:
+                                     = 2N ,
+                Take ⌦ = N, F = P(⌦) ⇠
+                and define     (A) = ⌃ 2n & µ(A) = ⌃ 2 n .
+                                        n2A              n2A
+
+
+
+
+7.4           the Radon-Nikodym theorem
+
+Theorem 7.4.1.               radon-nikodym17       (1930)
+
+                     If µ < 1 then
+                           ⌧µ      ,     d = Xdµ some µ-unique X
+proof :
+
+         We establish this result first for probability measures (based on
+          Halmos pp.128-31); generality follows by corollary:
+         1o      P ⌧Q        ,     dP = Xo dQ some Q-unique Xo
+
+
+               Let D = { X          0 | EQ XIA  P (A) 8 A 2 F }
+               and set po = sup EQ X choosing Xn 2 D st EQ Xn ! po .
+                              X2D
+                                          1
+               Then simply let Xo = sup Xn to have EQ Xo = po .
+                                         n=1
+
+    17
+          Otto Marcin Nikodym,1887-1974 ; Johann Karl August Radon, 1887-1956
+7   DENSITIES & RADON-NIKODYM                                                     81
+
+
+           We note that Xo 2 D :
+             For any X, Y 2 D : X _Y = XI(X              Y ) + Y I(X < Y )
+             so EQ X _Y I(A) = EQ XI(X             Y )I(A) + EQ Y I(X < Y )I(A)
+                                 P ((X      Y )A) + P ((X < Y )A) = P (A)
+                                                          n
+             so X _Y 2 D. Thus, by letting Yn = max Xn " Xo ,
+                                                         i=1
+             we easily find that EQ Xo I(A) = lim EQ Yn I(A)  P (A). ~
+
+
+           Thus µ(A) = P (A) EQ Xo I(A) defines a measure.
+           We prove this measure is identically zero:
+             For any given ✏ > 0, let       = µ ✏Q and take H as the
+             hahn-positive set for .        Let Y = Xo +✏IH .
+             But then EQ Y I(A) = EQ Xo I(A) + ✏Q(AH)  EQ Xo I(A) + µ(AH)
+                                    EQ Xo I(AH) + µ(AH) + EQ Xo I(AH c )
+                                   = P (AH) + EQ Xo I(AH c )  P (A)
+             And then EQ Y = po + ✏Q(H) ) Q(H) = 0 )                    (H) = 0.
+               ) µ  ✏Q 8 ✏ > 0 ) µ = 0. ~
+
+    2o       µ⌧P       ,    dµ = XdP some P-unique X
+
+                                              1
+         i) For µ < 1 we may write µ = ⌃ ci Pi w. ci > 0.
+                                             i=1
+          Note that Pi ⌧ P 8 i, so that we may then have dPi = Xi dP.
+                                               1
+          whereupon dµ = XdP w. X = ⌃ Xi . ~
+                                               i=1
+
+
+         ii) More generally (as in Ash pp. 64-5), let C = { C 2 F | µC < 1 }.
+                                        1
+          Note that C is closed wrt [ and ? 2 C.
+                                       n=1
+          Let po = sup P (C) and choose Cn 2 C st P (Cn ) ! po .
+                    C2C
+                            1
+          By setting Co = [ Cn , we then have Co 2 C with P (Co ) = po
+                           n=1
+          and we may then write dµCo = Xo dP.
+          But in the complement Coc we find directly that
+             µCoc (A) = 1P (ACoc ) = E 1I(ACoc )
+            To see this, note
+7   DENSITIES & RADON-NIKODYM                                                                    82
+
+
+                0  µ(ACoc ) < 1 ) Co [ ACoc 2 C
+                                          ) P (ACoc ) = 0 ) µ(ACoc ) = 0.
+                                   and thus P (ACoc ) > 0 ) µ(ACoc ) = 1.
+          So altogether we have: µ(A) = EXIA w. X = Xo +1I(Coc ). ~
+
+
+    3o     If µ < 1 then
+              ⌧µ     ,         d = Xdµ some µ-unique X
+
+
+         First suppose that            0, and let µ < 1 wrt partition Ai i 2 N.
+         and then set µi = µAi &                  i =    Ai .
+                     1                    1
+          )    µ = ⌃ µi &             = ⌃          i    with    i ⌧ µi   8 i 2 N.
+                    i=1                 i=1
+
+                      Z have
+         In that case we                  Z
+               i (A) =     Xi dµi =               Xi I(Ai )dµ for some Xi           0 i 2 N.
+                          AZ                  A
+                                                           1
+           )       (A) =           Xdµ w. X = ⌃ Xi I(Ai ). ~
+                               A                          i=1
+                                                                           +
+         For complete generality simply note that both                         ⌧µ &        ⌧ µ. ~~
+
+
+
+
+In consideration of this result, in what follows we will use the terminol-
+ogy absolutely continuous wrt and/or radon-nikodym subordinate
+to interchangeably. In an obvious way, and depending on context, radon-
+                                                          RN
+nikodym equivalence may be variously denoted ⌘RN or ⌘, or just plain
+⌘, as needed.
+
+Also, as a matter of mere notation, whenever we have a relationship of
+absolute continuity between two probability measures, as say PX ⌧ PY , we
+may, in what follows, prefer to write this more simply as X ⌧ Y — for
+which we then note the obvious transformation invariance
+
+                     X⌧Y              )            (X) ⌧ (Y ) .                                (174)
+
+And, although it might be just as readily obvious, it could prove helpful
+merely to take special note of the simple but easily overlooked fact that
+                               d
+                          X=Y          )           X ⌘RN Y.                                    (175)
+7   DENSITIES & RADON-NIKODYM                                                 83
+
+
+
+Consider a few examples.
+
+eg.1 gaussian subordinate variables
+
+    On Rd , any random variable, X, with a pdf (with respect to lebesgue
+    measure) is radon-nikodym subordinate to the unit gaussian, Z ⇠ Nd (0, I).
+
+    To see this is merely to notice that the pdf, (z), for Z is strictly positive
+    everywhere, so that, for any X ⇠ f (x)dx, we find, quite trivially, that
+                         Z               Z ✓       ◆
+                                             f (x)
+         P (X 2 B) =        f (x)dx =                (x)dx
+                           B              B    (x)
+                         Z ✓         ◆
+                               f (z)
+                     =                 (z)dz = E f (Z)/ (Z) IB (Z)
+                          B      (z)
+    by which it it is made perfectly clear that X ⌧ Z .
+
+
+And here are two simple applications of eg.1 — examples of the example:
+
+
+eg.2 non-equal coordinates with densities
+
+    We note immediately that for any X ⇠ f (x)dx on Rd , it is perfectly
+    equivalent to say that X ⌧ Z ⇠ Nd (0, I).
+
+    And the event that non of the coordinates of X be equal to any other is
+    simply the finite intersection
+                    \    (Xi 6= Xj ) =      \   (Xi 6= Xj ).
+                 1i<jd                 1i<jd
+
+    So, in either way of writing it, we quickly see that this is a sure set
+    simply because each element in its union is :
+                                   p                p d
+          X ⌧ Z ) (Xi Xj )/ 2 ⌧ (Zi Zj )/ 2 = Z ⇠ N (0, 1).
+
+
+
+eg.3 non-singularity/linear independence in a sample with densities
+
+    For a sample X1 , . . . , Xd IID X ⇠ f (x)dx on Rd it is perfectly equiva-
+    lent to say that X1 , . . . , Xd IID X ⌧ Z ⇠ Nd (0, I) on Rd .
+7   DENSITIES & RADON-NIKODYM                                                     84
+
+
+    So if we take a corresponding sample Z 1 , . . . , Z d IID Z ⇠ Nd (0, I),
+    and form the random matrices X = X1 , . . . , Xd and Z = Z 1 , . . . , Z d
+    in Rdd , it is then easy to see as well that X ⌧ Z — which, being invari-
+    ant under arbitrary transformation, allows that if we apply the determi-
+    nant function we have |X| ⌧ |Z| with Z = Zij ⇠ Ndd (0, I).
+
+    But then, it is merely a matter to verify that P |Z| = 0 = 0, thus
+    to know that the sample X1 , . . . , Xd is linearly independent-wP 1.
+
+    And to see that P |Z| = 0 = 0 falls immediately to induction on d:
+
+     For d = 1 it is trivial that P Z = 0 = 0.        So if we suppose
+     inductively that
+            ✓            ◆
+               Z11 z 12
+       Z=                  2 Rd+1                      6 0 =1
+                                        with P |Z 11 | =
+               z 021 Z22      d+1
+
+     then
+        P |Z| = 0    = P |Z| = 0, |Z 11 | =6 0
+                        ⇣                                                ⌘
+                     = P |Z 11 |(Z22 z 021 Z 111 z 12 ) = 0, |Z 11 | =6 0
+                        ⇣                                     ⌘
+                     = P Z22 = z 021 Z 111 z 12 ), |Z 11 | =
+                                                           6 0
+                          ⇣                                          ⌘
+                     = EP Z22 = z 021 Z 111 z 12 ) Z 11 , z 12 , z 21 I |Z 11 | =
+                                                                                6 0
+                     = E 0 I |Z 11 | =
+                                     6 0     = 0. ~
+
+
+
+eg.4 conditional expectation in L1
+
+Starting from a general discussion of orthogonal projection in L2 in Sec-
+tion 4 we had proceeded in Section 5 to the specific application of these ideas
+to the business of conditional expectation as but one example.
+
+Here we remind ourselves that, in any case, the definition of these objects
+was what is properly referred to as “implicit”: as the wP 1-unique solution
+to an infinite system of simultaneous equations. For this reason alone, it was
+necessary (pp.36, 43,48) to establish the objective existence of said solution.
+7   DENSITIES & RADON-NIKODYM                                                              85
+
+
+
+
+                              ! ⇠   ⌦, F, P
+
+
+    Z ⇠ R-valued/borel
+    X ⇠ X-valued/A                              Z = h(Y )
+
+
+    Zb = E(Z|X)
+                     Z                  Z
+           i↵                b X =
+                             ZdP                ZdP              8A2A                 (176)
+                         A                  X   1 (A)
+
+
+
+           ,           b A (X) = EZIA (X)
+                     E ZI                                          8A2A
+
+
+           ,           b
+                     E Zg(X) = EZg(X)                            8 g 2 hAi
+
+
+    when Z = h(Y ), Y ⇠ Y-valued/B, h 2 hBi, this translates to
+
+
+    Zb = b
+         h(X) = E(h(Y )|X)
+                     Z                          Z
+           i↵                b
+                             h(X)dPX =                  h(Y )dP       8A2A            (177)
+                         A                          X    1 (A)
+
+
+
+           ,         Eb
+                      h(X)IA (X) = Eh(Y )IA (X)                              8A2A
+
+
+           ,         Eb
+                      h(X)g(X) = Eh(Y )g(X)                             8 g 2 hAi
+
+
+In either case, by direct application of the theorem of Radon and Nikodym,
+the existence and uniqueness of this Zb is immediately guaranteed for any
+given Z 2 L. And this is simply because:
+                                Z
+     For any Z 2 L, Z (A) =        ZdP, A 2 A determines a -finite signed
+                                    X   1 (A)
+
+    signed measure on A, for which it is visibly obvious that                   Z ⌧ PX .
+7   DENSITIES & RADON-NIKODYM                                                86
+
+
+                                   ! ⇠    ⌦, F, P
+
+
+         G < F
+
+
+         Zb = E(Z|G)
+                          Z               Z
+                  i↵              b
+                                  ZdP =         ZdP      8G2G             (178)
+                          ZG               ZG
+                  i↵              b G =
+                                  ZdP           ZdP      8G2G
+                              G               XG 1 (G)
+
+                  ,         b G (XG ) = EZIG (XG )
+                          E ZI                     8G2G
+                  ,         b G = EZIG
+                          E ZI               8G2G
+                  ,         b = EZg
+                          E Zg                      8 G 2 hGi
+
+
+
+eg.5 counting measure is not              -finite
+
+In passing, consider briefly a rather curious, and almost pathological, counter
+example to the theorem when the measure µ is not -finite. Counting mea-
+sure, ⌘, on the real line is defined on the set of all subsets, P(R) ⇠= 2R , by
+the simple expedient of assigning to any A ⇢ R, the numerical value
+                             ⇢ #
+                                  A , # A <# N
+                  ⌘(A) =
+                                 1 , otherwise .
+And, of course, this measure, as presented, may certainly be restricted only
+to the borel subsets of the real line if we so choose. But it is perfectly clear
+that, by its very definition, the only null-set/zero-set of this measure is the
+empty set, ?, itself. And for this reason, alone, any other measure defined
+on the borel sets must automatically be absolutely continuous with respect
+to it! This is harsh indeed! And, of course, the Radon-Nikodym theorem
+fails utterly for this beast.
+
+
+
+In the next chapter, we carry on with additional aspects of construction
+and extension, in order that we may continue, as in Chpt.3, to track the
+distributions of major statistical application, but now with an eye to the
+larger multivariate setting.
+8   EXAMPLES FOR STUDY & PRACTICE                                            87
+
+
+8    EXAMPLES FOR STUDY & PRACTICE
+
+1. One-sided chebyshev : For Z 2 L2 with EZ = 0 & varZ = 1 verify
+   that, for any t 0:
+                          P (Z > t)  1/(1 + t2 ).
+
+        There are at least three di↵erent ways to arrive at this result:
+
+    (a) Hint: Z > t ) (Z + s)2       (t + s)2     8 s > 0.   Apply markov.
+
+
+
+
+    (b) Hint: t   Z  (t   Z)I(Z  t).     Apply cauchy-schwarz.
+
+
+
+
+    (c) Hint: (1 + t2 )2 I(Z > t)  (tZ + 1)2 .
+8   EXAMPLES FOR STUDY & PRACTICE                                        88
+
+
+2. wP1-equality
+                                       wP1
+        For any X 2 R we say that X = Y         i↵   P (X = Y ) = 1.
+                                 wP1
+    (a) Verify that equality-wP1, = , is an equivalence relation on R.
+
+
+
+
+                    wP1                 wP1                       wP1
+    (b) Verify    X = Y      ,    X Y = 0        ,    Z = |X Y | = 0
+
+
+
+
+                    d                    wP 1
+    (c) Verify    X = Y, X  Y    ) X = Y
+
+
+
+
+                   wP1
+    (d) Verify    Z = 0    ,     EZX = 0 8 X 2 R.
+8   EXAMPLES FOR STUDY & PRACTICE                                       89
+
+
+3. Verify that, in L2 , P is an orthogonal projection (onto W = ImP )
+   if and only if
+   it has the following three properties:
+                                    wP 1
+          i) linear :   P (aX +bY ) = aPX +bP Y       8 X, Y 2 L2
+                                  wP 1
+         ii) idempotent:     PW = W 8 W 2 W
+        iii) self-adjoint:   hPX, Y i = hX, P Y i 8 X, Y 2 L2 .
+
+    and, in particular, on Rn , P is an orthogonal projection
+
+      ,     P = P2 = P0       ,    P = A(A0 A) 1 A0    8 A = basis(ImP ).
+8   EXAMPLES FOR STUDY & PRACTICE                                     90
+
+
+    4. For an orthogonal projection, P , with P +Q = I, verify that
+                            wP 1          wP 1
+                       P Q = QP            = 0.
+
+    Use this result, or otherwise, to verify that
+
+                   hX, Y i = hPX, P Y i + hQX, QY i
+
+    from which we have the special case of pythagorus
+
+                      kXk2 = kPXk2 + kQXk2 .
+
+
+
+
+5. For nested sub-spaces V < W in L2 , if Q is the orthogonal projection
+   onto V, while P is the orthogonal projection onto W, verify that
+                                   wP 1          wP 1
+                             P Q = QP = Q.
+8   EXAMPLES FOR STUDY & PRACTICE                               91
+
+
+                                                         ?Y .
+6. Suppose that X ⇠ bin(2, 1/3) , Y ⇠ poisson(2/3) and X ?
+
+                                 k 2/3
+    a) Given that P (X = Y ) =      e  , determine k.
+                                 81
+
+
+
+
+    b) Determine the ratio kX Y k kX EXk.
+
+
+
+
+    c) Determine the coefficient of correlation ⇢(X Y, X+Y ).
+8   EXAMPLES FOR STUDY & PRACTICE                                        92
+
+
+7. Suppose that X ⇠ N (1, 1), let Y = X 3 , and consider the simple
+    linear model
+             Y = ↵+ X + W w. EW = 0 = ⇢(X, W ).
+
+    a) Evaluate the constants ↵ and .
+
+
+
+
+    b) Determine the relative proximity of Y to its closest linear predictor
+
+             kY     (↵+ X)k
+                            .
+                  kY EY k
+8   EXAMPLES FOR STUDY & PRACTICE                                        93
+
+
+8. Let X ⇠ exp (1), Y = e X , and consider the simple
+    linear model
+             Y = ↵+ X + W w. EW = 0 = ⇢(X, W ).
+
+    a) Evaluate the constants ↵,    and .
+
+
+
+
+    b) Determine the relative proximity of Y to its closest linear predictor
+
+            kY        (↵+ X)k
+                              .
+                 kY     EY k
+8   EXAMPLES FOR STUDY & PRACTICE                                           94
+
+
+9. Suppose that we obtain data y 2 Rn from Y and we let ẏ = y       y1.
+
+     i) Verify that op(y|1) = y1 and thus that y     y1 = ẏ = op(y|1? ).
+    ii) Use this to see that
+
+                            |y   y1|2 = |y|2    ny 2 .
+                                                        p
+    iii) And use that result to show that, for b = |ẏ|/ n, we will have
+
+                              b!       as   n ! 1.
+
+
+
+
+10. If varX > 0 and varY > 0 and ⇢ = ⇢(X, Y ), suppose that we obtain
+   data x 2 Rn from X & data y 2 Rn from Y and we let ⇢b = ẋ· ẏ/|ẋ||ẏ|.
+   Verify that
+
+                              ⇢b ! ⇢ as     n ! 1.
+8   EXAMPLES FOR STUDY & PRACTICE                                         95
+
+
+11. If varX > 0 so that X is not trivial, then, by proposition 0.0.1 p.18, we
+    know that there are unique ↵ and for which
+
+                  Y = ↵+ X +Z          w.   EZ = 0 = ⇢(X, Z)
+
+    Suppose that we obtain data y 2 Rn from Y with corresponding x 2 Rn
+    from X so that
+
+                              y = ↵1 + x + z.
+
+                 b = op(y|1, x) denote the orthogonal projection onto the
+     Let P (y) = y
+     two-dimensional vector sub-space W = spanR (1, x).
+
+       i) Prove that for n sufficiently large (1, x) is linearly independent
+          and thus there will be unique ↵b and b so that
+
+                                    b1 + bx.
+                                b = ↵
+                                y
+
+                                b ! ↵ and b !
+      ii) Hence prove that both ↵                   as n ! 1.
+8   EXAMPLES FOR STUDY & PRACTICE                                                                    96
+
+
+12. For any X1 , . . . , Xk & Y in L2 , let ⌃ = ( ij ) with ij = cov(Xi , Xj ).
+    Demonstrate that there are unique ↵, 1 , . . . , k for which
+    Y = ↵+         1 X1 + · · · +        k Xk + Z           w.    EZ = 0 = ⇢(Xi , Z) i = 1, . . . , k
+           ,          var(t0 X) > 0               8 t 6= 0         ,         |⌃| > 0
+
+    in which case we may explicitly know that
+                            = ⌃ 1                 w.       i = cov(Xi , Y )    i = 1, . . . , k
+                                              k
+               &      ↵ = EY                  ⌃    i EXi .
+                                          i=1
+
+
+    To begin with, we show                    |⌃| > 0 , 1, X1 , . . . , Xk lin. indep.
+     pf.
+       ()): assuming |⌃| > 0
+               wP 1
+       a+b0X = 0 ) 0 = var(b0X) = b0 ⌃b = |Ab|2                                    w.    ⌃ = A0 A
+                                                   |⌃|>0
+                            ) Ab = 0                   )     b = 0 & a = 0. ~
+       ((): assuming lin. indep.
+                                                                            wP 1   lin.indep
+       ⌃b = 0 ) 0 = b0 ⌃b = var(b0X) ) b0X = c                                       )         b = 0. ~
+
+
+    Now we show 1, X1 , . . . , Xk lin. indep. , unique coe↵s. ↵ &
+     pf.
+       ()): assuming lin. indep.
+       Let W = spanR (1, X1 , . . . , Xk ) and suppose
+                        0              also
+           Y =↵+        X + Z = a + b0X + Vboth Z, V 2 W?          w.
+                              wP 1
+       Then immediately ↵ + 0X = a + b0X since both are Yb
+                      lin.indep
+                            )      a = ↵, b =                hence also V = Z . ~
+       ((): assuming uniqueness
+                                wP 1
+       Suppose a+b0X = 0. Then Y = ↵ +                                  X + Z w. Z 2 W?
+                                                                        0
+
+                                                           = (↵+a) + ( +b)0 X + V
+                                                                 with V = Z         a b0X
+                                       uniqueness
+               ) V 2 W?                       )        a = 0, b = 0 . ~
+
+
+    in which case the above results with                         = ⌃ 1 , etc., are now trivial. ~~
+8   EXAMPLES FOR STUDY & PRACTICE                                               97
+
+
+13. For X1 , . . . , Xk & Y in L2 , the correlation coefficient of Y with Yb =
+   op(Y |1, X1 , . . . , Xk ) is usually/often referred to in the literature on
+   multivariate statistics, as the multiple correlation of Y on X:
+                                                                 or
+                 ⇢ = ⇢(Y, Yb ) = ⇢(Y |X1 , . . . , Xk ) = ⇢(Y |X).
+
+      (Obviously nothing much fancy about any of that; just names.)
+    In the notation of the previous example, show that if |⌃| > 0 and
+      Y > 0, then
+
+                                     0               0⌃ 1
+                                         ⌃
+                           ⇢2 =          2     =        2    .
+                                         Y              Y
+
+
+
+
+14. In the special case of polynomial regression, we find that for any X & Y
+   in L2 , there will be unique coefficients 0 , . . . , k such that
+            k
+                       i
+     Y = ⌃        iX       +Z   w.       EZ = 0 = ⇢(X i , Z) i = 1, . . . , k
+           i=0
+
+          ,        P (X 2 A) = 1 )               # A > k.
+8   EXAMPLES FOR STUDY & PRACTICE                                               98
+
+
+15. In the general regression model of ESP6.12 above, with |⌃| > 0,
+    suppose that y, x1 , . . . , xk & z in Rn are the corresponding
+    realizations from each of Y, X1 , . . . , Xk & Z, respectively, in L2 .
+
+    The corresponding model for the data is, therefore
+
+                    y = ↵1 +       1 x1 + · · · +   k xk + z
+
+    which is exactly to say that, but for the ‘perturbation’ z, the
+    sample vector, y, is a linear combination of the regression vectors,
+    x1 , . . . , xk & 1.
+
+    Let X = (x1 , . . . , xk ) & Ẋ = (ẋ1 , . . . , ẋk ) and demonstrate that for
+
+                           b1 + b1 x1 + · · · + bk xk
+                       b = ↵
+                       y
+
+    obtained as the orthogonal projection of y on the regression space,
+
+                      W = spanR (1, x1 , . . . , xk )
+
+    then
+
+               n su↵. large    )      (1, x1 , . . . , xk ) lin. indep.
+
+    and thus
+                 b!            b ! ↵ as n ! 1.
+                           and ↵
+8   EXAMPLES FOR STUDY & PRACTICE                                        99
+
+
+    16. For the general regression model with data as in the previous 8 through 11
+    consider the ‘natural’ estimator
+
+                                     ḃ ẏ|
+                               ⇢b = |y|/|
+
+    of the multiple correlation of Y on X1 , . . . , Xk
+
+                   ⇢ = ⇢(Y, Yb ) =        (Yb )/ (Y ) = kYḃ k/kẎ k.
+
+    Show that, as long as |⌃| > 0 and      Y > 0, we will have
+
+                              ⇢b ! ⇢ as     n ! 1.
+8   EXAMPLES FOR STUDY & PRACTICE                                     100
+
+
+17. Suppose X, Y IID X and that var(X | T ) = T 2/12 with T = X+Y .
+
+    a) Obtain E(Y | T ) and E(Y 2 | T ).
+
+
+
+
+    b) Determine cov(X, Y | T ) and thus obtain ⇢(X, Y | T ).
+8   EXAMPLES FOR STUDY & PRACTICE                                  101
+
+
+                                                          ?Y
+18. Suppose that X ⇠ poisson (2) , Y ⇠ poisson (3) with X ?
+    and let T = X+Y
+
+    a) Determine P (X = k | T = n) for every value of k and n,
+        and thereby obtain E(X | T ) and (X | T ).
+
+
+
+
+    b) Now determine P (T = n | X = k) for every value of n and k, and
+       hence obtain E(T | X) and (T | X).
+8   EXAMPLES FOR STUDY & PRACTICE                                  102
+
+
+19. Suppose that X ⇠ gamma(7), Y ⇠ gamma(5) and X ?  ? Y and let
+    U = X/(X +Y ) and T = X +Y . Determine the following
+
+    a) E(X 1 | U ) and (X 1 | U ).
+
+
+
+
+    b) E(U   1 | X) and   (U   1 | X).
+8   EXAMPLES FOR STUDY & PRACTICE                   103
+
+
+20. Suppose WX | X ⇠ gamma (2) and X ⇠ gamma (3).
+    Evaluate the following.
+
+    a) EW and (W ).
+
+
+
+
+    b) P (W > 1).
+8   EXAMPLES FOR STUDY & PRACTICE                                        104
+
+
+21. Suppose WX | X ⇠ gamma (2) and X ⇠ gamma (3).
+
+    a) First determine P (W > 0).
+
+
+
+
+    b) Obtain the joint probability density function f (x, w) for (X, W ).
+
+
+
+
+    c) Thus obtain the marginal probability density function, fW (w), of W .
+
+
+
+
+    d) Hence determine the distribution function FW (t) of W .
+8   EXAMPLES FOR STUDY & PRACTICE                                   105
+
+
+22. Suppose WX | X ⇠ gamma (2) and X ⇠ gamma (3).
+
+    a) First determine P (W > 0).
+
+
+
+
+                      ? X, obtain the joint distribution of (1+W )X and W .
+    b) Noting that WX ?
+
+
+
+
+    c) Hence, or otherwise, determine E(X|W ) and (X|W )
+8   EXAMPLES FOR STUDY & PRACTICE                                      106
+
+
+23. statistical independence & conditional expectation
+
+    Given any distribution (⌦, F, P ) let X : ⌦/F ! X/A & Y : ⌦/F ! Y/B
+    and suppose X statistically independent of Y [Defn.5.7.1, p.53, Eqn(103)]
+                ?Y .
+    — denoted X ?
+
+
+                    ?Y
+    (a) Show that X ?         ? X.
+                           , Y?
+
+
+
+
+    (b) For any : X/A ! U/C and : Y/B ! V/D explain why it is
+                         ? Y ) (X) ?
+        automatic that X ?         ? (Y )
+
+
+
+
+                                              wP 1
+    (c) Prove that    ?Y
+                     X?      , E g(X) Y        = Eg(X) 8 g 2 hAi w. g(X) 2 L2 .
+

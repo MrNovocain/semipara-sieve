@@ -1,0 +1,1115 @@
+L2 Geometry Workbook for Profile Sieve EL
+Three-Part Proof: Geometry, Small Stochastic Bounds, and Merging
+Solved derivation workbook
+
+Contents
+I
+
+Geometric and Convex KKT Body
+
+3
+
+1 Model Setup: Full Geometry in L2 (PT ) and L2 (P )
+
+3
+
+2 Finite-Sample Hilbert Space: Viewing the Entire Model in L2 (PT )
+2.1 The empirical space . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+2.2 The full finite-sample model . . . . . . . . . . . . . . . . . . . . . . . . . . .
+2.3 Candidate nuisance subspaces . . . . . . . . . . . . . . . . . . . . . . . . . .
+2.4 Orthogonal projection . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+
+4
+4
+4
+4
+6
+
+3 Profiling Is Orthogonal Projection
+3.1 Break search as subspace selection . . . . . . . . . . . . . . . . . . . . . . . .
+
+7
+8
+
+4 Residualized Score Direction
+
+8
+
+5 Known True Partition: Wilks Logic in Geometry
+
+8
+
+6 Omitted Breaks: False Predictivity as a Projection Drift
+
+9
+
+7 Estimated Partition
+
+9
+
+8 EL as a Finite-Sample Convex KKT Problem
+
+10
+
+9 Population Hilbert Space
+9.1 Population object in L2 (P ) . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+9.2 Population nuisance space . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+
+11
+11
+12
+
+10 Population Identification
+
+12
+
+II
+
+13
+
+Small Stochastic Bounds
+
+11 Small Stochastic Bounds
+
+13
+
+III
+
+14
+
+Merging Part
+
+1
+
+12 Merging Part: Moment Bridge, EL KKT, and χ21
+12.1 Merge A: consistency . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+12.2 Merge B: Wilks inference . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+
+14
+14
+15
+
+13 Three-Part Logic Checklist
+
+16
+
+14 Minimal Final Statement
+
+16
+
+2
+
+Part I
+
+Geometric and Convex KKT Body
+1
+
+Model Setup: Full Geometry in L2(PT ) and L2(P )
+
+The purpose of this workbook is to rewrite the whole proof logic as Hilbert space geometry.
+The sample space is not first probability; it is first the finite empirical Hilbert space
+L2 (PT ) = (RT , ⟨a, b⟩T = T −1 a′ b).
+The population limit is the Hilbert space
+L2 (P ),
+
+⟨f, g⟩P = E{f g}.
+
+The model setup is the following chain:
+y = β0 x + µ0 + u
+µ0,t = mj0 (t) (Wt−1 ), j0 (t) = j ⇐⇒ kj,0 < t ≤ kj+1,0
+NK,Λ,T = col(QK,Λ )
+MK,Λ = I − ΠK,Λ,T
+√
+ST (β, Λ) = T ⟨MK,Λ (y − βx), MK,Λ w⟩T
+
+model in L2 (PT ),
+true nuisance vector,
+nuisance subspace,
+residual-maker,
+projected score.
+
+Here µ0 is exactly the stacked nonparametric nuisance part of the model. If there are no
+nuisance breaks, µ0,t = m(Wt−1 ). With breaks, µ0,t = mj (Wt−1 ) on regime j, so µ0 is not
+one stable function evaluated over the whole sample; it is the true piecewise nuisance surface
+evaluated observation by observation.
+EL then uses the scalar products
+Zt (β, Λ) = {MK,Λ (y − βx)}t {MK,Λ w}t
+to form a one-dimensional empirical likelihood. EL is not the Hilbert projection; EL is the
+likelihood wrapper around the projected score.
+Three-part proof map. Part I is finite-sample geometry: profiling, residual scores,
+and EL are all KKT/convex objects in L2 (PT ). Part II is small stochastic verification:
+Gram stability, sieve and break errors, CLT, variance, max-score, and convex-hull
+size. Part III merges them: consistency comes from the moment bridge plus unique
+population zero, while Wilks comes from the EL KKT quadratic reduction plus the
+standardized score CLT.
+
+3
+
+2
+
+Finite-Sample Hilbert Space: Viewing the Entire
+Model in L2(PT )
+
+2.1
+
+The empirical space
+
+Let
+ΩT = {1, . . . , T },
+
+PT = T
+
+−1
+
+T
+X
+
+δt .
+
+t=1
+
+Every sample vector a = (a1 , . . . , aT )′ is a function aT : ΩT → R, with aT (t) = at . The
+empirical inner product is
+Z
+⟨a, b⟩T =
+
+aT bT dPT = T −1
+
+T
+X
+
+at bt = T −1 a′ b.
+
+t=1
+
+Thus all variables in the sample are elements of L2 (PT ):
+y, x, w, u, µ0 ∈ L2 (PT ).
+
+2.2
+
+The full finite-sample model
+
+The break-aware model is the vector identity in L2 (PT )
+y = β0 x + µ0 + u,
+where
+µ0,t =
+
+q0
+X
+
+(2.1)
+
+mj (Wt−1 )1{kj,0 < t ≤ kj+1,0 }.
+
+j=0
+
+So the full model says: y lies in the affine set
+β0 x + µ0 + u.
+The inferential problem is to remove µ0 , not by estimating it as a main parameter, but by
+projecting away its nuisance subspace.
+
+2.3
+
+Candidate nuisance subspaces
+
+For a candidate partition Λ = (k1 , . . . , kq ), define the block sieve matrix
+QK,Λ = [D0 (Λ)P , . . . , Dq (Λ)P ].
+The sample nuisance subspace is
+NK,Λ,T = col(QK,Λ ) ⊂ L2 (PT ).
+
+4
+
+(2.2)
+
+An element of this space has the form
+gT (t) =
+
+q
+X
+
+1{t ∈ Ij (Λ)}PK (Wt−1 )′ cj .
+
+j=0
+
+This is the finite-sample version of a regime-specific nonparametric nuisance function.
+Let jΛ (t) denote the regime index induced by Λ. For a regime-wise nuisance tuple h =
+(h0 , . . . , hq ), define its stacked sample vector by
+′
+hΛ,T = hjΛ (1) (W0 ), . . . , hjΛ (T ) (WT −1 ) .
+This vector is the empirical version of the candidate nuisance direction.
+Lemma 1 (Uniform finite-sieve approximation in L2 (PT )). Fix (K, Λ, T ) and a nuisance
+class H. For each h ∈ H, let hΛ,T ∈ L2 (PT ) be the stacked nuisance vector defined above.
+Define the finite-sieve approximation radius
+ρK,T (H, Λ) = sup
+
+inf
+
+h∈H γ∈R(q+1)K
+
+∥hΛ,T − QK,Λ γ∥T .
+
+(2.3)
+
+If ρK,T (H, Λ) = op (1), then the desired uniform L2 (PT ) approximation holds:
+sup ∥hΛ,T − QK,Λ γK,Λ (h)∥T = sup ∥rK,Λ,T (h)∥T = ρK,T (H, Λ) = op (1).
+h∈H
+
+(2.4)
+
+h∈H
+
+Here, for each h,
+γK,Λ (h) ∈ argmin ∥hΛ,T − QK,Λ γ∥2T ,
+γ∈R(q+1)K
+
+hK,Λ,T = QK,Λ γK,Λ (h),
+rK,Λ,T (h) = hΛ,T − hK,Λ,T .
+The ambient space is L2 (PT ) ∼
+= RT , so hΛ,T , hK,Λ,T , and rK,Λ,T (h) are all T × 1 vectors.
+The design matrix and coefficient vector have dimensions
+QK,Λ ∈ RT ×(q+1)K ,
+
+γK,Λ (h) ∈ R(q+1)K .
+
+The finite nuisance space has dimension
+dK,Λ,T = rank(QK,Λ ) ≤ (q + 1)K,
+and
+hΛ,T = QK,Λ γK,Λ (h) + rK,Λ,T (h),
+
+(2.5)
+
+where
+⊥T
+rK,Λ,T (h) ∈ NK,Λ,T
+⊂ L2 (PT ).
+
+QK,Λ γK,Λ (h) ∈ NK,Λ,T ⊂ L2 (PT ),
+
+Thus rK,Λ,T (h) is a T × 1 approximation-residual vector living in a (T − dK,Λ,T )-dimensional
+orthogonal complement, and
+Q′K,Λ rK,Λ,T (h) = 0.
+
+5
+
+Proof. The column space NK,Λ,T = col(QK,Λ ) is a finite-dimensional closed subspace of
+L2 (PT ). Therefore the Hilbert projection theorem gives the closest finite-sieve approximation
+to every hΛ,T :
+ΠK,Λ,T hΛ,T ∈ NK,Λ,T .
+Because every element of NK,Λ,T is QK,Λ γ, the projection can be written as
+ΠK,Λ,T hΛ,T = QK,Λ γK,Λ (h)
+for any least-squares minimizer γK,Λ (h). If QK,Λ is rank deficient, the coefficient vector need
+not be unique, but the fitted vector is unique.
+Define
+rK,Λ,T (h) = hΛ,T − ΠK,Λ,T hΛ,T .
+The projection theorem gives
+⟨rK,Λ,T (h), v⟩T = 0
+
+for every v ∈ NK,Λ,T ,
+
+which implies Q′K,Λ rK,Λ,T (h) = 0. This proves the orthogonal decomposition (2.5) and the
+⊥T
+.
+location rK,Λ,T (h) ∈ NK,Λ,T
+By the definition of orthogonal projection,
+∥rK,Λ,T (h)∥T =
+
+inf
+γ∈R(q+1)K
+
+∥hΛ,T − QK,Λ γ∥T .
+
+Taking the supremum over h ∈ H gives exactly (2.4). Hence the mathematical task behind
+this lemma is to verify ρK,T (H, Λ) = op (1) from the chosen basis, smoothness class, and
+growth rate of K. An arbitrary nuisance direction is not assumed to be exactly spanned by
+the sieve basis; it is approximated by its finite-sieve projection, and the leftover is rK,Λ,T (h).
+
+2.4
+
+Orthogonal projection
+
+Let ΠK,Λ,T be the L2 (PT )-orthogonal projection onto NK,Λ,T . In coordinates,
+ΠK,Λ,T = QK,Λ (Q′K,Λ QK,Λ )† Q′K,Λ .
+The residual-maker is
+MK,Λ = I − ΠK,Λ,T .
+
+(2.6)
+
+It satisfies the projection identities
+′
+MK,Λ
+= MK,Λ ,
+
+2
+= MK,Λ ,
+MK,Λ
+
+Q′K,Λ MK,Λ = 0.
+
+Lemma 2 (Projection identities for the residual-maker). Let Q = QK,Λ , G = Q′ Q,
+Π = QG† Q′ ,
+
+M = I − Π,
+
+where G† is the Moore-Penrose inverse. Then Π and M are symmetric and idempotent, and
+M annihilates the sieve nuisance space:
+M ′ = M,
+
+M 2 = M,
+
+M Q = 0,
+6
+
+Q′ M = 0.
+
+Proof. Since G = Q′ Q is symmetric, its Moore-Penrose inverse G† is also symmetric. Hence
+Π′ = {QG† Q′ }′ = QG† Q′ = Π.
+For idempotence, use the Moore-Penrose identity G† GG† = G† :
+Π2 = QG† Q′ QG† Q′ = QG† GG† Q′ = QG† Q′ = Π.
+Therefore
+M ′ = I − Π′ = M,
+
+M 2 = (I − Π)2 = I − 2Π + Π2 = I − Π = M.
+
+It remains to show that M kills the columns of Q. Since R(G) = R(Q′ ) and G† G is the
+orthogonal projector onto R(G),
+QG† G = Q.
+Thus
+ΠQ = QG† Q′ Q = QG† G = Q,
+
+M Q = (I − Π)Q = 0.
+
+Finally, because M is symmetric, Q′ M = (M Q)′ = 0. This proves all projection identities.
+
+3
+
+Profiling Is Orthogonal Projection
+
+For a trial value β, define the partial outcome
+yβ◦ = y − βx.
+It is the original outcome y after subtracting the trial linear component βx.
+Profiling the nuisance means finding the closest nuisance vector to the partial outcome
+◦
+yβ in NK,Λ,T :
+b β,Λ = arg min ∥yβ◦ − g∥2T .
+µ
+g∈NK,Λ,T
+
+By Hilbert projection,
+b β,Λ = ΠK,Λ,T yβ◦ ,
+µ
+
+b (β, Λ) = yβ◦ − µ
+b β,Λ = MK,Λ yβ◦ .
+u
+
+Lemma 3 (Profile normal equation). For every h ∈ NK,Λ,T ,
+⟨b
+u(β, Λ), h⟩T = 0.
+Equivalently,
+b (β, Λ) = 0.
+Q′K,Λ u
+Proof. This is the KKT condition for a least-squares projection in L2 (PT ). If h = QK,Λ a,
+then
+b ′ QK,Λ a = T −1 (Q′K,Λ u
+b )′ a = 0.
+⟨b
+u, h⟩T = T −1 u
+
+7
+
+3.1
+
+Break search as subspace selection
+
+For fixed β, the profile RSS is
+RSSK (β, Λ) = ∥MK,Λ (y − βx)∥2 = T ∥MK,Λ yβ◦ ∥2T .
+Thus break estimation is not a separate idea geometrically. It is subspace selection:
+b q (β) = arg min dist2 (y ◦ , NK,Λ,T ).
+Λ
+T
+β
+Λ∈Lq (ϵ)
+
+Unknown order adds a penalty to the same distance:
+qb(β) = arg min{T dist2T (yβ◦ , NK,Λb q (β),T ) + penT (q, K)}.
+q
+
+Workbook task 2. Rewrite every profile-RSS criterion in the manuscript as a
+squared Hilbert distance from y − βx to a candidate nuisance subspace.
+
+4
+
+Residualized Score Direction
+
+The raw score weight w ∈ L2 (PT ) may contain nuisance directions. The geometric score
+direction is its nuisance-orthogonal component
+vΛ = wc (Λ) = MK,Λ w.
+Then
+⊥T
+,
+vΛ ∈ NK,Λ,T
+
+⟨vΛ , h⟩T = 0 ∀h ∈ NK,Λ,T .
+
+The sample profiled moment is the Hilbert inner product
+ΨT (β, Λ) = ⟨MK,Λ (y − βx), MK,Λ w⟩T .
+The scaled score is
+ST (β, Λ) =
+
+(4.1)
+
+√
+T ΨT (β, Λ).
+
+Lemma 4 (Finite-sample nuisance cancellation). If g ∈ NK,Λ,T , then
+⟨MK,Λ g, MK,Λ w⟩T = 0.
+Proof. Because g ∈ NK,Λ,T , MK,Λ g = 0. Hence the inner product is zero. Equivalently,
+(Qc)′ MK,Λ w = 0 for every c.
+
+5
+
+Known True Partition: Wilks Logic in Geometry
+
+Set Λ = Λ0 . Decompose the true nuisance into its sieve projection part and approximation
+error:
+µ0 = QK,Λ0 c0 + r0 .
+8
+
+At β = β0 , the model gives
+y − β0 x = QK,Λ0 c0 + r0 + u.
+Apply M0 = MK,Λ0 and set v0 = M0 w:
+M0 (y − β0 x) = M0 u + M0 r0 .
+Therefore
+ST (β0 , Λ0 ) = T −1/2 u′ v0 + T −1/2 r0′ v0 .
+
+(5.1)
+
+The first term is the stochastic score. The second term is projection bias. The key high-level
+condition is
+T −1/2 r0′ M0 w = op (1).
+Workbook task 3. Starting from y = β0 x + Q0 c0 + r0 + u, derive equation (5.1).
+Circle the only term that must be controlled by approximation rates.
+
+6
+
+Omitted Breaks: False Predictivity as a Projection
+Drift
+
+If we use a stable/no-break nuisance space NK,0,T when the true nuisance has breaks, the
+true nuisance vector µ0 generally does not belong to NK,0,T . Let Mst denote the stable
+residual-maker and vst = Mst w. Then
+Mst (y − β0 x) = Mst u + Mst µ0 .
+The stable score is
+STst (β0 ) = T −1/2 u′ vst + T −1/2 µ′0 vst .
+
+(6.1)
+
+The second term
+BT = T −1/2 ⟨T Mst µ0 , vst ⟩T = T −1/2 µ′0 Mst w
+is a geometric projection drift. It is not predictive signal; it is the component of the omitted
+nuisance break that lies in the stable score direction.
+Workbook task 4. Explain false predictivity in one line:
+wrong nuisance subspace ⇒ Mst µ0 ̸= 0 ⇒ BT ̸= 0.
+
+7
+
+Estimated Partition
+
+The estimated break procedure chooses a random subspace
+bT = N b ,
+N
+K,Λ,T
+
+cT = M b .
+M
+K,Λ
+
+9
+
+The feasible score is
+
+√
+SbT (β0 ) =
+
+cT (y − β0 x), M
+cT w⟩T .
+T ⟨M
+
+The true-partition score is
+ST0 (β0 ) =
+
+√
+
+T ⟨M0 (y − β0 x), M0 w⟩T .
+
+The estimated-partition Wilks argument is the score-equivalence statement
+SbT (β0 ) − ST0 (β0 ) = op (1),
+
+VbT − VT0 = op (1).
+
+(7.1)
+
+Geometrically, (7.1) says that replacing the true subspace NK,Λ0 ,T by the estimated subspace
+NK,Λ,T
+changes the score only by a negligible amount at the T −1/2 scale.
+b
+Remark 1 (Why this is weaker than operator-norm convergence). It is not necessary to
+cT − M0 ∥op → 0. Break-date errors can make that hard. The theorem only needs
+prove ∥M
+the projected score and its second moment to be asymptotically unchanged.
+
+8
+
+EL as a Finite-Sample Convex KKT Problem
+
+For fixed (K, Λ, β), everything in this section is finite-sample algebra in L2 (PT ). Define the
+profiled residual, score direction, and scalar moment array
+rβ = MK,Λ (y − βx),
+
+a = MK,Λ w,
+
+Then
+ΨT (β, Λ) = PT g(β, Λ) = T −1
+
+T
+X
+
+gt (β, Λ) = rβ,t at .
+
+gt (β, Λ) = ⟨rβ , a⟩T .
+
+t=1
+
+Thus the sieve basis QK,Λ has already represented the nuisance feasible directions: col(QK,Λ )
+is the tangent plane for nuisance variation, and MK,Λ keeps only the orthogonal score component.
+EL adds one more finite-dimensional convex problem. The primal feasible set is the
+probability simplex cut by the affine moment hyperplane
+(
+)
+T
+T
+X
+X
+T
+CT (β, Λ) = π ∈ R+ :
+πt = 1,
+πt gt (β, Λ) = 0 .
+t=1
+
+t=1
+
+The empirical likelihood problem is equivalently
+min
+π∈CT (β,Λ)
+
+−
+
+T
+X
+
+log(T πt ).
+
+(8.1)
+
+t=1
+
+This is a convex barrier objective over a convex feasible set. Its Lagrangian is
+!
+T
+T
+T
+X
+X
+X
+L(π, η, λ) = −
+log(T πt ) + η
+πt − 1 + T λ
+πt g t .
+t=1
+
+t=1
+
+10
+
+t=1
+
+The KKT first-order condition gives
+−
+After normalizing by
+
+P
+
+1
++ η + T λgt = 0.
+πt
+
+t πt = 1, the EL weights are
+
+π
+bt (λ) =
+
+1
+,
+T {1 + λgt (β, Λ)}
+
+1 + λgt (β, Λ) > 0.
+
+The remaining KKT equation is the dual moment equation
+
+
+gt (β, Λ)
+= 0.
+PT
+1 + λgt (β, Λ)
+
+(8.2)
+
+(8.3)
+
+The log empirical likelihood ratio is therefore
+ℓT (β, Λ) = 2
+
+T
+X
+
+log{1 + λT gt (β, Λ)}.
+
+(8.4)
+
+t=1
+
+The quadratic EL reduction is also mostly KKT algebra. If maxt |λT gt | = op (1), then
+expanding (8.3) gives
+
+
+gt
+= PT gt − λT PT gt2 + R1T ,
+R1T = op (T −1/2 ).
+0 = PT
+1 + λT gt
+Hence, with VT = PT gt2 ,
+λT =
+
+PT g t
++ op (T −1/2 ).
+VT
+
+Expanding (8.4) then yields
+ℓT (β0 , Λ) =
+
+T {PT gt (β0 , Λ)}2
+ST (β0 , Λ)2
++ op (1) =
++ op (1).
+VT (Λ)
+VT (Λ)
+
+(8.5)
+
+The stochastic work is not to rediscover EL; it is only to verify the small size conditions
+under which the KKT expansion is valid.
+
+9
+
+Population Hilbert Space
+
+9.1
+
+Population object in L2 (P )
+
+To express breaks in population geometry, include rescaled time S ∈ (0, 1]. Let
+O = (Y, X, W, S, U )
+be a population random element with law P . The true regime map is
+j0 (S) = j
+
+⇐⇒
+
+τj,0 < S ≤ τj+1,0 .
+
+The population model is the identity in L2 (P ):
+Y = β0 X + µ0 (S, W ) + U,
+
+µ0 (S, W ) =
+
+q0
+X
+j=0
+
+11
+
+mj (W )1{τj,0 < S ≤ τj+1,0 }.
+
+(9.1)
+
+9.2
+
+Population nuisance space
+
+For a population partition Λ, define
+NΛP =
+
+( q
+X
+
+)L2 (P )
+1{S ∈ Ij (Λ)}hj (W ) : hj ∈ L2 (PW )
+
+.
+
+j=0
+
+Let ΠPΛ be the L2 (P )-orthogonal projection onto NΛP , and let
+MΛP = I − ΠPΛ .
+The population profiled residual and score direction are
+uPβ (Λ) = MΛP (Y − βX),
+
+v P (Λ) = MΛP w.
+
+The population moment is
+Ψ(β, Λ) = ⟨uPβ (Λ), v P (Λ)⟩P .
+
+10
+
+(9.2)
+
+Population Identification
+
+At the true population nuisance space NΛP0 , the nuisance belongs to the subspace:
+µ0 (S, W ) ∈ NΛP0 .
+Therefore
+MΛP0 µ0 = 0.
+Using (9.1),
+uPβ (Λ0 ) = MΛP0 (Y − βX)
+= MΛP0 {U − (β − β0 )X}.
+Hence
+Ψ(β, Λ0 ) = ⟨MΛP0 U, v0P ⟩P − (β − β0 )⟨MΛP0 X, v0P ⟩P ,
+
+(10.1)
+
+where v0P = MΛP0 w.
+If the orthogonal score is exogenous,
+⟨MΛP0 U, v0P ⟩P = 0,
+and the predictive direction is not absorbed by the nuisance space,
+Γ = ⟨MΛP0 X, v0P ⟩P ̸= 0,
+then
+Ψ(β, Λ0 ) = −(β − β0 )Γ.
+Thus
+Ψ(β, Λ0 ) = 0
+
+⇐⇒
+12
+
+β = β0 .
+
+(10.2)
+
+Workbook task 5. Derive (10.1) from the population model. The only two
+population assumptions needed after projection are exogeneity ⟨M0P U, v0P ⟩P = 0
+and relevance Γ ̸= 0.
+
+Part II
+
+Small Stochastic Bounds
+11
+
+Small Stochastic Bounds
+
+After Part I, the finite-sample objects are fixed: the nuisance space is col(QK,Λ ), profiling is
+MK,Λ , the score is gt = rβ,t at , and EL is the KKT system (8.2)–(8.3). The stochastic part
+should therefore be small. It only verifies that these finite-sample objects are close to their
+population limits and that the KKT expansion is used in a valid local neighborhood.
+The first stochastic target is the uniform moment bridge
+b − Ψ(β, Λ0 )| = op (1).
+sup |ΨT (β, Λ)
+
+(11.1)
+
+β∈B
+
+This is the stochastic statement that the empirical projected inner product converges to the
+population projected inner product.
+A clean lemma list is:
+1. Gram stability. The empirical Gram matrices for QK,Λ , x, and w converge uniformly
+over admissible partitions.
+2. Sieve approximation. Lemma 1 states the desired uniform L2 (PT ) approximation.
+The stochastic task is to verify ρK,T (H, Λ0 ) = op (1), so the residual for the true nuisance,
+MK,Λ0 µ0 , is negligible in the required score norm.
+b changes the projected score only by op (1) at
+3. Break localization. Replacing Λ0 by Λ
+−1/2
+the moment scale and by op (1) at the T
+score scale when Wilks is the target.
+4. Uniform LLN. The projected sample moment obeys (11.1).
+5. Score CLT. At the true value,
+
+√
+
+b =
+ST (β0 , Λ)
+
+b ⇒ N (0, V ).
+T ΨT (β0 , Λ)
+
+b = PT gt (β0 , Λ)
+b 2,
+6. Variance consistency. With VT (Λ)
+b →p V > 0.
+VT (Λ)
+b T
+7. EL local feasibility. The origin lies in the interior of the convex hull of {gt (β0 , Λ)}
+t=1
+with high probability, and
+√
+b
+max |gt (β0 , Λ)|/
+T = op (1).
+t≤T
+
+These conditions make 1 + λT gt > 0 and justify the Taylor reduction in (8.5).
+13
+
+If βbT is an approximate sample root,
+b = op (1),
+ΨT (βbT , Λ)
+then (11.1) gives
+Ψ(βbT , Λ0 ) = op (1).
+By unique population identification, βbT →p β0 . This is where the stochastic bridge feeds the
+geometric identification result.
+
+Part III
+
+Merging Part
+Merging Part: Moment Bridge, EL KKT, and χ21
+
+12
+
+The merge step should not say that the unscaled moment bridge is itself equivalent to Wilks.
+The correct statement is more precise:
+The same projected moment ΨT is the interface for both targets. Unscaled convergence of ΨT to Ψ merges with population uniqueness to prove consistency. Scaled
+convergence of ΨT , together with the EL KKT quadratic reduction, merges to prove
+χ21 .
+
+12.1
+
+Merge A: consistency
+
+Part I gives the population geometry
+Ψ(β, Λ0 ) = ⟨MΛP0 (Y − βX), MΛP0 w⟩P = −(β − β0 )Γ
+under exogeneity and relevance. Hence
+⇐⇒
+
+Ψ(β, Λ0 ) = 0
+
+β = β0 .
+
+Part II gives the stochastic bridge
+b − Ψ(β, Λ0 )| = op (1).
+sup |ΨT (β, Λ)
+β∈B
+
+Therefore any approximate sample root satisfies
+b = op (1)
+ΨT (βbT , Λ)
+This is the estimation target.
+
+14
+
+=⇒
+
+βbT →p β0 .
+
+12.2
+
+Merge B: Wilks inference
+
+For inference, Part I gives the EL KKT representation
+b =2
+ℓT (β, Λ)
+
+T
+X
+
+b
+log{1 + λT gt (β, Λ)},
+
+t=1
+
+where λT solves
+
+"
+PT
+
+b
+gt (β, Λ)
+
+#
+
+b
+1 + λT gt (β, Λ)
+
+= 0.
+
+Part II verifies the local size and convex-hull conditions, so the KKT equation can be expanded at β = β0 :
+b 2
+b = T {ΨT (β0 , Λ)} + op (1).
+ℓT (β0 , Λ)
+b
+VT (Λ)
+Part II also gives
+
+√
+
+b
+T ΨT (β0 , Λ)
+q
+⇒ N (0, 1).
+b
+VT (Λ)
+
+Combining the last two displays gives
+b ⇒ χ21 .
+ℓT (β0 , Λ)
+
+(12.1)
+
+Thus the “equivalence” is conditional on the geometric KKT reduction. Once EL has
+been reduced to the square of the standardized projected moment, Wilks is equivalent to the
+standardized score CLT. It is not equivalent to the unscaled LLN bridge used for consistency.
+Proof-body split. Geometry owns the model, nuisance tangent space, projection
+KKT, residual score, population zero, and EL primal/dual KKT. Small stochastic
+bounds only verify convergence and local size. The merging part then turns the
+same projected moment into either consistency or Wilks.
+
+15
+
+13
+
+Three-Part Logic Checklist
+
+Proof part
+
+Object
+
+What it proves
+
+Geometry / KKT
+
+y = β0 x + µ0 + u ∈ L2 (PT )
+
+The full sample model is a
+Hilbert-space identity.
+
+Geometry / KKT
+
+NK,Λ,T = col(QK,Λ )
+
+The sieve basis represents the
+nuisance tangent plane.
+
+Geometry / KKT
+
+MK,Λ = I − ΠK,Λ,T
+
+Profiling is the KKT normal
+equation for orthogonal
+projection.
+
+Geometry / KKT
+
+gt = {M (y − βx)}t {M w}t
+
+The profile score is one
+projected inner product.
+
+Geometry / KKT
+
+EL primal/dual KKT
+
+EL is a convex simplex
+problem cut by the moment
+hyperplane.
+
+Population
+geometry
+
+Ψ(β, Λ0 ) = −(β − β0 )Γ
+
+Exogeneity and relevance give
+the unique population zero.
+
+Small stochastic
+
+supβ |ΨT − Ψ| = op (1)
+
+The sample projected
+moment reaches the
+population moment.
+
+Small stochastic
+
+CLT, variance, max-score,
+convex hull
+
+The EL KKT expansion is
+valid locally and the
+standardized score is normal.
+
+Merging
+
+Moment bridge plus unique zero
+
+Consistency: βbT →p β0 .
+
+Merging
+
+EL KKT quadratic reduction
+plus CLT
+
+b ⇒ χ21 .
+Wilks: ℓT (β0 , Λ)
+
+14
+
+Minimal Final Statement
+
+The full profile-sieve EL proof is a three-part argument.
+Geometric/KKT body. In L2 (PT ), the model is y = β0 x+µ0 +u. A candidate
+partition and sieve define the nuisance tangent plane NK,Λ,T = col(QK,Λ ). Profiling is orthogonal projection onto this space. The residual score is the projected
+inner product
+ΨT (β, Λ) = ⟨MK,Λ (y − βx), MK,Λ w⟩T .
+P
+EL is then a convex simplex problem with the moment hyperplane t πt gt = 0,
+whose KKT system gives πt = 1/[T {1 + λgt }].
+Small stochastic body. The stochastic lemmas verify that the empirical projection, estimated break partition, sieve approximation, score variance, convex
+16
+
+hull, and max-score terms are small enough for the sample KKT objects to approximate their population limits.
+Merging body. For consistency, combine ΨT → Ψ with the unique population
+zero. For Wilks, combine the EL KKT quadratic reduction with the standardized
+score CLT:
+√
+b 2
+b
+T
+Ψ
+(β
+,
+Λ)
+T ΨT (β0 , Λ)
+T
+0
+b =
+q
++ op (1),
+⇒ N (0, 1).
+ℓT (β0 , Λ)
+b
+VT (Λ)
+b
+VT (Λ)
+b ⇒ χ21 .
+Therefore ℓT (β0 , Λ)
+
+17
+
+

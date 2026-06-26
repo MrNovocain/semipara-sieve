@@ -47,6 +47,14 @@ For a scalar array \(\bm a=(a_1,\ldots,a_T)'\), write
     \qquad
     \|\bm a\|_\infty=\max_{t\leq T}|a_t|.
 \]
+The empirical norm is the Euclidean geometry of the sample written as
+\(L^2(P_T)\).  Throughout the proof, \(P_T=T^{-1}\sum_{t=1}^T\delta_t\) and
+\[
+    \langle \bm a,\bm b\rangle_T=T^{-1}\bm a'\bm b.
+\]
+Thus \(\|\cdot\|_T\) is the norm induced by the empirical inner product.  This
+notation is not cosmetic: the profile step below is an exact projection KKT
+statement in \(L^2(P_T)\).
 All \(O_p(\cdot)\) and \(o_p(\cdot)\) statements for vectors and matrices use Euclidean and spectral norm unless another norm is displayed.
 
 The maintained null model is
@@ -131,6 +139,50 @@ For each \((\beta,\Lambda)\), define
     &=
     \widehat u_t(\beta,\Lambda)w_t^c(\Lambda).
 \end{align}
+
+\begin{lemma}[Sample \(L^2(P_T)\) profile KKT]
+\label{lem:sample-l2pt-profile-kkt}
+Fix \((\beta,\Lambda)\), write \(\bm Q=\bm Q_{K,\Lambda}\), and equip
+\(\mathbb R^T\) with the empirical inner product
+\(\langle \bm a,\bm b\rangle_T=T^{-1}\bm a'\bm b\). The fitted value
+\(\bm Q\widehat{\bm c}\) from
+\[
+    \min_{\bm c}\|\bm Y-\beta\bm X_{lag}-\bm Q\bm c\|_T^2
+\]
+is the \(L^2(P_T)\) orthogonal projection of \(\bm Y-\beta\bm X_{lag}\) onto
+\(\operatorname{col}(\bm Q)\). Its residual
+\[
+    \widehat{\bm u}(\beta,\Lambda)
+    =\bm M_{K,\Lambda}(\bm Y-\beta\bm X_{lag})
+\]
+satisfies the KKT normal equations
+\[
+    \bm Q'\widehat{\bm u}(\beta,\Lambda)=\bm0.
+\]
+Likewise, \(\bm w^c(\Lambda)=\bm M_{K,\Lambda}\bm w\) is the residual from the
+\(L^2(P_T)\) projection of \(\bm w\) onto \(\operatorname{col}(\bm Q)\), and
+\[
+    \bm Q'\bm w^c(\Lambda)=\bm0.
+\]
+\end{lemma}
+
+\begin{proof}
+The objective is a convex quadratic. Its first-order normal equation is
+\(\bm Q'(\bm Y-\beta\bm X_{lag}-\bm Q\bm c)=\bm0\). When \(\bm Q'\bm Q\) is
+singular, the coefficient vector need not be unique, but the fitted value is
+the Moore--Penrose projection
+\[
+    \bm Q(\bm Q'\bm Q)^\dagger\bm Q'(\bm Y-\beta\bm X_{lag}),
+\]
+and the residual is \(\bm M_{K,\Lambda}(\bm Y-\beta\bm X_{lag})\). Hence
+\(\bm Q'\widehat{\bm u}(\beta,\Lambda)=\bm0\). The same argument with
+\(\bm w\) in place of \(\bm Y-\beta\bm X_{lag}\) gives
+\(\bm Q'\bm w^c(\Lambda)=\bm0\). These two normal equations are the
+finite-sample source of the nuisance annihilation used later: any component in
+\(\operatorname{col}(\bm Q)\) is orthogonal to both the profiled residual and
+the residualized score weight.
+\end{proof}
+
 Let
 \[
     S_T(\Lambda)
@@ -162,6 +214,33 @@ In particular,
                     \widehat Z_T(\beta,\Lambda)\}.
 \]
 
+\begin{remark}[Three KKT systems]
+\label{rem:three-kkt-systems}
+The proof uses three linked KKT systems. First, nuisance profiling solves a
+quadratic projection KKT problem in \(L^2(P_T)\), producing
+\(\widehat{\bm u}(\beta,\Lambda)\) and \(\bm w^c(\Lambda)\) in the empirical
+orthogonal complement of the sieve space. Second, empirical likelihood solves
+an entropy KKT problem on the sample simplex, producing the multiplier
+\(\lambda_T\). Third, as empirical inner products converge to their population
+limits, the sample normal-score equation approaches a population \(L^2(P)\)
+KKT equation. Identification comes from uniqueness of the population zero;
+Wilks comes from the local \(L^2(P_T)\) curvature of the EL KKT plus the
+conditional CLT and LLN for the oracle score.
+\end{remark}
+
+\begin{remark}[Deterministic geometry on good events]
+\label{rem:deterministic-good-event-geometry}
+Apart from the oracle CLT, denominator LLN, maximum-score bound, and the
+probability of the required good events, the proof is deterministic geometry.
+On events where the Gram matrices are stable, the sieve envelopes hold, the
+candidate partition is localized, and the EL convex-hull qualification holds,
+the required bounds follow from projection contraction, Pythagoras, Cauchy--
+Schwarz, support size of the boundary block, and finite-dimensional KKT
+calculus. The stochastic lemmas below therefore verify the inputs to this
+algebra; they are not the organizing principle of the proof. In the one-break
+bridge this bookkeeping is collected explicitly in Lemma
+\ref{lem:wb-deterministic-bridge-algebra}.
+\end{remark}
 For an interval \([s,e]\), define the null-imposed segment cost
 \[
     \mathcal C_K(s,e;\beta)
@@ -556,6 +635,130 @@ and conditional triangular-array CLT arguments.  The cost is a stronger
 exogeneity assumption and, in the main estimated-break Wilks theorem, the
 explicit one-break scope \(q_0=1\).
 \end{remark}
+
+For a scalar score array \(Z_1,\ldots,Z_T\), empirical likelihood is not a
+projection problem. It is the entropy KKT problem on the sample simplex
+\[
+    \max_{\pi_1,\ldots,\pi_T}
+    \sum_{t=1}^T\log(T\pi_t)
+    \quad\text{subject to}\quad
+    \pi_t>0,\quad
+    \sum_{t=1}^T\pi_t=1,\quad
+    \sum_{t=1}^T\pi_tZ_t=0.
+\]
+Its connection with \(L^2(P_T)\) appears only locally: near a small multiplier,
+the derivative of the EL KKT equation has curvature
+\(-T^{-1}\sum_t Z_t^2\), the empirical \(L^2(P_T)\) norm squared of the score.
+
+\begin{lemma}[Sample empirical-likelihood KKT]
+\label{lem:sample-el-kkt}
+If zero lies in the interior of the convex hull of \(Z_1,\ldots,Z_T\), the
+empirical-likelihood simplex program has weights
+\[
+    \widehat\pi_t
+    =
+    \frac{1}{T(1+\lambda_TZ_t)},
+    \qquad t=1,\ldots,T,
+\]
+where \(\lambda_T\) is the unique value satisfying
+\[
+    \sum_{t=1}^T\frac{Z_t}{1+\lambda_TZ_t}=0,
+    \qquad
+    1+\lambda_TZ_t>0\quad(t\leq T).
+\]
+The twice negative empirical-likelihood log ratio is therefore
+\[
+    2\sum_{t=1}^T\log(1+\lambda_TZ_t).
+\]
+\end{lemma}
+
+\begin{proof}
+The Lagrangian first-order condition gives
+\[
+    \pi_t^{-1}=\nu+\eta Z_t.
+\]
+Multiplying by \(\pi_t\) and summing over \(t\), while using
+\(\sum_t\pi_t=1\) and \(\sum_t\pi_tZ_t=0\), gives \(\nu=T\). With
+\(\lambda_T=\eta/T\),
+\[
+    \pi_t=\{T(1+\lambda_TZ_t)\}^{-1}.
+\]
+Substitution into the moment constraint gives the displayed multiplier
+equation. The interior convex-hull condition gives existence, positivity, and
+uniqueness of the scalar multiplier.
+\end{proof}
+
+\begin{lemma}[Local \(L^2(P_T)\) curvature of the EL KKT]
+\label{lem:sample-el-local-l2-curvature}
+Let \(Z_{1,T},\ldots,Z_{T,T}\) satisfy the convex-hull condition and suppose
+\[
+    S_1=\sum_{t=1}^TZ_{t,T}=O_p(\sqrt T),
+    \qquad
+    S_2=\sum_{t=1}^TZ_{t,T}^2\geq(c+o_p(1))T,
+\]
+for some \(c>0\).  If \(M_T=\max_{t\leq T}|Z_{t,T}|=o_p(\sqrt T)\), then the
+EL multiplier satisfies
+\[
+    \lambda_T=\frac{S_1}{S_2}+o_p(T^{-1/2}),
+    \qquad
+    |\lambda_T|M_T=o_p(1).
+\]
+Equivalently,
+\[
+    \lambda_T
+    =
+    \frac{T^{-1}\sum_tZ_{t,T}}
+         {T^{-1}\sum_tZ_{t,T}^2}
+    +o_p(T^{-1/2}).
+\]
+The denominator in this display is the empirical \(L^2(P_T)\) curvature
+of the EL KKT equation.
+\end{lemma}
+
+\begin{proof}
+The EL KKT equation is
+\[
+    0=\sum_{t=1}^T\frac{Z_{t,T}}{1+\lambda_TZ_{t,T}}.
+\]
+The convex-hull condition gives a unique multiplier on the interval where all
+\(1+\lambda_TZ_{t,T}\) are positive.  Using
+\(z/(1+\lambda z)=z-\lambda z^2/(1+\lambda z)\), the KKT equation implies
+\[
+    S_1
+    =
+    \lambda_T\sum_{t=1}^T
+      \frac{Z_{t,T}^2}{1+\lambda_TZ_{t,T}}.
+\]
+Consequently,
+\[
+    |S_1|
+    \geq
+    \frac{|\lambda_T|S_2}{1+|\lambda_T|M_T}.
+\]
+After rearrangement,
+\[
+    |\lambda_T|\{S_2-|S_1|M_T\}\leq |S_1|.
+\]
+Now \(|S_1|=O_p(\sqrt T)\), \(S_2\geq(c+o_p(1))T\), and
+\(|S_1|M_T=o_p(T)\).  Hence
+\[
+    \lambda_T=O_p(T^{-1/2}),
+    \qquad
+    |\lambda_T|M_T=o_p(1).
+\]
+Using \((1+x)^{-1}=1-x+x^2/(1+x)\) in the KKT equation gives
+\[
+    0=S_1-\lambda_TS_2+R_T,
+    \qquad
+    |R_T|
+    \leq
+    \frac{\lambda_T^2M_TS_2}{1-|\lambda_T|M_T}
+    =o_p(\sqrt T).
+\]
+Since \(S_2\) is bounded below by order \(T\), the displayed expansion for
+\(\lambda_T\) follows.
+\end{proof}
+
 \begin{lemma}[Scalar empirical-likelihood expansion]
 \label{lem:sol-scalar-el}
 Let \(Z_{1,T},\ldots,Z_{T,T}\) satisfy the convex-hull condition and suppose
@@ -579,42 +782,11 @@ Then
 \begin{proof}
 Put
 \(S_1=\sum_tZ_{t,T}\), \(S_2=\sum_tZ_{t,T}^2\), and
-\(M_T=\max_t|Z_{t,T}|\).  The convex-hull condition gives a unique multiplier
-\(\lambda_T\) in the interval on which every \(1+\lambda_TZ_{t,T}\) is
-positive.  Its score equation implies the exact identity
+\(M_T=\max_t|Z_{t,T}|\).  Lemma \ref{lem:sample-el-local-l2-curvature} gives
 \[
-    S_1
-    =\lambda_T\sum_{t=1}^T
-      \frac{Z_{t,T}^2}{1+\lambda_TZ_{t,T}}.
-\]
-Consequently,
-\[
-    |S_1|
-    \geq
-    \frac{|\lambda_T|S_2}{1+|\lambda_T|M_T}.
-\]
-After rearrangement,
-\[
-    |\lambda_T|\{S_2-|S_1|M_T\}\leq |S_1|.
-\]
-Now \(|S_1|=O_p(\sqrt T)\), \(S_2\geq(c+o_p(1))T\), and
-\(|S_1|M_T=o_p(T)\).  Hence
-\[
-    \lambda_T=O_p(T^{-1/2}),
+    \lambda_T=\frac{S_1}{S_2}+o_p(T^{-1/2}),
     \qquad
     |\lambda_T|M_T=o_p(1).
-\]
-Using \((1+x)^{-1}=1-x+x^2/(1+x)\) in the score equation gives
-\[
-    0=S_1-\lambda_TS_2+R_{1T},
-    \qquad
-    |R_{1T}|
-    \leq
-    \frac{\lambda_T^2M_TS_2}{1-|\lambda_T|M_T}.
-\]
-Thus
-\[
-    \lambda_T=\frac{S_1}{S_2}+o_p(T^{-1/2}).
 \]
 Finally, Taylor expansion of the logarithm, uniformly because
 \(|\lambda_T|M_T=o_p(1)\), yields
@@ -709,6 +881,72 @@ For conformable \(\bm c\) and \(\bm w\), it follows immediately that
     =\bm c'\bm Q'\bm M_{K,\Lambda}\bm w=0.
 \]
 \end{proof}
+
+\begin{assumption}[Population KKT bridge and identification]
+\label{ass:population-kkt-identification}
+Let \(\mathcal B\) be a compact neighborhood of \(\beta_0\). Let
+\(\mathcal N_{\Lambda_0}^{P}\) be the \(L^2(P)\) closure of the true
+regime-specific nuisance space generated by
+\(\ind\{j_{\Lambda_0}(t)=j\}h(W_{t-1})\). Uniformly over
+\(\beta\in\mathcal B\), the empirical projection moments and profiled score
+moments converge to their \(L^2(P)\) limits, the empirical Gram matrices are
+stable, and the sieve approximation errors vanish at the rates in Assumption
+\ref{ass:prim-sieve}. Let
+\[
+    u_\beta
+    =
+    Y-\beta X_{lag}
+    -\Pi_P(Y-\beta X_{lag}\mid\mathcal N_{\Lambda_0}^{P}),
+    \qquad
+    v
+    =
+    w-\Pi_P(w\mid\mathcal N_{\Lambda_0}^{P}),
+\]
+where \(\Pi_P(\cdot\mid\mathcal N_{\Lambda_0}^{P})\) denotes \(L^2(P)\)
+orthogonal projection. The population normal-score equation
+\[
+    \Psi(\beta)=\E\{u_\beta v\}=0
+\]
+has the unique solution \(\beta=\beta_0\) in \(\mathcal B\).
+\end{assumption}
+
+\begin{proposition}[From sample KKT to population KKT]
+\label{prop:sample-to-population-kkt}
+Under Assumption \ref{ass:population-kkt-identification}, any sequence
+\(\widehat\beta_T\in\mathcal B\) whose sample profiled score satisfies
+\[
+    T^{-1}\sum_{t=1}^T
+    \widehat u_t(\widehat\beta_T,\widehat\Lambda)
+    w_t^c(\widehat\Lambda)
+    =o_p(1)
+\]
+also satisfies \(\Psi(\widehat\beta_T)=o_p(1)\). Consequently,
+\[
+    \widehat\beta_T\overset{p}{\longrightarrow}\beta_0.
+\]
+\end{proposition}
+
+\begin{proof}
+Lemma \ref{lem:sample-l2pt-profile-kkt} puts both the profiled residual and
+the residualized score weight in the empirical orthogonal complement of the
+sample sieve space. Assumption \ref{ass:population-kkt-identification}
+transfers these empirical normal equations to their \(L^2(P)\) limits, so the
+sample profiled score is uniformly close to \(\Psi(\beta)\) on \(\mathcal B\).
+If the sample score at \(\widehat\beta_T\) is \(o_p(1)\), then
+\(\Psi(\widehat\beta_T)=o_p(1)\). Compactness of \(\mathcal B\), continuity of
+\(\Psi\), and uniqueness of the population zero imply
+\(\widehat\beta_T\to_p\beta_0\).
+\end{proof}
+
+\begin{remark}[What the KKT bridge does and does not prove]
+The KKT bridge proves identification and consistency once uniform convergence
+and population uniqueness are available. It does not by itself prove Wilks.
+For Wilks, the EL KKT must be localized near \(\lambda_T=0\), which requires
+the oracle numerator CLT, denominator LLN, and maximum-score control proved
+below. Those stochastic lemmas are therefore not replacements for the KKT
+geometry; they are the conditions that make the EL KKT use its local
+\(L^2(P_T)\) curvature.
+\end{remark}
 
 
 \begin{lemma}[Uniform fitted-value and leverage bounds]
@@ -983,6 +1221,14 @@ because Lemma \ref{lem:wb-oracle-lln} gives
 \ref{lem:wb-oracle-max} and \(\|\bm d_0\|_\infty=o_p(\sqrt T)\).
 \end{proof}
 
+\begin{remark}[How the stochastic lemmas enter the KKT geometry]
+The nuisance geometry has already reduced the feasible score to the oracle
+array \(U_tv_{t,0}\) plus a negligible residual. The next three lemmas do not
+identify \(\beta_0\); they localize the EL KKT. The numerator CLT gives the
+scale of \(P_TZ\), the denominator LLN gives the \(L^2(P_T)\) curvature
+\(P_TZ^2\), and the maximum bound guarantees that
+\(|\lambda_T|\max_t|Z_t|=o_p(1)\), so the entropy KKT is locally quadratic.
+\end{remark}
 \begin{theorem}[Known-partition conditional-design Wilks]
 \label{thm:wb-known-wilks}
 Under Assumptions \ref{ass:prim-stoch}--\ref{ass:prim-sieve},
@@ -1021,7 +1267,8 @@ probability tending to one.  Lemmas \ref{lem:wb-oracle-max} and
     \max_t|\widehat Z_t(\beta_0,\Lambda_0)|=o_p(\sqrt T).
 \]
 Assumption \ref{ass:prim-convex} supplies the convex-hull condition.  Lemma
-\ref{lem:sol-scalar-el} gives
+\ref{lem:sample-el-local-l2-curvature} localizes the EL multiplier, and Lemma
+\ref{lem:sol-scalar-el} gives the local quadratic form
 \[
     \ell_T(\beta_0,\Lambda_0)=A_T^2/B_T+o_p(1),
 \]

@@ -1,0 +1,1277 @@
+\documentclass[12pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsfonts,amsthm,bm,array,booktabs,enumitem}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+
+\numberwithin{equation}{section}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}{Proposition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{assumption}{Assumption}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{remark}{Remark}
+
+\newcommand{\E}{\mathbb E}
+\newcommand{\R}{\mathbb R}
+\newcommand{\Pp}{\mathbb P}
+\newcommand{\ind}{\mathbf 1}
+\newcommand{\op}{o_p}
+\newcommand{\Op}{O_p}
+\newcommand{\N}{\mathcal N}
+\newcommand{\LtwoT}{L^2(P_T)}
+\newcommand{\LtwoP}{L^2(P)}
+\newcommand{\innerT}[2]{\langle #1,#2\rangle_T}
+\newcommand{\innerP}[2]{\langle #1,#2\rangle_P}
+
+\begin{document}
+
+\begin{center}
+{\Large\bf L2 Geometry Workbook for Profile Sieve EL}\\[6pt]
+{\large Three-Part Proof: Geometry, Small Stochastic Bounds, and Merging}\\[6pt]
+{\normalsize Solved derivation workbook}\\[12pt]
+\end{center}
+
+\tableofcontents
+\newpage
+
+\part{Geometric and Convex KKT Body}
+
+\section{Model Setup: Full Geometry in \texorpdfstring{\(L^2(P_T)\)}{L2PT} and \texorpdfstring{\(L^2(P)\)}{L2P}}
+
+The purpose of this workbook is to rewrite the whole proof logic as Hilbert
+space geometry. The sample space is not first probability; it is first the
+finite empirical Hilbert space
+\[
+    \LtwoT=(\R^T,\innerT{a}{b}=T^{-1}a'b).
+\]
+The population limit is the Hilbert space
+\[
+    \LtwoP,\qquad \innerP{f}{g}=\E\{fg\}.
+\]
+
+The model setup is the following chain:
+\[
+\begin{aligned}
+\bm y&=\beta_0\bm x+\bm\mu_0+\bm u
+&&\text{model in }\LtwoT,\\
+\mu_{0,t}&=m_{j_0(t)}(W_{t-1}),\quad
+j_0(t)=j\iff k_{j,0}<t\le k_{j+1,0}
+&&\text{true nuisance vector},\\
+\N_{K,\Lambda,T}&=\operatorname{col}(\bm Q_{K,\Lambda})
+&&\text{nuisance subspace},\\
+\bm M_{K,\Lambda}&=I-\Pi_{K,\Lambda,T}
+&&\text{residual-maker},\\
+S_T(\beta,\Lambda)&=\sqrt T\innerT{\bm M_{K,\Lambda}(\bm y-\beta\bm x)}
+{\bm M_{K,\Lambda}\bm w}
+&&\text{projected score}.
+\end{aligned}
+\]
+Here \(\bm\mu_0\) is exactly the stacked nonparametric nuisance part of the
+model. If there are no nuisance breaks, \(\mu_{0,t}=m(W_{t-1})\). With breaks,
+\(\mu_{0,t}=m_j(W_{t-1})\) on regime \(j\), so \(\bm\mu_0\) is not one stable
+function evaluated over the whole sample; it is the true piecewise nuisance
+surface evaluated observation by observation.
+
+EL then uses the scalar products
+\[
+    Z_t(\beta,\Lambda)
+    =\{\bm M_{K,\Lambda}(\bm y-\beta\bm x)\}_t\{\bm M_{K,\Lambda}\bm w\}_t
+\]
+to form a one-dimensional empirical likelihood. EL is not the Hilbert
+projection; EL is the likelihood wrapper around the projected score.
+
+\begin{center}
+\fbox{\parbox{0.92\textwidth}{
+\textbf{Three-part proof map.} Part I is finite-sample geometry: profiling,
+residual scores, and EL are all KKT/convex objects in \(\LtwoT\). Part II is
+small stochastic verification: Gram stability, sieve and break errors, CLT,
+variance, max-score, and convex-hull size. Part III merges them: consistency
+comes from the moment bridge plus unique population zero, while Wilks comes
+from the EL KKT quadratic reduction plus the standardized score CLT.}}
+\end{center}
+
+\section{Finite-Sample Hilbert Space: Viewing the Entire Model in \texorpdfstring{\(L^2(P_T)\)}{L2PT}}
+
+\subsection{The empirical space}
+
+Let
+\[
+    \Omega_T=\{1,\ldots,T\},
+    \qquad
+    P_T=T^{-1}\sum_{t=1}^T\delta_t.
+\]
+Every sample vector \(\bm a=(a_1,\ldots,a_T)'\) is a function
+\(a_T:\Omega_T\to\R\), with \(a_T(t)=a_t\). The empirical inner product is
+\[
+    \innerT{\bm a}{\bm b}
+    =\int a_T b_T\,dP_T
+    =T^{-1}\sum_{t=1}^Ta_tb_t
+    =T^{-1}\bm a'\bm b.
+\]
+Thus all variables in the sample are elements of \(\LtwoT\):
+\[
+    \bm y,\bm x,\bm w,\bm u,\bm\mu_0\in\LtwoT.
+\]
+
+\subsection{The full finite-sample model}
+
+The break-aware model is the vector identity in \(\LtwoT\)
+\begin{equation}
+    \bm y=\beta_0\bm x+\bm\mu_0+\bm u,
+    \label{eq:l2pt-model}
+\end{equation}
+where
+\[
+    \mu_{0,t}=\sum_{j=0}^{q_0}m_j(W_{t-1})\ind\{k_{j,0}<t\le k_{j+1,0}\}.
+\]
+So the full model says: \(\bm y\) lies in the affine set
+\[
+    \beta_0\bm x+\bm\mu_0+\bm u.
+\]
+The inferential problem is to remove \(\bm\mu_0\), not by estimating it as a
+main parameter, but by projecting away its nuisance subspace.
+
+\subsection{Candidate nuisance subspaces}
+
+For a candidate partition \(\Lambda=(k_1,\ldots,k_q)\), define the block sieve
+matrix
+\[
+    \bm Q_{K,\Lambda}
+    =[
+      \bm D_0(\Lambda)\bm P,
+      \ldots,
+      \bm D_q(\Lambda)\bm P
+    ].
+\]
+The sample nuisance subspace is
+\begin{equation}
+    \N_{K,\Lambda,T}
+    =\operatorname{col}(\bm Q_{K,\Lambda})\subset\LtwoT.
+    \label{eq:sample-nuisance-space}
+\end{equation}
+An element of this space has the form
+\[
+    g_T(t)=\sum_{j=0}^q\ind\{t\in I_j(\Lambda)\}\bm P_K(W_{t-1})'c_j.
+\]
+This is the finite-sample version of a regime-specific nonparametric nuisance
+function.
+
+Let \(j_\Lambda(t)\) denote the regime index induced by \(\Lambda\). For a
+regime-wise nuisance tuple \(h=(h_0,\ldots,h_q)\), define its stacked sample
+vector by
+\[
+    \bm h_{\Lambda,T}
+    =\big(h_{j_\Lambda(1)}(W_0),\ldots,
+          h_{j_\Lambda(T)}(W_{T-1})\big)'.
+\]
+This vector is the empirical version of the candidate nuisance direction.
+
+\begin{lemma}[Uniform finite-sieve approximation in \texorpdfstring{\(L^2(P_T)\)}{L2PT}]
+\label{lem:sieve-decomposition}
+Fix \((K,\Lambda,T)\) and a nuisance class \(\mathcal H\). For each
+\(h\in\mathcal H\), let \(\bm h_{\Lambda,T}\in\LtwoT\) be the stacked nuisance
+vector defined above. Define the finite-sieve approximation radius
+\begin{equation}
+    \rho_{K,T}(\mathcal H,\Lambda)
+    =\sup_{h\in\mathcal H}
+      \inf_{\gamma\in\R^{(q+1)K}}
+      \|\bm h_{\Lambda,T}-\bm Q_{K,\Lambda}\gamma\|_T.
+    \label{eq:rho-sieve-radius}
+\end{equation}
+If \(\rho_{K,T}(\mathcal H,\Lambda)=\op(1)\), then the desired uniform
+\(\LtwoT\) approximation holds:
+\begin{equation}
+    \sup_{h\in\mathcal H}
+    \|\bm h_{\Lambda,T}-\bm Q_{K,\Lambda}\gamma_{K,\Lambda}(h)\|_T
+    =\sup_{h\in\mathcal H}\|\bm r_{K,\Lambda,T}(h)\|_T
+    =\rho_{K,T}(\mathcal H,\Lambda)
+    =\op(1).
+    \label{eq:uniform-sieve-approximation}
+\end{equation}
+Here, for each \(h\),
+\[
+    \gamma_{K,\Lambda}(h)
+    \in\operatorname*{argmin}_{\gamma\in\R^{(q+1)K}}
+    \|\bm h_{\Lambda,T}-\bm Q_{K,\Lambda}\gamma\|_T^2,
+\]
+\[
+    \bm h_{K,\Lambda,T}
+    =\bm Q_{K,\Lambda}\gamma_{K,\Lambda}(h),
+    \qquad
+    \bm r_{K,\Lambda,T}(h)
+    =\bm h_{\Lambda,T}-\bm h_{K,\Lambda,T}.
+\]
+The ambient space is \(\LtwoT\cong\R^T\), so \(\bm h_{\Lambda,T}\),
+\(\bm h_{K,\Lambda,T}\), and \(\bm r_{K,\Lambda,T}(h)\) are all \(T\times1\)
+vectors. The design matrix and coefficient vector have dimensions
+\[
+    \bm Q_{K,\Lambda}\in\R^{T\times(q+1)K},
+    \qquad
+    \gamma_{K,\Lambda}(h)\in\R^{(q+1)K}.
+\]
+The finite nuisance space has dimension
+\[
+    d_{K,\Lambda,T}=\operatorname{rank}(\bm Q_{K,\Lambda})\le(q+1)K,
+\]
+and
+\begin{equation}
+    \bm h_{\Lambda,T}
+    =\bm Q_{K,\Lambda}\gamma_{K,\Lambda}(h)
+     +\bm r_{K,\Lambda,T}(h),
+    \label{eq:sieve-decomposition}
+\end{equation}
+where
+\[
+    \bm Q_{K,\Lambda}\gamma_{K,\Lambda}(h)\in\N_{K,\Lambda,T}\subset\LtwoT,
+    \qquad
+    \bm r_{K,\Lambda,T}(h)\in\N_{K,\Lambda,T}^{\perp_T}\subset\LtwoT.
+\]
+Thus \(\bm r_{K,\Lambda,T}(h)\) is a \(T\times1\) approximation-residual vector
+living in a \((T-d_{K,\Lambda,T})\)-dimensional orthogonal complement, and
+\[
+    \bm Q_{K,\Lambda}'\bm r_{K,\Lambda,T}(h)=0.
+\]
+\end{lemma}
+
+\begin{proof}
+The column space \(\N_{K,\Lambda,T}=\operatorname{col}(\bm Q_{K,\Lambda})\) is a
+finite-dimensional closed subspace of \(\LtwoT\). Therefore the Hilbert
+projection theorem gives the closest finite-sieve approximation to every
+\(\bm h_{\Lambda,T}\):
+\[
+    \Pi_{K,\Lambda,T}\bm h_{\Lambda,T}
+    \in\N_{K,\Lambda,T}.
+\]
+Because every element of \(\N_{K,\Lambda,T}\) is \(\bm Q_{K,\Lambda}\gamma\), the
+projection can be written as
+\[
+    \Pi_{K,\Lambda,T}\bm h_{\Lambda,T}
+    =\bm Q_{K,\Lambda}\gamma_{K,\Lambda}(h)
+\]
+for any least-squares minimizer \(\gamma_{K,\Lambda}(h)\). If
+\(\bm Q_{K,\Lambda}\) is rank deficient, the coefficient vector need not be
+unique, but the fitted vector is unique.
+
+Define
+\[
+    \bm r_{K,\Lambda,T}(h)
+    =\bm h_{\Lambda,T}-\Pi_{K,\Lambda,T}\bm h_{\Lambda,T}.
+\]
+The projection theorem gives
+\[
+    \innerT{\bm r_{K,\Lambda,T}(h)}{\bm v}=0
+    \qquad\text{for every }\bm v\in\N_{K,\Lambda,T},
+\]
+which implies \(\bm Q_{K,\Lambda}'\bm r_{K,\Lambda,T}(h)=0\). This proves the
+orthogonal decomposition \eqref{eq:sieve-decomposition} and the location
+\(\bm r_{K,\Lambda,T}(h)\in\N_{K,\Lambda,T}^{\perp_T}\).
+
+By the definition of orthogonal projection,
+\[
+    \|\bm r_{K,\Lambda,T}(h)\|_T
+    =\inf_{\gamma\in\R^{(q+1)K}}
+      \|\bm h_{\Lambda,T}-\bm Q_{K,\Lambda}\gamma\|_T.
+\]
+Taking the supremum over \(h\in\mathcal H\) gives exactly
+\eqref{eq:uniform-sieve-approximation}. Hence the mathematical task behind this
+lemma is to verify \(\rho_{K,T}(\mathcal H,\Lambda)=\op(1)\) from the chosen
+basis, smoothness class, and growth rate of \(K\). An arbitrary nuisance
+direction is not assumed to be exactly spanned by the sieve basis; it is
+approximated by its finite-sieve projection, and the leftover is
+\(\bm r_{K,\Lambda,T}(h)\).
+\end{proof}
+\subsection{Orthogonal projection}
+
+Let \(\Pi_{K,\Lambda,T}\) be the \(\LtwoT\)-orthogonal projection onto
+\(\N_{K,\Lambda,T}\). In coordinates,
+\[
+    \Pi_{K,\Lambda,T}
+    =\bm Q_{K,\Lambda}(\bm Q_{K,\Lambda}'\bm Q_{K,\Lambda})^\dagger
+      \bm Q_{K,\Lambda}'.
+\]
+The residual-maker is
+\begin{equation}
+    \bm M_{K,\Lambda}=I-\Pi_{K,\Lambda,T}.
+    \label{eq:sample-residual-maker}
+\end{equation}
+It satisfies the projection identities
+\[
+    \bm M_{K,\Lambda}'=\bm M_{K,\Lambda},
+    \qquad
+    \bm M_{K,\Lambda}^2=\bm M_{K,\Lambda},
+    \qquad
+    \bm Q_{K,\Lambda}'\bm M_{K,\Lambda}=0.
+\]
+
+\begin{lemma}[Projection identities for the residual-maker]
+\label{lem:projection-identities}
+Let \(Q=\bm Q_{K,\Lambda}\), \(G=Q'Q\),
+\[
+    \Pi=QG^\dagger Q',
+    \qquad
+    M=I-\Pi,
+\]
+where \(G^\dagger\) is the Moore-Penrose inverse. Then \(\Pi\) and \(M\) are
+symmetric and idempotent, and \(M\) annihilates the sieve nuisance space:
+\[
+    M'=M,
+    \qquad
+    M^2=M,
+    \qquad
+    MQ=0,
+    \qquad
+    Q'M=0.
+\]
+\end{lemma}
+
+\begin{proof}
+Since \(G=Q'Q\) is symmetric, its Moore-Penrose inverse \(G^\dagger\) is also
+symmetric. Hence
+\[
+    \Pi'=\{QG^\dagger Q'\}'=QG^\dagger Q'=\Pi.
+\]
+For idempotence, use the Moore-Penrose identity
+\(G^\dagger GG^\dagger=G^\dagger\):
+\[
+    \Pi^2
+    =QG^\dagger Q'QG^\dagger Q'
+    =QG^\dagger GG^\dagger Q'
+    =QG^\dagger Q'
+    =\Pi.
+\]
+Therefore
+\[
+    M'=I-\Pi'=M,
+    \qquad
+    M^2=(I-\Pi)^2=I-2\Pi+\Pi^2=I-\Pi=M.
+\]
+It remains to show that \(M\) kills the columns of \(Q\). Since
+\(\mathcal R(G)=\mathcal R(Q')\) and \(G^\dagger G\) is the orthogonal projector
+onto \(\mathcal R(G)\),
+\[
+    QG^\dagger G=Q.
+\]
+Thus
+\[
+    \Pi Q=QG^\dagger Q'Q=QG^\dagger G=Q,
+    \qquad
+    MQ=(I-\Pi)Q=0.
+\]
+Finally, because \(M\) is symmetric, \(Q'M=(MQ)'=0\). This proves all projection
+identities.
+\end{proof}
+
+\section{Profiling Is Orthogonal Projection}
+
+For a trial value \(\beta\), define the partial outcome
+\[
+    \bm y_\beta^\circ=\bm y-\beta\bm x.
+\]
+It is the original outcome \(\bm y\) after subtracting the trial linear component
+\(\beta\bm x\).
+
+Profiling the nuisance means finding the closest nuisance vector to the partial
+outcome \(\bm y_\beta^\circ\) in \(\N_{K,\Lambda,T}\):
+\[
+    \widehat{\bm\mu}_{\beta,\Lambda}
+    =\arg\min_{\bm g\in\N_{K,\Lambda,T}}\|\bm y_\beta^\circ-\bm g\|_T^2.
+\]
+By Hilbert projection,
+\[
+    \widehat{\bm\mu}_{\beta,\Lambda}=\Pi_{K,\Lambda,T}\bm y_\beta^\circ,
+    \qquad
+    \widehat{\bm u}(\beta,\Lambda)=\bm y_\beta^\circ-\widehat{\bm\mu}_{\beta,\Lambda}
+    =\bm M_{K,\Lambda}\bm y_\beta^\circ.
+\]
+
+\begin{lemma}[Profile normal equation]
+For every \(\bm h\in\N_{K,\Lambda,T}\),
+\[
+    \innerT{\widehat{\bm u}(\beta,\Lambda)}{\bm h}=0.
+\]
+Equivalently,
+\[
+    \bm Q_{K,\Lambda}'\widehat{\bm u}(\beta,\Lambda)=0.
+\]
+\end{lemma}
+
+\begin{proof}
+This is the KKT condition for a least-squares projection in \(\LtwoT\). If
+\(\bm h=\bm Q_{K,\Lambda}\bm a\), then
+\[
+    \innerT{\widehat{\bm u}}{\bm h}
+    =T^{-1}\widehat{\bm u}'\bm Q_{K,\Lambda}\bm a
+    =T^{-1}(\bm Q_{K,\Lambda}'\widehat{\bm u})'\bm a=0.
+\]
+\end{proof}
+
+\subsection{Break search as subspace selection}
+
+For fixed \(\beta\), the partial outcome is
+\[
+    \bm y_\beta^\circ=\bm y-\beta\bm x.
+\]
+For a candidate partition \(\Lambda=(k_1,\ldots,k_q)\), set \(k_0=0\),
+\(k_{q+1}=T\), and
+\[
+    I_j(\Lambda)=\{t:k_j<t\le k_{j+1}\}.
+\]
+The block sieve matrix is
+\[
+    \bm Q_{K,\Lambda}
+    =[\bm D_0(\Lambda)\bm P,\ldots,\bm D_q(\Lambda)\bm P].
+\]
+For \(c=(c_0',\ldots,c_q')'\), the fitted nuisance vector is
+\(\bm Q_{K,\Lambda}c\), with component
+\[
+    (\bm Q_{K,\Lambda}c)_t
+    =\bm P_K(W_{t-1})'c_j
+    \qquad\text{if }t\in I_j(\Lambda).
+\]
+Thus minimizing over \(c\) is exactly the same as choosing a separate sieve
+coefficient vector \(c_j\) on each segment.
+
+\begin{lemma}[Profile RSS is a Hilbert distance]
+\label{lem:rss-hilbert-distance}
+For fixed \((\beta,\Lambda)\), define the segment cost
+\[
+    C_K(s,e;\beta)
+    =\min_{c\in\R^K}
+      \sum_{t=s}^e
+      \{y_t-\beta x_t-\bm P_K(W_{t-1})'c\}^2,
+\]
+and the profile RSS
+\[
+    RSS_K(\beta,\Lambda)
+    =\sum_{j=0}^q C_K(k_j+1,k_{j+1};\beta).
+\]
+Then
+\begin{equation}
+\begin{aligned}
+    RSS_K(\beta,\Lambda)
+    &=\min_{c\in\R^{(q+1)K}}
+      \|\bm y_\beta^\circ-\bm Q_{K,\Lambda}c\|_2^2 \\
+    &=\inf_{\bm g\in\N_{K,\Lambda,T}}
+      \|\bm y_\beta^\circ-\bm g\|_2^2 \\
+    &=T\operatorname{dist}_T^2
+      (\bm y_\beta^\circ,\N_{K,\Lambda,T}) \\
+    &=T\|\bm M_{K,\Lambda}\bm y_\beta^\circ\|_T^2.
+\end{aligned}
+\label{eq:rss-distance-equivalence}
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+Because each segment \(I_j(\Lambda)\) has its own coefficient vector \(c_j\),
+\[
+\begin{aligned}
+    RSS_K(\beta,\Lambda)
+    &=\min_{c_0,\ldots,c_q}
+      \sum_{j=0}^q\sum_{t\in I_j(\Lambda)}
+      \{y_t-\beta x_t-\bm P_K(W_{t-1})'c_j\}^2 \\
+    &=\min_{c\in\R^{(q+1)K}}
+      \|\bm y-\beta\bm x-\bm Q_{K,\Lambda}c\|_2^2 \\
+    &=\min_{c\in\R^{(q+1)K}}
+      \|\bm y_\beta^\circ-\bm Q_{K,\Lambda}c\|_2^2.
+\end{aligned}
+\]
+Since \(\N_{K,\Lambda,T}=\operatorname{col}(\bm Q_{K,\Lambda})\), every
+\(\bm g\in\N_{K,\Lambda,T}\) can be written as
+\(\bm g=\bm Q_{K,\Lambda}c\). Therefore
+\[
+    \min_c\|\bm y_\beta^\circ-\bm Q_{K,\Lambda}c\|_2^2
+    =\inf_{\bm g\in\N_{K,\Lambda,T}}
+      \|\bm y_\beta^\circ-\bm g\|_2^2.
+\]
+The Euclidean norm and the empirical Hilbert norm satisfy
+\(\|\bm a\|_2^2=T\|\bm a\|_T^2\). Hence
+\[
+    \inf_{\bm g\in\N_{K,\Lambda,T}}
+      \|\bm y_\beta^\circ-\bm g\|_2^2
+    =T\operatorname{dist}_T^2(\bm y_\beta^\circ,\N_{K,\Lambda,T}).
+\]
+Finally, \(\bm M_{K,\Lambda}\) is the residual-maker for the orthogonal
+projection onto \(\N_{K,\Lambda,T}\), so
+\[
+    \operatorname{dist}_T^2(\bm y_\beta^\circ,\N_{K,\Lambda,T})
+    =\|\bm M_{K,\Lambda}\bm y_\beta^\circ\|_T^2.
+\]
+This proves \eqref{eq:rss-distance-equivalence}.
+\end{proof}
+
+Consequently, for known order \(q\), the break estimator is
+\[
+\begin{aligned}
+    \widehat\Lambda_q(\beta)
+    &=\arg\min_{\Lambda\in\mathcal L_q(\epsilon)} RSS_K(\beta,\Lambda) \\
+    &=\arg\min_{\Lambda\in\mathcal L_q(\epsilon)}
+      \operatorname{dist}_T^2(\bm y_\beta^\circ,\N_{K,\Lambda,T}).
+\end{aligned}
+\]
+Unknown order adds a penalty to the same distance:
+\[
+    \widehat q(\beta)
+    =\arg\min_{0\le q\le\bar q}
+     \left\{
+       T\operatorname{dist}_T^2
+       (\bm y_\beta^\circ,\N_{K,\widehat\Lambda_q(\beta),T})
+       +\operatorname{pen}_T(q,K)
+     \right\}.
+\]
+Thus break search is subspace selection: each candidate \(\Lambda\) creates a
+candidate nuisance subspace \(\N_{K,\Lambda,T}\), and RSS picks the subspace
+closest to the partial outcome \(\bm y_\beta^\circ\).
+\section{Residualized Score Direction}
+
+The raw score weight \(\bm w\in\LtwoT\) may contain nuisance directions. The
+geometric score direction is its nuisance-orthogonal component
+\[
+    \bm v_\Lambda=\bm w^c(\Lambda)=\bm M_{K,\Lambda}\bm w.
+\]
+Then
+\[
+    \bm v_\Lambda\in\N_{K,\Lambda,T}^{\perp_T},
+    \qquad
+    \innerT{\bm v_\Lambda}{\bm h}=0
+    \quad \forall \bm h\in\N_{K,\Lambda,T}.
+\]
+
+The sample profiled moment is the Hilbert inner product
+\begin{equation}
+    \Psi_T(\beta,\Lambda)
+    =\innerT{\bm M_{K,\Lambda}(\bm y-\beta\bm x)}
+      {\bm M_{K,\Lambda}\bm w}.
+    \label{eq:sample-profile-moment}
+\end{equation}
+The scaled score is
+\[
+    S_T(\beta,\Lambda)=\sqrt T\,\Psi_T(\beta,\Lambda).
+\]
+
+\begin{lemma}[Finite-sample nuisance cancellation]
+If \(\bm g\in\N_{K,\Lambda,T}\), then
+\[
+    \innerT{\bm M_{K,\Lambda}\bm g}{\bm M_{K,\Lambda}\bm w}=0.
+\]
+\end{lemma}
+
+\begin{proof}
+Because \(\bm g\in\N_{K,\Lambda,T}\), \(\bm M_{K,\Lambda}\bm g=0\). Hence the
+inner product is zero. Equivalently,
+\((\bm Qc)'\bm M_{K,\Lambda}\bm w=0\) for every \(c\).
+\end{proof}
+
+\section{Known True Partition: Wilks Logic in Geometry}
+
+Set \(\Lambda=\Lambda_0\), and abbreviate
+\[
+    \bm Q_0=\bm Q_{K,\Lambda_0},
+    \qquad
+    \bm M_0=\bm M_{K,\Lambda_0},
+    \qquad
+    \bm v_0=\bm M_0\bm w.
+\]
+Decompose the true nuisance into its finite-sieve projection and approximation
+residual:
+\[
+    \bm\mu_0=\bm Q_0\bm c_0+\bm r_0,
+    \qquad
+    \bm Q_0\bm c_0\in\N_{K,\Lambda_0,T},
+    \qquad
+    \bm r_0\in\N_{K,\Lambda_0,T}^{\perp_T}.
+\]
+
+\begin{lemma}[True-partition score decomposition]
+\label{lem:true-partition-score-decomposition}
+At \(\beta=\beta_0\) and \(\Lambda=\Lambda_0\), the projected score satisfies
+\begin{equation}
+    S_T(\beta_0,\Lambda_0)
+    =T^{-1/2}\bm u'\bm v_0
+     +T^{-1/2}\bm r_0'\bm v_0.
+    \label{eq:true-partition-score-decomposition}
+\end{equation}
+The first term is the stochastic score. The second term is the sieve
+approximation-bias term, and this is the term controlled by approximation
+rates:
+\begin{equation}
+    T^{-1/2}\bm r_0'\bm v_0
+    =T^{-1/2}\bm r_0'\bm M_0\bm w
+    =\op(1).
+    \label{eq:true-partition-approximation-bias}
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+At the true parameter, the partial outcome is
+\[
+    \bm y_{\beta_0}^\circ
+    =\bm y-\beta_0\bm x
+    =\bm\mu_0+\bm u
+    =\bm Q_0\bm c_0+\bm r_0+\bm u.
+\]
+Apply the true-partition residual-maker \(\bm M_0\). Since \(\bm Q_0\bm c_0\) is
+in \(\N_{K,\Lambda_0,T}\), Lemma~\ref{lem:projection-identities} gives
+\(\bm M_0\bm Q_0\bm c_0=0\). Therefore
+\[
+    \bm M_0\bm y_{\beta_0}^\circ
+    =\bm M_0\bm u+\bm M_0\bm r_0.
+\]
+The projected score is
+\[
+\begin{aligned}
+    S_T(\beta_0,\Lambda_0)
+    &=\sqrt T\innerT{\bm M_0\bm y_{\beta_0}^\circ}{\bm M_0\bm w} \\
+    &=T^{-1/2}(\bm M_0\bm u+\bm M_0\bm r_0)'\bm v_0.
+\end{aligned}
+\]
+Because \(\bm M_0\) is symmetric and idempotent and \(\bm v_0=\bm M_0\bm w\),
+we have \(\bm M_0\bm v_0=\bm v_0\). Hence
+\[
+    (\bm M_0\bm u)'\bm v_0=\bm u'\bm v_0,
+    \qquad
+    (\bm M_0\bm r_0)'\bm v_0=\bm r_0'\bm v_0.
+\]
+Substituting these two identities gives
+\eqref{eq:true-partition-score-decomposition}. The term
+\(T^{-1/2}\bm u'\bm v_0\) is handled by the score CLT and variance consistency.
+The term \(T^{-1/2}\bm r_0'\bm v_0\) is the only approximation-rate term in this
+decomposition, because it is the only term containing the sieve residual
+\(\bm r_0\).
+\end{proof}
+\section{Omitted Breaks: False Predictivity as a Projection Drift}
+
+Let \(\N_{K,0,T}\) be the stable/no-break nuisance space and let
+\(\bm M_{\mathrm{st}}\) be the residual-maker for orthogonal projection onto
+\(\N_{K,0,T}\). Define
+\[
+    \bm v_{\mathrm{st}}=\bm M_{\mathrm{st}}\bm w,
+    \qquad
+    S_T^{\mathrm{st}}(\beta)
+    =\sqrt T\innerT{\bm M_{\mathrm{st}}(\bm y-\beta\bm x)}
+                         {\bm M_{\mathrm{st}}\bm w}.
+\]
+
+\begin{proposition}[Omitted-break projection drift]
+\label{prop:omitted-break-projection-drift}
+At the true parameter \(\beta_0\),
+\begin{equation}
+    S_T^{\mathrm{st}}(\beta_0)
+    =
+    T^{-1/2}\bm u'\bm v_{\mathrm{st}}
+    +B_T,
+    \qquad
+    B_T=T^{-1/2}\bm\mu_0'\bm v_{\mathrm{st}}.
+    \label{eq:stable-score-drift-decomposition}
+\end{equation}
+Equivalently,
+\begin{equation}
+    B_T
+    =
+    \sqrt T
+    \innerT{\bm M_{\mathrm{st}}\bm\mu_0}
+           {\bm M_{\mathrm{st}}\bm w}.
+    \label{eq:stable-score-drift-inner-product}
+\end{equation}
+If
+\[
+    \innerT{\bm M_{\mathrm{st}}\bm\mu_0}
+           {\bm M_{\mathrm{st}}\bm w}
+    \to b\ne0,
+\]
+then \(B_T/\sqrt T\to b\), so the stable score has deterministic drift of
+order \(\sqrt T\) at the true parameter.
+\end{proposition}
+
+\begin{proof}
+At \(\beta_0\),
+\[
+    \bm y-\beta_0\bm x=\bm\mu_0+\bm u.
+\]
+Applying the stable residual-maker gives
+\[
+    \bm M_{\mathrm{st}}(\bm y-\beta_0\bm x)
+    =
+    \bm M_{\mathrm{st}}\bm u
+    +
+    \bm M_{\mathrm{st}}\bm\mu_0.
+\]
+Therefore
+\[
+\begin{aligned}
+    S_T^{\mathrm{st}}(\beta_0)
+    &=
+    T^{-1/2}
+    (\bm M_{\mathrm{st}}\bm u+\bm M_{\mathrm{st}}\bm\mu_0)'
+    \bm v_{\mathrm{st}}  \\
+    &=
+    T^{-1/2}\bm u'\bm v_{\mathrm{st}}
+    +
+    T^{-1/2}\bm\mu_0'\bm v_{\mathrm{st}},
+\end{aligned}
+\]
+because \(\bm M_{\mathrm{st}}\) is symmetric and idempotent and
+\(\bm v_{\mathrm{st}}=\bm M_{\mathrm{st}}\bm w\). This proves
+\eqref{eq:stable-score-drift-decomposition}. The same symmetry and idempotence
+give
+\[
+    T^{-1/2}\bm\mu_0'\bm v_{\mathrm{st}}
+    =
+    T^{-1/2}\bm\mu_0'\bm M_{\mathrm{st}}\bm w
+    =
+    \sqrt T
+    \innerT{\bm M_{\mathrm{st}}\bm\mu_0}
+           {\bm M_{\mathrm{st}}\bm w},
+\]
+which proves \eqref{eq:stable-score-drift-inner-product}. If the empirical
+inner product converges to \(b\ne0\), the drift is \(B_T=\sqrt T\,b+o(\sqrt T)\).
+\end{proof}
+
+As a toy example, suppose there are no covariates and the stable nuisance space
+contains only constants:
+\[
+    \N_{K,0,T}=\operatorname{span}\{\bm 1_T\}.
+\]
+Let the true nuisance contain one level shift,
+\[
+    \mu_{0,t}=\delta\ind\{t>k_0\},
+    \qquad
+    \pi_T=T^{-1}\sum_{t=1}^T\ind\{t>k_0\}.
+\]
+The stable projection removes only the global mean. Hence
+\[
+    (\bm M_{\mathrm{st}}\bm\mu_0)_t
+    =
+    \delta\{\ind(t>k_0)-\pi_T\}.
+\]
+If the residualized score direction is aligned with this step, for instance
+\(\bm M_{\mathrm{st}}\bm w=\bm M_{\mathrm{st}}\bm\mu_0\), then
+\[
+    \innerT{\bm M_{\mathrm{st}}\bm\mu_0}
+           {\bm M_{\mathrm{st}}\bm w}
+    =
+    \|\bm M_{\mathrm{st}}\bm\mu_0\|_T^2
+    =
+    \delta^2\pi_T(1-\pi_T).
+\]
+When \(\delta\ne0\) and \(\pi_T\to\pi\in(0,1)\), the limit is
+\(\delta^2\pi(1-\pi)\ne0\). The stable score therefore reports a false signal
+even at \(\beta_0\).
+
+The correct break-aware block sieve changes the projection target. Under the
+true partition,
+\[
+    \bm\mu_0=\bm Q_0\bm c_0+\bm r_0,
+    \qquad
+    \bm Q_0\bm c_0\in\N_{K,\Lambda_0,T},
+    \qquad
+    \|\bm r_0\|_T=o_p(1),
+\]
+so \(\bm M_0\bm\mu_0=\bm r_0\) is small. Under the stable space,
+\(\bm M_{\mathrm{st}}\bm\mu_0\) need not be small. The block-sieve projection
+removes the low-frequency break component before testing \(\beta\); otherwise
+omitted nuisance breaks can enter the score as false predictivity.
+\section{Estimated Partition}
+
+The estimated break procedure chooses a random subspace
+\[
+    \widehat\N_T=\N_{K,\widehat\Lambda,T},
+    \qquad
+    \widehat M_T=\bm M_{K,\widehat\Lambda}.
+\]
+The feasible score is
+\[
+    \widehat S_T(\beta_0)
+    =\sqrt T\innerT{\widehat M_T(\bm y-\beta_0\bm x)}{\widehat M_T\bm w}.
+\]
+The true-partition score is
+\[
+    S_T^0(\beta_0)
+    =\sqrt T\innerT{\bm M_0(\bm y-\beta_0\bm x)}{\bm M_0\bm w}.
+\]
+The estimated-partition Wilks argument is the score-equivalence statement
+\begin{equation}
+    \widehat S_T(\beta_0)-S_T^0(\beta_0)=\op(1),
+    \qquad
+    \widehat V_T-V_T^0=\op(1).
+    \label{eq:score-equivalence}
+\end{equation}
+Geometrically, \eqref{eq:score-equivalence} says that replacing the true
+subspace \(\N_{K,\Lambda_0,T}\) by the estimated subspace
+\(\N_{K,\widehat\Lambda,T}\) changes the score only by a negligible amount at
+the \(T^{-1/2}\) scale.
+
+\begin{remark}[Why this is weaker than operator-norm convergence]
+It is not necessary to prove \(\|\widehat M_T-M_0\|_{op}\to0\). Break-date
+errors can make that hard. The theorem only needs the projected score and its
+second moment to be asymptotically unchanged.
+\end{remark}
+
+\section{EL as a Finite-Sample Convex KKT Problem}
+
+For fixed \((K,\Lambda,\beta)\), everything in this section is finite-sample
+algebra in \(\LtwoT\). Define the profiled residual, score direction, and scalar
+moment array
+\[
+    \bm r_\beta=\bm M_{K,\Lambda}(\bm y-\beta\bm x),
+    \qquad
+    \bm a=\bm M_{K,\Lambda}\bm w,
+    \qquad
+    g_t(\beta,\Lambda)=r_{\beta,t}a_t.
+\]
+Then
+\[
+    \Psi_T(\beta,\Lambda)=P_Tg(\beta,\Lambda)
+    =T^{-1}\sum_{t=1}^Tg_t(\beta,\Lambda)
+    =\innerT{\bm r_\beta}{\bm a}.
+\]
+Thus the sieve basis \(Q_{K,\Lambda}\) has already represented the nuisance
+feasible directions: \(\operatorname{col}(Q_{K,\Lambda})\) is the tangent plane
+for nuisance variation, and \(M_{K,\Lambda}\) keeps only the orthogonal score
+component.
+
+EL adds one more finite-dimensional convex problem. The primal feasible set is
+the probability simplex cut by the affine moment hyperplane
+\[
+    \mathcal C_T(\beta,\Lambda)
+    =\left\{\pi\in\R^T_+:
+       \sum_{t=1}^T\pi_t=1,
+       \quad \sum_{t=1}^T\pi_tg_t(\beta,\Lambda)=0
+     \right\}.
+\]
+The empirical likelihood problem is equivalently
+\begin{equation}
+    \min_{\pi\in\mathcal C_T(\beta,\Lambda)}
+    -\sum_{t=1}^T\log(T\pi_t).
+    \label{eq:el-primal-convex}
+\end{equation}
+This is a convex barrier objective over a convex feasible set. Its Lagrangian is
+\[
+    \mathcal L(\pi,\eta,\lambda)
+    =-\sum_{t=1}^T\log(T\pi_t)
+      +\eta\left(\sum_{t=1}^T\pi_t-1\right)
+      +T\lambda\sum_{t=1}^T\pi_tg_t.
+\]
+The KKT first-order condition gives
+\[
+    -\frac{1}{\pi_t}+\eta+T\lambda g_t=0.
+\]
+After normalizing by \(\sum_t\pi_t=1\), the EL weights are
+\begin{equation}
+    \widehat\pi_t(\lambda)
+    =\frac{1}{T\{1+\lambda g_t(\beta,\Lambda)\}},
+    \qquad
+    1+\lambda g_t(\beta,\Lambda)>0.
+    \label{eq:el-kkt-weights}
+\end{equation}
+The remaining KKT equation is the dual moment equation
+\begin{equation}
+    P_T\left[\frac{g_t(\beta,\Lambda)}
+    {1+\lambda g_t(\beta,\Lambda)}\right]=0.
+    \label{eq:el-dual-kkt}
+\end{equation}
+The log empirical likelihood ratio is therefore
+\begin{equation}
+    \ell_T(\beta,\Lambda)
+    =2\sum_{t=1}^T\log\{1+\lambda_Tg_t(\beta,\Lambda)\}.
+    \label{eq:el-ratio-kkt}
+\end{equation}
+
+The quadratic EL reduction is also mostly KKT algebra. If
+\(\max_t|\lambda_Tg_t|=o_p(1)\), then expanding
+\eqref{eq:el-dual-kkt} gives
+\[
+    0=P_T\left[\frac{g_t}{1+\lambda_Tg_t}\right]
+      =P_Tg_t-\lambda_TP_Tg_t^2+R_{1T},
+    \qquad
+    R_{1T}=o_p(T^{-1/2}).
+\]
+Hence, with \(V_T=P_Tg_t^2\),
+\[
+    \lambda_T=\frac{P_Tg_t}{V_T}+o_p(T^{-1/2}).
+\]
+Expanding \eqref{eq:el-ratio-kkt} then yields
+\begin{equation}
+    \ell_T(\beta_0,\Lambda)
+    =\frac{T\{P_Tg_t(\beta_0,\Lambda)\}^2}{V_T(\Lambda)}+o_p(1)
+    =\frac{S_T(\beta_0,\Lambda)^2}{V_T(\Lambda)}+o_p(1).
+    \label{eq:el-kkt-quadratic}
+\end{equation}
+The stochastic work is not to rediscover EL; it is only to verify the small size
+conditions under which the KKT expansion is valid.
+
+\section{Population Hilbert Space}
+
+\subsection{Population object in \texorpdfstring{\(L^2(P)\)}{L2P}}
+
+To express breaks in population geometry, include rescaled time \(S\in(0,1]\).
+Let
+\[
+    O=(Y,X,W,S,U)
+\]
+be a population random element with law \(P\). The true regime map is
+\[
+    j_0(S)=j
+    \quad\Longleftrightarrow\quad
+    \tau_{j,0}<S\le\tau_{j+1,0}.
+\]
+The population model is the identity in \(\LtwoP\):
+\begin{equation}
+    Y=\beta_0X+\mu_0(S,W)+U,
+    \qquad
+    \mu_0(S,W)=\sum_{j=0}^{q_0}m_j(W)
+    \ind\{\tau_{j,0}<S\le\tau_{j+1,0}\}.
+    \label{eq:l2p-model}
+\end{equation}
+
+\subsection{Population nuisance space}
+
+For a population partition \(\Lambda\), define
+\[
+    \N_\Lambda^P
+    =\overline{\left\{
+      \sum_{j=0}^{q} \ind\{S\in I_j(\Lambda)\}h_j(W):
+      h_j\in L^2(P_W)
+    \right\}}^{L^2(P)}.
+\]
+Let \(\Pi_\Lambda^P\) be the \(\LtwoP\)-orthogonal projection onto
+\(\N_\Lambda^P\), and let
+\[
+    M_\Lambda^P=I-\Pi_\Lambda^P.
+\]
+For \(\beta\in\mathcal B\), define the population partial outcome
+\[
+    Y_\beta^\circ=Y-\beta X.
+\]
+The population profiled residual and score direction are
+\[
+    r_\beta^P(\Lambda)=M_\Lambda^PY_\beta^\circ
+    =M_\Lambda^P(Y-\beta X),
+    \qquad
+    v^P(\Lambda)=M_\Lambda^Pw.
+\]
+The population moment is
+\begin{equation}
+    \Psi(\beta,\Lambda)
+    =\innerP{r_\beta^P(\Lambda)}{v^P(\Lambda)}.
+    \label{eq:population-moment}
+\end{equation}
+
+\section{Population Identification}
+
+At the true population partition \(\Lambda_0\), abbreviate
+\[
+    \N_0^P=\N_{\Lambda_0}^P,
+    \qquad
+    \Pi_0^P=\Pi_{\Lambda_0}^P,
+    \qquad
+    M_0^P=M_{\Lambda_0}^P,
+    \qquad
+    v_0^P=v^P(\Lambda_0)=M_0^Pw.
+\]
+Because the true nuisance is regime-specific with the true population partition,
+\[
+    \mu_0(S,W)\in\N_0^P.
+\]
+Therefore the true-partition population residual-maker removes it:
+\begin{equation}
+    M_0^P\mu_0=0.
+    \label{eq:population-nuisance-cancellation}
+\end{equation}
+This is the \(L^2(P)\) analog of the finite-sample statement that the correct
+break-aware nuisance space absorbs the nuisance component.
+
+Using the population model \eqref{eq:l2p-model}, the population partial outcome
+at a generic \(\beta\) is
+\[
+\begin{aligned}
+    Y_\beta^\circ
+    &=Y-\beta X \\
+    &=\mu_0(S,W)+U-(\beta-\beta_0)X.
+\end{aligned}
+\]
+Projecting onto \((\N_0^P)^{\perp_P}\) gives
+\begin{equation}
+\begin{aligned}
+    r_\beta^P(\Lambda_0)
+    &=M_0^PY_\beta^\circ \\
+    &=M_0^P\mu_0+M_0^PU-(\beta-\beta_0)M_0^PX \\
+    &=M_0^PU-(\beta-\beta_0)M_0^PX,
+\end{aligned}
+\label{eq:population-profiled-residual-identity}
+\end{equation}
+because \(M_0^P\mu_0=0\). Taking the inner product with the true population
+score direction \(v_0^P\) gives
+\begin{equation}
+    \Psi(\beta,\Lambda_0)
+    =\innerP{M_0^PU}{v_0^P}
+     -(\beta-\beta_0)\innerP{M_0^PX}{v_0^P}.
+    \label{eq:population-identification}
+\end{equation}
+This derivation is algebraic. The two population assumptions enter only after
+\eqref{eq:population-identification} is obtained.
+
+The exogeneity condition is
+\[
+    \innerP{M_0^PU}{v_0^P}=0.
+\]
+The relevance condition is
+\[
+    \Gamma=\innerP{M_0^PX}{v_0^P}\ne0.
+\]
+Under these two conditions,
+\[
+    \Psi(\beta,\Lambda_0)=-(\beta-\beta_0)\Gamma.
+\]
+Thus
+\begin{equation}
+    \Psi(\beta,\Lambda_0)=0
+    \quad\Longleftrightarrow\quad
+    \beta=\beta_0.
+    \label{eq:unique-identification}
+\end{equation}
+\part{Small Stochastic Bounds}
+
+\section{Small Stochastic Bounds}
+
+After Part I, the finite-sample objects are fixed: the nuisance space is
+\(\operatorname{col}(Q_{K,\Lambda})\), profiling is \(M_{K,\Lambda}\), the
+score is \(g_t=r_{\beta,t}a_t\), and EL is the KKT system
+\eqref{eq:el-kkt-weights}--\eqref{eq:el-dual-kkt}. The stochastic part should
+therefore be small. It only verifies that these finite-sample objects are close
+to their population limits and that the KKT expansion is used in a valid local
+neighborhood.
+
+The first stochastic target is the uniform moment bridge
+\begin{equation}
+    \sup_{\beta\in\mathcal B}
+    |\Psi_T(\beta,\widehat\Lambda)-\Psi(\beta,\Lambda_0)|=\op(1).
+    \label{eq:uniform-bridge}
+\end{equation}
+This is the stochastic statement that the empirical projected inner product
+converges to the population projected inner product.
+
+A clean lemma list is:
+\begin{enumerate}[leftmargin=2em]
+\item \textbf{Gram stability.} The empirical Gram matrices for
+      \(Q_{K,\Lambda}\), \(x\), and \(w\) converge uniformly over admissible
+      partitions.
+\item \textbf{Sieve approximation.} Lemma~\ref{lem:sieve-decomposition}
+      states the desired uniform \(\LtwoT\) approximation. The stochastic task
+      is to verify \(\rho_{K,T}(\mathcal H,\Lambda_0)=\op(1)\), so the residual
+      for the true nuisance, \(M_{K,\Lambda_0}\bm\mu_0\), is negligible in the
+      required score norm.
+\item \textbf{Break localization.} Replacing \(\Lambda_0\) by
+      \(\widehat\Lambda\) changes the projected score only by \(\op(1)\) at the
+      moment scale and by \(\op(1)\) at the \(T^{-1/2}\) score scale when Wilks
+      is the target.
+\item \textbf{Uniform LLN.} The projected sample moment obeys
+      \eqref{eq:uniform-bridge}.
+\item \textbf{Score CLT.} At the true value,
+      \[
+          S_T(\beta_0,\widehat\Lambda)
+          =\sqrt T\,\Psi_T(\beta_0,\widehat\Lambda)
+          \Rightarrow N(0,V).
+      \]
+\item \textbf{Variance consistency.} With
+      \(V_T(\widehat\Lambda)=P_Tg_t(\beta_0,\widehat\Lambda)^2\),
+      \[
+          V_T(\widehat\Lambda)\to_p V>0.
+      \]
+\item \textbf{EL local feasibility.} The origin lies in the interior of the
+      convex hull of \(\{g_t(\beta_0,\widehat\Lambda)\}_{t=1}^T\) with high
+      probability, and
+      \[
+          \max_{t\le T}|g_t(\beta_0,\widehat\Lambda)|/\sqrt T=\op(1).
+      \]
+      These conditions make \(1+\lambda_Tg_t>0\) and justify the Taylor
+      reduction in \eqref{eq:el-kkt-quadratic}.
+\end{enumerate}
+
+If \(\widehat\beta_T\) is an approximate sample root,
+\[
+    \Psi_T(\widehat\beta_T,\widehat\Lambda)=\op(1),
+\]
+then \eqref{eq:uniform-bridge} gives
+\[
+    \Psi(\widehat\beta_T,\Lambda_0)=\op(1).
+\]
+By unique population identification, \(\widehat\beta_T\to_p\beta_0\). This is
+where the stochastic bridge feeds the geometric identification result.
+
+\part{Merging Part}
+
+\section{Merging Part: Moment Bridge, EL KKT, and \texorpdfstring{\(\chi_1^2\)}{chi-square}}
+
+The merge step should not say that the unscaled moment bridge is itself
+equivalent to Wilks. The correct statement is more precise:
+
+\begin{center}
+\fbox{\parbox{0.9\textwidth}{
+The same projected moment \(\Psi_T\) is the interface for both targets.
+Unscaled convergence of \(\Psi_T\) to \(\Psi\) merges with population uniqueness
+to prove consistency. Scaled convergence of \(\Psi_T\), together with the EL KKT
+quadratic reduction, merges to prove \(\chi_1^2\).}}
+\end{center}
+
+\subsection{Merge A: consistency}
+
+Part I gives the population geometry
+\[
+    \Psi(\beta,\Lambda_0)
+    =\innerP{M_0^PY_\beta^\circ}{v_0^P}
+    =-(\beta-\beta_0)\Gamma
+\]
+under exogeneity and relevance. Hence
+\[
+    \Psi(\beta,\Lambda_0)=0
+    \quad\Longleftrightarrow\quad
+    \beta=\beta_0.
+\]
+Part II gives the stochastic bridge
+\[
+    \sup_{\beta\in\mathcal B}
+    |\Psi_T(\beta,\widehat\Lambda)-\Psi(\beta,\Lambda_0)|=\op(1).
+\]
+Therefore any approximate sample root satisfies
+\[
+    \Psi_T(\widehat\beta_T,\widehat\Lambda)=\op(1)
+    \quad\Longrightarrow\quad
+    \widehat\beta_T\to_p\beta_0.
+\]
+This is the estimation target.
+
+\subsection{Merge B: Wilks inference}
+
+For inference, Part I gives the EL KKT representation
+\[
+    \ell_T(\beta,\widehat\Lambda)
+    =2\sum_{t=1}^T\log\{1+\lambda_Tg_t(\beta,\widehat\Lambda)\},
+\]
+where \(\lambda_T\) solves
+\[
+    P_T\left[\frac{g_t(\beta,\widehat\Lambda)}
+    {1+\lambda_Tg_t(\beta,\widehat\Lambda)}\right]=0.
+\]
+Part II verifies the local size and convex-hull conditions, so the KKT equation
+can be expanded at \(\beta=\beta_0\):
+\[
+    \ell_T(\beta_0,\widehat\Lambda)
+    =\frac{T\{\Psi_T(\beta_0,\widehat\Lambda)\}^2}
+           {V_T(\widehat\Lambda)}+\op(1).
+\]
+Part II also gives
+\[
+    \frac{\sqrt T\Psi_T(\beta_0,\widehat\Lambda)}
+         {\sqrt{V_T(\widehat\Lambda)}}
+    \Rightarrow N(0,1).
+\]
+Combining the last two displays gives
+\begin{equation}
+    \ell_T(\beta_0,\widehat\Lambda)
+    \Rightarrow \chi_1^2.
+    \label{eq:target-wilks}
+\end{equation}
+
+Thus the ``equivalence'' is conditional on the geometric KKT reduction. Once
+EL has been reduced to the square of the standardized projected moment, Wilks is
+equivalent to the standardized score CLT. It is not equivalent to the unscaled
+LLN bridge used for consistency.
+
+\begin{center}
+\fbox{\parbox{0.9\textwidth}{
+\textbf{Proof-body split.} Geometry owns the model, nuisance tangent space,
+projection KKT, residual score, population zero, and EL primal/dual KKT. Small
+stochastic bounds only verify convergence and local size. The merging part then
+turns the same projected moment into either consistency or Wilks.}}
+\end{center}
+
+\section{Three-Part Logic Checklist}
+
+\begin{center}
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.22\textwidth}
+                >{\raggedright\arraybackslash}p{0.35\textwidth}
+                >{\raggedright\arraybackslash}p{0.33\textwidth}}
+\toprule
+Proof part & Object & What it proves \\
+\midrule
+Geometry / KKT &
+\(\bm y=\beta_0\bm x+\bm\mu_0+\bm u\in\LtwoT\) &
+The full sample model is a Hilbert-space identity. \\
+\addlinespace
+Geometry / KKT &
+\(\N_{K,\Lambda,T}=\operatorname{col}(Q_{K,\Lambda})\) &
+The sieve basis represents the nuisance tangent plane. \\
+\addlinespace
+Geometry / KKT &
+\(M_{K,\Lambda}=I-\Pi_{K,\Lambda,T}\) &
+Profiling is the KKT normal equation for orthogonal projection. \\
+\addlinespace
+Geometry / KKT &
+\(g_t=\{M(y-\beta x)\}_t\{Mw\}_t\) &
+The profile score is one projected inner product. \\
+\addlinespace
+Geometry / KKT &
+EL primal/dual KKT &
+EL is a convex simplex problem cut by the moment hyperplane. \\
+\addlinespace
+Population geometry &
+\(\Psi(\beta,\Lambda_0)=-(\beta-\beta_0)\Gamma\) &
+Exogeneity and relevance give the unique population zero. \\
+\addlinespace
+Small stochastic &
+\(\sup_\beta|\Psi_T-\Psi|=\op(1)\) &
+The sample projected moment reaches the population moment. \\
+\addlinespace
+Small stochastic &
+CLT, variance, max-score, convex hull &
+The EL KKT expansion is valid locally and the standardized score is normal. \\
+\addlinespace
+Merging &
+Moment bridge plus unique zero &
+Consistency: \(\widehat\beta_T\to_p\beta_0\). \\
+\addlinespace
+Merging &
+EL KKT quadratic reduction plus CLT &
+Wilks: \(\ell_T(\beta_0,\widehat\Lambda)\Rightarrow\chi_1^2\). \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Minimal Final Statement}
+
+The full profile-sieve EL proof is a three-part argument.
+
+\begin{quote}
+\textbf{Geometric/KKT body.} In \(\LtwoT\), the model is
+\(\bm y=\beta_0\bm x+\bm\mu_0+\bm u\). A candidate partition and sieve define the
+nuisance tangent plane \(\N_{K,\Lambda,T}=\operatorname{col}(Q_{K,\Lambda})\).
+Profiling is orthogonal projection onto this space. The residual score is the
+projected inner product
+\[
+    \Psi_T(\beta,\Lambda)
+    =\innerT{M_{K,\Lambda}(\bm y-\beta\bm x)}{M_{K,\Lambda}\bm w}.
+\]
+EL is then a convex simplex problem with the moment hyperplane
+\(\sum_t\pi_tg_t=0\), whose KKT system gives
+\(\pi_t=1/[T\{1+\lambda g_t\}]\).
+
+\textbf{Small stochastic body.} The stochastic lemmas verify that the empirical
+projection, estimated break partition, sieve approximation, score variance,
+convex hull, and max-score terms are small enough for the sample KKT objects to
+approximate their population limits.
+
+\textbf{Merging body.} For consistency, combine
+\(\Psi_T\to\Psi\) with the unique population zero. For Wilks, combine the EL KKT
+quadratic reduction with the standardized score CLT:
+\[
+    \ell_T(\beta_0,\widehat\Lambda)
+    =\frac{T\Psi_T(\beta_0,\widehat\Lambda)^2}{V_T(\widehat\Lambda)}+\op(1),
+    \qquad
+    \frac{\sqrt T\Psi_T(\beta_0,\widehat\Lambda)}
+         {\sqrt{V_T(\widehat\Lambda)}}\Rightarrow N(0,1).
+\]
+Therefore \(\ell_T(\beta_0,\widehat\Lambda)\Rightarrow\chi_1^2\).
+\end{quote}
+\end{document}
