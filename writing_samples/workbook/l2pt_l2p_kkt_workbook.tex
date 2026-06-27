@@ -788,26 +788,74 @@ The feasible score is
 The true-partition score is
 \[
     S_T^0(\beta_0)
-    =\sqrt T\innerT{\bm M_0(\bm y-\beta_0\bm x)}{\bm M_0\bm w}.
-\]
-The estimated-partition Wilks argument is the score-equivalence statement
-\begin{equation}
-    \widehat S_T(\beta_0)-S_T^0(\beta_0)=\op(1),
+    =\sqrt T\innerT{\bm M_0(\bm y-\beta_0\bm x)}{\bm M_0\bm w},
     \qquad
-    \widehat V_T-V_T^0=\op(1).
-    \label{eq:score-equivalence}
+    \bm M_0=\bm M_{K,\Lambda_0}.
+\]
+Because each residual-maker is symmetric and idempotent,
+\[
+    \widehat S_T(\beta_0)=T^{-1/2}(\bm\mu_0+\bm u)'\widehat M_T\bm w,
+    \qquad
+    S_T^0(\beta_0)=T^{-1/2}(\bm\mu_0+\bm u)'\bm M_0\bm w.
+\]
+Therefore the exact estimated-partition score error is
+\begin{equation}
+\begin{aligned}
+    \widehat S_T(\beta_0)-S_T^0(\beta_0)
+    &=T^{-1/2}\bm\mu_0'(\widehat M_T-\bm M_0)\bm w \\
+    &\quad+T^{-1/2}\bm u'(\widehat M_T-\bm M_0)\bm w.
+\end{aligned}
+\label{eq:estimated-partition-score-decomposition}
 \end{equation}
-Geometrically, \eqref{eq:score-equivalence} says that replacing the true
-subspace \(\N_{K,\Lambda_0,T}\) by the estimated subspace
-\(\N_{K,\widehat\Lambda,T}\) changes the score only by a negligible amount at
-the \(T^{-1/2}\) scale.
+The first term is local sieve-bias perturbation. The second term is local noise
+perturbation. Thus the estimated-partition Wilks argument needs
+\begin{equation}
+    T^{-1/2}\bm\mu_0'(\widehat M_T-\bm M_0)\bm w=\op(1),
+    \qquad
+    T^{-1/2}\bm u'(\widehat M_T-\bm M_0)\bm w=\op(1).
+    \label{eq:estimated-partition-score-pieces}
+\end{equation}
+For the variance, the corresponding requirement is
+\begin{equation}
+    \widehat V_T-V_T^0=\op(1),
+    \qquad
+    \widehat V_T=P_Tg_t(\beta_0,\widehat\Lambda)^2,
+    \qquad
+    V_T^0=P_Tg_t(\beta_0,\Lambda_0)^2.
+    \label{eq:estimated-partition-variance-replacement}
+\end{equation}
+Equations \eqref{eq:estimated-partition-score-decomposition}--\eqref{eq:estimated-partition-variance-replacement}
+are the exact bridge from estimated breaks to the true-partition geometry.
 
-\begin{remark}[Why this is weaker than operator-norm convergence]
-It is not necessary to prove \(\|\widehat M_T-M_0\|_{op}\to0\). Break-date
-errors can make that hard. The theorem only needs the projected score and its
-second moment to be asymptotically unchanged.
-\end{remark}
+The reason this is weaker than operator-norm convergence is visible from
+\eqref{eq:estimated-partition-score-decomposition}. We do not need
+\(\|\widehat M_T-\bm M_0\|_{op}\to0\). We only need the difference to be small
+when applied to the score direction \(\bm w\) and paired with \(\bm\mu_0\) and
+\(\bm u\), plus the analogous second-moment replacement.
 
+The localization proof uses the RSS distance identity from
+Lemma~\ref{lem:rss-hilbert-distance}. At \(\beta_0\), set
+\[
+    \Delta_\Lambda=\bm M_{K,\Lambda}-\bm M_0,
+    \qquad
+    \bm y_{\beta_0}^\circ=\bm\mu_0+\bm u.
+\]
+Then
+\begin{equation}
+\begin{aligned}
+    RSS_K(\beta_0,\Lambda)-RSS_K(\beta_0,\Lambda_0)
+    &=(\bm y_{\beta_0}^\circ)'\Delta_\Lambda\bm y_{\beta_0}^\circ \\
+    &=\bm\mu_0'\Delta_\Lambda\bm\mu_0
+      +2\bm\mu_0'\Delta_\Lambda\bm u
+      +\bm u'\Delta_\Lambda\bm u.
+\end{aligned}
+\label{eq:rss-localization-decomposition}
+\end{equation}
+The deterministic term is the geometric drift from choosing the wrong nuisance
+subspace. The two stochastic terms must be uniformly smaller than that drift on
+wrong partitions. Part II states the primitive concentration conditions and then
+uses \eqref{eq:rss-localization-decomposition} to obtain break localization and
+order selection.
 \section{EL as a Finite-Sample Convex KKT Problem}
 
 For fixed \((K,\Lambda,\beta)\), everything in this section is finite-sample
@@ -1035,71 +1083,795 @@ Thus
 
 \section{Small Stochastic Bounds}
 
-After Part I, the finite-sample objects are fixed: the nuisance space is
-\(\operatorname{col}(Q_{K,\Lambda})\), profiling is \(M_{K,\Lambda}\), the
-score is \(g_t=r_{\beta,t}a_t\), and EL is the KKT system
-\eqref{eq:el-kkt-weights}--\eqref{eq:el-dual-kkt}. The stochastic part should
-therefore be small. It only verifies that these finite-sample objects are close
-to their population limits and that the KKT expansion is used in a valid local
-neighborhood.
+Part I has already fixed the objects. For every candidate partition \(\Lambda\),
+write
+\[
+    \bm r_\beta(\Lambda)=\bm M_{K,\Lambda}(\bm y-\beta\bm x),
+    \qquad
+    \bm a(\Lambda)=\bm M_{K,\Lambda}\bm w,
+\]
+and
+\[
+    g_t(\beta,\Lambda)=r_{\beta,t}(\Lambda)a_t(\Lambda),
+    \qquad
+    \Psi_T(\beta,\Lambda)=P_Tg(\beta,\Lambda)
+    =\innerT{\bm r_\beta(\Lambda)}{\bm a(\Lambda)}.
+\]
+At the true partition, abbreviate
+\[
+    \bm M_0=\bm M_{K,\Lambda_0},
+    \qquad
+    \bm v_0=\bm M_0\bm w,
+    \qquad
+    \bm y_\beta^\circ=\bm y-\beta\bm x.
+\]
+For the estimated partition, write
+\[
+    \widehat{\bm M}=\bm M_{K,\widehat\Lambda},
+    \qquad
+    \widehat{\bm v}=\widehat{\bm M}\bm w.
+\]
+The variance objects are
+\[
+    V_T(\Lambda)=P_Tg_t(\beta_0,\Lambda)^2,
+    \qquad
+    V_T^0=V_T(\Lambda_0),
+    \qquad
+    \widehat V_T=V_T(\widehat\Lambda).
+\]
 
-The first stochastic target is the uniform moment bridge
+The stochastic part proves the following targets one by one:
+\begin{equation}
+    \sup_{\beta\in\mathcal B}
+    |\Psi_T(\beta,\widehat\Lambda)-\Psi(\beta,\Lambda_0)|=\op(1),
+    \label{eq:uniform-bridge}
+\end{equation}
+\[
+    \sqrt T\Psi_T(\beta_0,\widehat\Lambda)\Rightarrow N(0,V),
+    \qquad
+    \widehat V_T\to_p V>0,
+\]
+and the local empirical-likelihood conditions that make the KKT expansion
+\eqref{eq:el-kkt-quadratic} valid. None of these statements changes the
+geometric objects. They only control their sampling error.
+
+\subsection{Standing stochastic conditions}
+
+Let \(\mathcal L_T\) denote the admissible set of candidate partitions searched
+by the estimator. For local break-date arguments, let
+\(\mathcal N_T(r_T)\subset\mathcal L_T\) denote the event/set of partitions whose
+break dates are within the localization radius \(r_T\) of \(\Lambda_0\). The
+following assumptions are the stochastic input for Part II. They are stated in
+the workbook notation so each proof below can be read directly.
+
+\begin{assumption}[Empirical-to-population inner-product bridge]
+\label{ass:gram-stability}
+Uniformly over \(\Lambda\in\mathcal L_T\), the empirical Gram matrices of the
+block sieve design are stable:
+\[
+    \sup_{\Lambda\in\mathcal L_T}
+    \left\|T^{-1}\bm Q_{K,\Lambda}'\bm Q_{K,\Lambda}-G_Q(\Lambda)\right\|_{op}
+    =\op(1),
+\]
+where
+\[
+    0<c\le \lambda_{\min}\{G_Q(\Lambda)\}
+    \le \lambda_{\max}\{G_Q(\Lambda)\}\le C<\infty
+    \qquad \text{uniformly over }\Lambda\in\mathcal L_T.
+\]
+The same uniform empirical laws hold for the projected cross moments involving
+\(\bm Q_{K,\Lambda}\), \(\bm x\), \(\bm w\), and \(\bm u\). Equivalently, for
+the finite sieve and break classes used here,
+\[
+    \sup_{f,g\in\mathcal F_{K,T}}
+    |\innerT{\bm f_T}{\bm g_T}-\innerP{f}{g}|=\op(1).
+\]
+This is the bridge between \(L^2(P_T)\) and \(L^2(P)\). The spaces are not being
+identified as the same space; only the relevant inner products converge.
+\end{assumption}
+
+\begin{assumption}[Score-negligible sieve remainder]
+\label{ass:score-negligible-sieve-remainder}
+For the true nuisance vector \(\bm\mu_0\), the true-partition finite-sieve
+remainder
+\[
+    \bm r_{\mu,T}=\bm M_0\bm\mu_0
+\]
+satisfies
+\[
+    \|\bm r_{\mu,T}\|_T=\op(1),
+    \qquad
+    \sqrt T\,|\innerT{\bm r_{\mu,T}}{\bm v_0}|=\op(1),
+    \qquad
+    P_T\{r_{\mu,T,t}^2v_{0,t}^2\}=\op(1).
+\]
+The first bound is the consistency-scale approximation bound. The second is the
+score-scale bias bound. The third removes the sieve remainder from the variance.
+\end{assumption}
+
+\begin{assumption}[Estimated-partition primitive closure]
+\label{ass:directional-break-replacement}
+The RSS break estimator localizes at radius \(r_T\):
+\[
+    \Pr\{\widehat\Lambda\in\mathcal N_T(r_T)\}\to1.
+\]
+On \(\mathcal N_T(r_T)\), local perturbations of the projected score and second
+moment are negligible:
+\[
+    \sup_{\Lambda\in\mathcal N_T(r_T)}
+    \sqrt T\,|\Psi_T(\beta_0,\Lambda)-\Psi_T(\beta_0,\Lambda_0)|=\op(1),
+\]
+\[
+    \sup_{\Lambda\in\mathcal N_T(r_T)}
+    |V_T(\Lambda)-V_T^0|=\op(1),
+\]
+and, at the unscaled consistency level,
+\[
+    \sup_{\Lambda\in\mathcal N_T(r_T)}\sup_{\beta\in\mathcal B}
+    |\Psi_T(\beta,\Lambda)-\Psi_T(\beta,\Lambda_0)|=\op(1).
+\]
+A sufficient local perturbation route is
+\[
+    \sup_{\Lambda\in\mathcal N_T(r_T)}
+    T^{-1/2}|\bm r_{\mu,T}'(\bm M_{K,\Lambda}-\bm M_0)\bm w|=\op(1),
+\]
+\[
+    \sup_{\Lambda\in\mathcal N_T(r_T)}
+    T^{-1/2}|\bm u'(\bm M_{K,\Lambda}-\bm M_0)\bm w|=\op(1),
+\]
+with the variance replacement below. For a one-break local window, a standard
+sufficient rate is
+\[
+    \zeta_K\sqrt{\frac{Kr_T}{T}}\to0,
+\]
+where \(\zeta_K\) controls the sieve-envelope size.
+\end{assumption}
+
+\begin{assumption}[RSS concentration and penalty rates]
+\label{ass:rss-localization-penalty}
+Let \(\Delta_\Lambda=\bm M_{K,\Lambda}-\bm M_0\). Outside the local set
+\(\mathcal N_T(r_T)\), the deterministic RSS drift dominates stochastic RSS
+fluctuation:
+\[
+    \inf_{\Lambda\in\mathcal L_T\setminus\mathcal N_T(r_T)}
+    T^{-1}\bm\mu_0'\Delta_\Lambda\bm\mu_0\ge c_T,
+\]
+\[
+    \sup_{\Lambda\in\mathcal L_T\setminus\mathcal N_T(r_T)}
+    T^{-1}|2\bm\mu_0'\Delta_\Lambda\bm u+\bm u'\Delta_\Lambda\bm u|=o_p(c_T).
+\]
+One primitive route for the stochastic bound is conditionally sub-Gaussian
+innovations plus sieve entropy/concentration over the searched RSS class.
+
+For unknown order, the underfitted deterministic loss and overfitted stochastic
+gain satisfy
+\[
+    \inf_{q<q_0}\{RSS_K(q)-RSS_K(q_0)\}\ge cT\Delta_T^2+o_p(T\Delta_T^2),
+\]
+\[
+    \sup_{q>q_0}\{RSS_K(q_0)-RSS_K(q)\}=\Op(K\log T),
+\]
+and the penalty obeys
+\[
+    K\log T=o\{\operatorname{pen}_T(q,K)\},
+    \qquad
+    \operatorname{pen}_T(q,K)=o(T\Delta_T^2)
+\]
+for every fixed nonzero order difference.
+\end{assumption}
+
+\begin{assumption}[Projected LLN and CLT at the true partition]
+\label{ass:projected-lln-clt}
+The true-partition projected empirical moments obey
+\[
+    \innerT{\bm M_0\bm u}{\bm v_0}
+    -\innerP{M_0^PU}{v_0^P}=\op(1),
+\]
+\[
+    \innerT{\bm M_0\bm x}{\bm v_0}
+    -\innerP{M_0^PX}{v_0^P}=\op(1),
+\]
+and
+\[
+    T^{-1/2}\bm u'\bm v_0\Rightarrow N(0,V),
+    \qquad 0<V<\infty.
+\]
+\end{assumption}
+
+\begin{assumption}[Second and higher moment control]
+\label{ass:moment-control}
+With \(\tilde g_t^0=(\bm M_0\bm u)_t v_{0,t}\),
+\[
+    P_T(\tilde g_t^0)^2\to_p V,
+    \qquad
+    P_T|g_t(\beta_0,\Lambda_0)|^3=\Op(1),
+    \qquad
+    P_T|g_t(\beta_0,\widehat\Lambda)|^3=\Op(1),
+\]
+and
+\[
+    \max_{t\le T}|g_t(\beta_0,\Lambda_0)|/\sqrt T=\op(1),
+    \qquad
+    \max_{t\le T}|g_t(\beta_0,\widehat\Lambda)|/\sqrt T=\op(1).
+\]
+\end{assumption}
+
+\begin{assumption}[Scalar convex-hull condition]
+\label{ass:convex-hull}
+With probability tending to one, both scalar samples
+\(\{g_t(\beta_0,\Lambda_0):1\le t\le T\}\) and
+\(\{g_t(\beta_0,\widehat\Lambda):1\le t\le T\}\) contain at least one strictly
+positive value and at least one strictly negative value.
+\end{assumption}
+
+\subsection{Primitive stochastic assumptions sufficient for Part II}
+
+The high-level assumptions above are implied by familiar primitive bounds. Let
+\[
+    v^*_{t,0}=v_{0,t}=(\bm M_0\bm w)_t,
+    \qquad
+    \widehat v^*_{t,0}=(\widehat{\bm M}\bm w)_t.
+\]
+A useful sufficient primitive package is:
+\begin{enumerate}[leftmargin=2em]
+\item \textbf{Envelope control.}
+      \[
+          \max_{t\le T}|v^*_{t,0}|=\Op(1+\zeta_K),
+          \qquad
+          \max_{t\le T}|\widehat v^*_{t,0}|=\Op(1+\zeta_K).
+      \]
+\item \textbf{Variance replacement.} If
+      \(\sigma_t^2=\E(u_t^2\mid\mathcal F_{t-1})\), then
+      \[
+          T^{-1}\sum_{t=1}^T
+          \sigma_t^2\{(\widehat v^*_{t,0})^2-(v^*_{t,0})^2\}=\op(1).
+      \]
+\item \textbf{Local sieve-bias stability.}
+      \[
+          \sup_{\Lambda\in\mathcal N_T(r_T)}
+          T^{-1/2}|\bm r_{\mu,T}'(\bm M_{K,\Lambda}-\bm M_0)\bm w|=\op(1).
+      \]
+\item \textbf{Local noise perturbation.}
+      \[
+          \sup_{\Lambda\in\mathcal N_T(r_T)}
+          T^{-1/2}|\bm u'(\bm M_{K,\Lambda}-\bm M_0)\bm w|=\op(1),
+      \]
+      for example under the rate \(\zeta_K\sqrt{Kr_T/T}\to0\) in the one-break
+      local perturbation calculation.
+\item \textbf{RSS concentration.} The errors have enough tail control, for
+      example conditional sub-Gaussian tails, so the searched RSS class satisfies
+      the concentration bounds in Assumption~\ref{ass:rss-localization-penalty}.
+\item \textbf{Penalty separation.} The unknown-order penalty dominates searched
+      overfit gains but is smaller than the underfit deterministic loss:
+      \[
+          K\log T=o\{\operatorname{pen}_T(q,K)\},
+          \qquad
+          \operatorname{pen}_T(q,K)=o(T\Delta_T^2).
+      \]
+\end{enumerate}
+These primitive conditions are not new geometry. They are the stochastic closure
+that makes the geometric KKT construction usable with estimated breaks.
+\subsection{RSS localization and order selection}
+
+\begin{proposition}[RSS localization]
+\label{prop:part2-rss-localization}
+Under Assumption~\ref{ass:rss-localization-penalty}, the known-order RSS
+estimator satisfies
+\[
+    \Pr\{\widehat\Lambda\in\mathcal N_T(r_T)\}\to1.
+\]
+\end{proposition}
+
+\begin{proof}
+For any candidate \(\Lambda\), Section~7 gives the exact decomposition
+\[
+\begin{aligned}
+    RSS_K(\beta_0,\Lambda)-RSS_K(\beta_0,\Lambda_0)
+    &=\bm\mu_0'\Delta_\Lambda\bm\mu_0
+      +2\bm\mu_0'\Delta_\Lambda\bm u
+      +\bm u'\Delta_\Lambda\bm u,
+\end{aligned}
+\]
+where \(\Delta_\Lambda=\bm M_{K,\Lambda}-\bm M_0\). On
+\(\mathcal L_T\setminus\mathcal N_T(r_T)\), Assumption~\ref{ass:rss-localization-penalty}
+gives
+\[
+    T^{-1}\bm\mu_0'\Delta_\Lambda\bm\mu_0\ge c_T
+\]
+uniformly, while
+\[
+    T^{-1}|2\bm\mu_0'\Delta_\Lambda\bm u+\bm u'\Delta_\Lambda\bm u|=o_p(c_T)
+\]
+uniformly. Therefore
+\[
+    \inf_{\Lambda\in\mathcal L_T\setminus\mathcal N_T(r_T)}
+    \{RSS_K(\beta_0,\Lambda)-RSS_K(\beta_0,\Lambda_0)\}>0
+\]
+with probability tending to one. A minimizer over the known-order search set
+cannot lie outside \(\mathcal N_T(r_T)\) on this event.
+\end{proof}
+
+\begin{proposition}[Unknown-order penalty selection]
+\label{prop:part2-order-selection}
+Under Assumption~\ref{ass:rss-localization-penalty}, the penalized RSS selector
+satisfies
+\[
+    \Pr(\widehat q=q_0)\to1.
+\]
+\end{proposition}
+
+\begin{proof}
+For underfitting, Assumption~\ref{ass:rss-localization-penalty} gives
+\[
+    \inf_{q<q_0}\{RSS_K(q)-RSS_K(q_0)\}
+    \ge cT\Delta_T^2+o_p(T\Delta_T^2).
+\]
+The penalty difference for a fixed lower order is
+\(o(T\Delta_T^2)\), so the deterministic loss from omitting a true break
+dominates any penalty saving. Thus underfitted orders are rejected with
+probability tending to one.
+
+For overfitting,
+\[
+    \sup_{q>q_0}\{RSS_K(q_0)-RSS_K(q)\}=\Op(K\log T).
+\]
+The penalty increment satisfies \(K\log T=o\{\operatorname{pen}_T(q,K)\}\), so
+any spurious RSS gain is dominated by the penalty increase with probability
+tending to one. Thus overfitted orders are rejected with probability tending to
+one. Combining the underfit and overfit cases gives \(\Pr(\widehat q=q_0)\to1\).
+\end{proof}
+\subsection{Gram stability}
+
+\begin{lemma}[Gram stability gives well-behaved projections]
+\label{lem:part2-gram-stability}
+Under Assumption~\ref{ass:gram-stability}, uniformly over
+\(\Lambda\in\mathcal L_T\),
+\[
+    \lambda_{\min}\{T^{-1}\bm Q_{K,\Lambda}'\bm Q_{K,\Lambda}\}\ge c/2
+\]
+with probability tending to one. Hence the coordinate formula for
+\(\Pi_{K,\Lambda,T}\) is stable on \(\mathcal L_T\), and the residual-maker
+\(\bm M_{K,\Lambda}=I-\Pi_{K,\Lambda,T}\) remains an orthogonal contraction in
+\(\LtwoT\):
+\[
+    \|\bm M_{K,\Lambda}\bm z\|_T\le \|\bm z\|_T
+    \qquad \text{for every }\bm z\in\LtwoT.
+\]
+\end{lemma}
+
+\begin{proof}
+By Weyl's eigenvalue inequality,
+\[
+\begin{aligned}
+\lambda_{\min}\{T^{-1}\bm Q_{K,\Lambda}'\bm Q_{K,\Lambda}\}
+&\ge
+\lambda_{\min}\{G_Q(\Lambda)\}
+-\left\|T^{-1}\bm Q_{K,\Lambda}'\bm Q_{K,\Lambda}-G_Q(\Lambda)\right\|_{op}.
+\end{aligned}
+\]
+Taking the infimum over \(\Lambda\in\mathcal L_T\), Assumption~\ref{ass:gram-stability}
+puts the first term above \(c\) and the second term below \(c/2\) with
+probability tending to one. This proves the eigenvalue bound.
+
+On that event, the least-squares projection has the usual stable coordinate
+form
+\[
+    \Pi_{K,\Lambda,T}
+    =\bm Q_{K,\Lambda}
+      (\bm Q_{K,\Lambda}'\bm Q_{K,\Lambda})^{-1}
+      \bm Q_{K,\Lambda}'.
+\]
+Independently of coordinates, \(\Pi_{K,\Lambda,T}\) is the orthogonal projection
+onto \(\N_{K,\Lambda,T}\). Therefore
+\(\bm M_{K,\Lambda}=I-\Pi_{K,\Lambda,T}\) is also an orthogonal projection.
+Orthogonal projections are contractions in Hilbert norm.
+\end{proof}
+
+\subsection{Empirical-to-population projection bridge}
+
+\begin{lemma}[Inner-product bridge from \(L^2(P_T)\) to \(L^2(P)\)]
+\label{lem:part2-inner-product-bridge}
+Under Assumption~\ref{ass:gram-stability}, uniformly over the sieve and break
+classes used in the projected score,
+\[
+    \innerT{\bm f_T}{\bm g_T}=\innerP{f}{g}+\op(1).
+\]
+In particular,
+\[
+    \sup_{\Lambda\in\mathcal L_T}
+    \left\|T^{-1}\bm Q_{K,\Lambda}'\bm Q_{K,\Lambda}-G_Q(\Lambda)\right\|_{op}
+    =\op(1),
+\]
+and the corresponding projected \((x,w,u)\) cross moments converge to their
+population limits.
+\end{lemma}
+
+\begin{proof}
+The first display is the uniform empirical law in
+Assumption~\ref{ass:gram-stability}. Taking \(f\) and \(g\) to be two
+coordinates of the block sieve row gives the displayed Gram convergence.
+Taking one or both functions to be the projected \(x\), \(w\), or \(u\)
+directions gives the corresponding cross-moment convergence. This is exactly
+the bridge needed by the workbook: finite-sample projection geometry is written
+in \(L^2(P_T)\), while identification is written in \(L^2(P)\), and the common
+object is convergence of the relevant inner products.
+\end{proof}
+\subsection{Sieve remainder is small}
+
+\begin{lemma}[True-partition sieve remainder is negligible]
+\label{lem:part2-sieve-remainder}
+Under Assumption~\ref{ass:score-negligible-sieve-remainder},
+\[
+    \innerT{\bm M_0\bm\mu_0}{\bm v_0}=\op(1),
+    \qquad
+    \sqrt T\innerT{\bm M_0\bm\mu_0}{\bm v_0}=\op(1),
+\]
+and
+\[
+    V_T^0
+    =P_T\{(\bm M_0\bm u)_tv_{0,t}\}^2+\op(1).
+\]
+\end{lemma}
+
+\begin{proof}
+By definition \(\bm r_{\mu,T}=\bm M_0\bm\mu_0\). The first two displays are
+exactly the consistency-scale and score-scale components of
+Assumption~\ref{ass:score-negligible-sieve-remainder}.
+
+At \(\beta_0\),
+\[
+    \bm M_0\bm y_{\beta_0}^\circ
+    =\bm M_0(\bm\mu_0+\bm u)
+    =\bm r_{\mu,T}+\bm M_0\bm u.
+\]
+Thus
+\[
+    g_t(\beta_0,\Lambda_0)
+    =\{(\bm M_0\bm u)_t+r_{\mu,T,t}\}v_{0,t}.
+\]
+Let \(\tilde g_t^0=(\bm M_0\bm u)_tv_{0,t}\) and
+\(d_t=r_{\mu,T,t}v_{0,t}\). Then
+\[
+    V_T^0-P_T(\tilde g_t^0)^2
+    =2P_T\tilde g_t^0d_t+P_Td_t^2.
+\]
+The final term is \(\op(1)\) by Assumption~\ref{ass:score-negligible-sieve-remainder}.
+The cross term is bounded by Cauchy-Schwarz:
+\[
+    |P_T\tilde g_t^0d_t|
+    \le \{P_T(\tilde g_t^0)^2\}^{1/2}\{P_Td_t^2\}^{1/2}=\op(1),
+\]
+using the bounded second moment in Assumption~\ref{ass:moment-control}. Hence
+\(V_T^0=P_T(\tilde g_t^0)^2+\op(1)\).
+\end{proof}
+
+\subsection{Break replacement}
+
+\begin{lemma}[Estimated partition may replace the true partition]
+\label{lem:part2-break-replacement}
+Under Assumption~\ref{ass:directional-break-replacement},
+\[
+    \sup_{\beta\in\mathcal B}
+    |\Psi_T(\beta,\widehat\Lambda)-\Psi_T(\beta,\Lambda_0)|=\op(1),
+\]
+\[
+    \sqrt T\,
+    |\Psi_T(\beta_0,\widehat\Lambda)-\Psi_T(\beta_0,\Lambda_0)|=\op(1),
+    \qquad
+    \widehat V_T-V_T^0=\op(1).
+\]
+\end{lemma}
+
+\begin{proof}
+By Assumption~\ref{ass:directional-break-replacement},
+\(\Pr\{\widehat\Lambda\in\mathcal N_T(r_T)\}\to1\). On this event,
+\(\widehat\Lambda\) is one of the partitions over which the three local
+suprema in the same assumption are taken. Therefore
+\[
+    \sup_{\beta\in\mathcal B}
+    |\Psi_T(\beta,\widehat\Lambda)-\Psi_T(\beta,\Lambda_0)|
+    \le
+    \sup_{\Lambda\in\mathcal N_T(r_T)}\sup_{\beta\in\mathcal B}
+    |\Psi_T(\beta,\Lambda)-\Psi_T(\beta,\Lambda_0)|=\op(1),
+\]
+\[
+    \sqrt T|\Psi_T(\beta_0,\widehat\Lambda)-\Psi_T(\beta_0,\Lambda_0)|
+    \le
+    \sup_{\Lambda\in\mathcal N_T(r_T)}
+    \sqrt T|\Psi_T(\beta_0,\Lambda)-\Psi_T(\beta_0,\Lambda_0)|=\op(1),
+\]
+and
+\[
+    |\widehat V_T-V_T^0|
+    \le
+    \sup_{\Lambda\in\mathcal N_T(r_T)}|V_T(\Lambda)-V_T^0|=\op(1).
+\]
+The conclusion follows after adding the negligible probability of the complement
+of the localization event.
+\end{proof}
+
+\subsection{Uniform moment bridge}
+
+\begin{lemma}[Uniform projected moment bridge]
+\label{lem:part2-uniform-bridge}
+Under Assumptions~\ref{ass:score-negligible-sieve-remainder},
+\ref{ass:directional-break-replacement}, and \ref{ass:projected-lln-clt},
 \begin{equation}
     \sup_{\beta\in\mathcal B}
     |\Psi_T(\beta,\widehat\Lambda)-\Psi(\beta,\Lambda_0)|=\op(1).
-    \label{eq:uniform-bridge}
+    \tag{\ref{eq:uniform-bridge}}
 \end{equation}
-This is the stochastic statement that the empirical projected inner product
-converges to the population projected inner product.
+\end{lemma}
 
-A clean lemma list is:
-\begin{enumerate}[leftmargin=2em]
-\item \textbf{Gram stability.} The empirical Gram matrices for
-      \(Q_{K,\Lambda}\), \(x\), and \(w\) converge uniformly over admissible
-      partitions.
-\item \textbf{Sieve approximation.} Lemma~\ref{lem:sieve-decomposition}
-      states the desired uniform \(\LtwoT\) approximation. The stochastic task
-      is to verify \(\rho_{K,T}(\mathcal H,\Lambda_0)=\op(1)\), so the residual
-      for the true nuisance, \(M_{K,\Lambda_0}\bm\mu_0\), is negligible in the
-      required score norm.
-\item \textbf{Break localization.} Replacing \(\Lambda_0\) by
-      \(\widehat\Lambda\) changes the projected score only by \(\op(1)\) at the
-      moment scale and by \(\op(1)\) at the \(T^{-1/2}\) score scale when Wilks
-      is the target.
-\item \textbf{Uniform LLN.} The projected sample moment obeys
-      \eqref{eq:uniform-bridge}.
-\item \textbf{Score CLT.} At the true value,
-      \[
-          S_T(\beta_0,\widehat\Lambda)
-          =\sqrt T\,\Psi_T(\beta_0,\widehat\Lambda)
-          \Rightarrow N(0,V).
-      \]
-\item \textbf{Variance consistency.} With
-      \(V_T(\widehat\Lambda)=P_Tg_t(\beta_0,\widehat\Lambda)^2\),
-      \[
-          V_T(\widehat\Lambda)\to_p V>0.
-      \]
-\item \textbf{EL local feasibility.} The origin lies in the interior of the
-      convex hull of \(\{g_t(\beta_0,\widehat\Lambda)\}_{t=1}^T\) with high
-      probability, and
-      \[
-          \max_{t\le T}|g_t(\beta_0,\widehat\Lambda)|/\sqrt T=\op(1).
-      \]
-      These conditions make \(1+\lambda_Tg_t>0\) and justify the Taylor
-      reduction in \eqref{eq:el-kkt-quadratic}.
-\end{enumerate}
+\begin{proof}
+First prove the bridge at the true partition. Since
+\(\bm y_\beta^\circ=\bm\mu_0+\bm u-(\beta-\beta_0)\bm x\),
+\[
+\begin{aligned}
+    \Psi_T(\beta,\Lambda_0)
+    &=\innerT{\bm M_0\bm y_\beta^\circ}{\bm v_0} \\
+    &=\innerT{\bm M_0\bm\mu_0}{\bm v_0}
+      +\innerT{\bm M_0\bm u}{\bm v_0}
+      -(\beta-\beta_0)\innerT{\bm M_0\bm x}{\bm v_0}.
+\end{aligned}
+\]
+The population moment from Part I is
+\[
+    \Psi(\beta,\Lambda_0)
+    =\innerP{M_0^PU}{v_0^P}
+     -(\beta-\beta_0)\innerP{M_0^PX}{v_0^P}.
+\]
+Subtracting gives
+\[
+\begin{aligned}
+    \Psi_T(\beta,\Lambda_0)-\Psi(\beta,\Lambda_0)
+    &=\innerT{\bm M_0\bm\mu_0}{\bm v_0} \\
+    &\quad+
+      \left\{\innerT{\bm M_0\bm u}{\bm v_0}
+      -\innerP{M_0^PU}{v_0^P}\right\} \\
+    &\quad-(\beta-\beta_0)
+      \left\{\innerT{\bm M_0\bm x}{\bm v_0}
+      -\innerP{M_0^PX}{v_0^P}\right\}.
+\end{aligned}
+\]
+The first term is \(\op(1)\) by Lemma~\ref{lem:part2-sieve-remainder}. The next
+two bracketed terms are \(\op(1)\) by Assumption~\ref{ass:projected-lln-clt}.
+Because \(\mathcal B\) is fixed and bounded, the convergence is uniform in
+\(\beta\in\mathcal B\):
+\[
+    \sup_{\beta\in\mathcal B}
+    |\Psi_T(\beta,\Lambda_0)-\Psi(\beta,\Lambda_0)|=\op(1).
+\]
+Finally, Lemma~\ref{lem:part2-break-replacement} gives
+\[
+    \sup_{\beta\in\mathcal B}
+    |\Psi_T(\beta,\widehat\Lambda)-\Psi_T(\beta,\Lambda_0)|=\op(1).
+\]
+The triangle inequality proves the stated bridge.
+\end{proof}
 
-If \(\widehat\beta_T\) is an approximate sample root,
+\subsection{Score CLT}
+
+\begin{lemma}[Projected score CLT]
+\label{lem:part2-score-clt}
+Under Assumptions~\ref{ass:score-negligible-sieve-remainder},
+\ref{ass:directional-break-replacement}, and \ref{ass:projected-lln-clt},
+\[
+    \sqrt T\Psi_T(\beta_0,\widehat\Lambda)
+    \Rightarrow N(0,V).
+\]
+\end{lemma}
+
+\begin{proof}
+At the true partition,
+\[
+\begin{aligned}
+    \sqrt T\Psi_T(\beta_0,\Lambda_0)
+    &=\sqrt T\innerT{\bm M_0\bm y_{\beta_0}^\circ}{\bm v_0} \\
+    &=T^{-1/2}\bm u'\bm v_0
+      +\sqrt T\innerT{\bm M_0\bm\mu_0}{\bm v_0}.
+\end{aligned}
+\]
+The first equality is the definition of \(\Psi_T\). The second uses
+\(\bm y_{\beta_0}^\circ=\bm\mu_0+\bm u\) and the symmetry/idempotence of
+\(\bm M_0\), so \(\innerT{\bm M_0\bm u}{\bm v_0}=T^{-1}\bm u'\bm v_0\).
+The approximation-bias term is \(\op(1)\) by
+Assumption~\ref{ass:score-negligible-sieve-remainder}. The leading term
+\(T^{-1/2}\bm u'\bm v_0\) converges to \(N(0,V)\) by
+Assumption~\ref{ass:projected-lln-clt}. Therefore
+\[
+    \sqrt T\Psi_T(\beta_0,\Lambda_0)\Rightarrow N(0,V).
+\]
+Lemma~\ref{lem:part2-break-replacement} gives
+\[
+    \sqrt T\{
+    \Psi_T(\beta_0,\widehat\Lambda)-\Psi_T(\beta_0,\Lambda_0)
+    \}=\op(1).
+\]
+Slutsky's theorem gives the result for \(\widehat\Lambda\).
+\end{proof}
+
+\subsection{Variance consistency}
+
+\begin{lemma}[Projected variance consistency]
+\label{lem:part2-variance-consistency}
+Under Assumptions~\ref{ass:score-negligible-sieve-remainder},
+\ref{ass:directional-break-replacement}, and \ref{ass:moment-control},
+\[
+    \widehat V_T\to_p V>0.
+\]
+\end{lemma}
+
+\begin{proof}
+Lemma~\ref{lem:part2-sieve-remainder} gives
+\[
+    V_T^0=P_T(\tilde g_t^0)^2+\op(1),
+    \qquad
+    \tilde g_t^0=(\bm M_0\bm u)_tv_{0,t}.
+\]
+Assumption~\ref{ass:moment-control} gives \(P_T(\tilde g_t^0)^2\to_p V\).
+Therefore \(V_T^0\to_p V\). Lemma~\ref{lem:part2-break-replacement} gives
+\(\widehat V_T-V_T^0=\op(1)\), so \(\widehat V_T\to_p V\). The lower bound
+\(V>0\) is part of Assumption~\ref{ass:projected-lln-clt}; it rules out a
+degenerate residual score direction.
+\end{proof}
+
+\subsection{Max-score and convex hull}
+
+\begin{lemma}[EL local feasibility and max-score]
+\label{lem:part2-el-feasibility}
+Under Assumptions~\ref{ass:moment-control} and \ref{ass:convex-hull},
+\[
+    \max_{t\le T}|g_t(\beta_0,\Lambda_0)|/\sqrt T=\op(1),
+    \qquad
+    \max_{t\le T}|g_t(\beta_0,\widehat\Lambda)|/\sqrt T=\op(1),
+\]
+and the origin is in the interior of the scalar convex hull for both
+\(\{g_t(\beta_0,\Lambda_0):1\le t\le T\}\) and
+\(\{g_t(\beta_0,\widehat\Lambda):1\le t\le T\}\) with probability tending to
+one.
+\end{lemma}
+
+\begin{proof}
+The two max-score bounds are displayed in Assumption~\ref{ass:moment-control}.
+For scalar moments, the convex hull of the observed values is the interval from
+the sample minimum to the sample maximum. The origin is in its interior exactly
+when the minimum is strictly negative and the maximum is strictly positive.
+Assumption~\ref{ass:convex-hull} states that this sign condition holds with
+probability tending to one for both the known-partition and estimated-partition
+moment arrays.
+\end{proof}
+
+\subsection{EL KKT local expansion}
+
+\begin{lemma}[Local EL KKT expansion]
+\label{lem:part2-el-local-expansion}
+Under Assumptions~\ref{ass:score-negligible-sieve-remainder}, \ref{ass:directional-break-replacement}, \ref{ass:projected-lln-clt}, \ref{ass:moment-control}, and \ref{ass:convex-hull},
+with \(g_t=g_t(\beta_0,\widehat\Lambda)\),
+\[
+    \lambda_T=\frac{P_Tg_t}{P_Tg_t^2}+\op(T^{-1/2}),
+    \qquad
+    \max_{t\le T}|\lambda_Tg_t|=\op(1),
+\]
+and
+\[
+    \ell_T(\beta_0,\widehat\Lambda)
+    =\frac{T\{\Psi_T(\beta_0,\widehat\Lambda)\}^2}{\widehat V_T}
+     +\op(1).
+\]
+\end{lemma}
+
+\begin{proof}
+By Lemma~\ref{lem:part2-el-feasibility}, the scalar convex-hull condition holds
+with probability tending to one, so the EL dual root \(\lambda_T\) exists in the
+interior region where \(1+\lambda_Tg_t>0\). By Lemma~\ref{lem:part2-score-clt},
+\[
+    P_Tg_t=\Psi_T(\beta_0,\widehat\Lambda)=\Op(T^{-1/2}).
+\]
+By Lemma~\ref{lem:part2-variance-consistency},
+\[
+    P_Tg_t^2=\widehat V_T\to_p V>0.
+\]
+Expanding the KKT equation
+\[
+    0=P_T\left[\frac{g_t}{1+\lambda_Tg_t}\right]
+\]
+around \(\lambda_T=0\) gives
+\[
+    0=P_Tg_t-\lambda_TP_Tg_t^2
+      +O_p\{\lambda_T^2P_T|g_t|^3\}.
+\]
+The third-moment bound in Assumption~\ref{ass:moment-control} implies the
+remainder is \(O_p(\lambda_T^2)\). Since \(P_Tg_t=\Op(T^{-1/2})\) and
+\(P_Tg_t^2\to_p V>0\), the root satisfies \(\lambda_T=\Op(T^{-1/2})\) and hence
+\[
+    \lambda_T=\frac{P_Tg_t}{P_Tg_t^2}+\op(T^{-1/2}).
+\]
+Combining \(\lambda_T=\Op(T^{-1/2})\) with the max-score bound gives
+\[
+    \max_{t\le T}|\lambda_Tg_t|
+    \le |\lambda_T|\max_{t\le T}|g_t|=\op(1).
+\]
+Therefore the log EL ratio can be Taylor-expanded:
+\[
+\begin{aligned}
+    \ell_T(\beta_0,\widehat\Lambda)
+    &=2\sum_{t=1}^T\log(1+\lambda_Tg_t) \\
+    &=2T\lambda_TP_Tg_t-T\lambda_T^2P_Tg_t^2
+      +O_p\{T|\lambda_T|^3P_T|g_t|^3\}.
+\end{aligned}
+\]
+The final term is \(\op(1)\), because \(\lambda_T=\Op(T^{-1/2})\) and
+\(P_T|g_t|^3=\Op(1)\). Substituting
+\(\lambda_T=P_Tg_t/P_Tg_t^2+\op(T^{-1/2})\) yields
+\[
+    \ell_T(\beta_0,\widehat\Lambda)
+    =\frac{T(P_Tg_t)^2}{P_Tg_t^2}+\op(1)
+    =\frac{T\{\Psi_T(\beta_0,\widehat\Lambda)\}^2}{\widehat V_T}+\op(1).
+\]
+\end{proof}
+
+\subsection{Known-partition Wilks}
+
+\begin{proposition}[Known-partition profile EL Wilks]
+\label{prop:part2-known-partition-wilks}
+Under the true partition \(\Lambda_0\), the profile empirical likelihood ratio
+satisfies
+\[
+    \ell_T(\beta_0,\Lambda_0)\Rightarrow\chi_1^2.
+\]
+\end{proposition}
+
+\begin{proof}
+The true-partition versions of Lemmas~\ref{lem:part2-score-clt} and
+\ref{lem:part2-variance-consistency} give
+\[
+    \sqrt T\Psi_T(\beta_0,\Lambda_0)\Rightarrow N(0,V),
+    \qquad
+    V_T^0\to_p V>0.
+\]
+The max-score and convex-hull parts of Assumptions~\ref{ass:moment-control} and
+\ref{ass:convex-hull} apply to \(g_t(\beta_0,\Lambda_0)\), so the KKT expansion
+from Part I gives
+\[
+    \ell_T(\beta_0,\Lambda_0)
+    =\frac{T\{\Psi_T(\beta_0,\Lambda_0)\}^2}{V_T^0}+\op(1).
+\]
+Therefore
+\[
+    \ell_T(\beta_0,\Lambda_0)
+    =\left\{
+      \frac{\sqrt T\Psi_T(\beta_0,\Lambda_0)}{\sqrt{V_T^0}}
+     \right\}^2+
+     \op(1)
+    \Rightarrow\chi_1^2.
+\]
+\end{proof}
+\subsection{Part II consequences}
+
+The uniform bridge gives the consistency input. If \(\widehat\beta_T\) is an
+approximate sample root,
 \[
     \Psi_T(\widehat\beta_T,\widehat\Lambda)=\op(1),
 \]
-then \eqref{eq:uniform-bridge} gives
+then Lemma~\ref{lem:part2-uniform-bridge} gives
 \[
     \Psi(\widehat\beta_T,\Lambda_0)=\op(1).
 \]
-By unique population identification, \(\widehat\beta_T\to_p\beta_0\). This is
-where the stochastic bridge feeds the geometric identification result.
+Part I gives the unique population zero, so \(\widehat\beta_T\to_p\beta_0\).
 
+For Wilks, Lemmas~\ref{lem:part2-score-clt},
+\ref{lem:part2-variance-consistency}, and \ref{lem:part2-el-local-expansion}
+give
+\[
+    \ell_T(\beta_0,\widehat\Lambda)
+    =\frac{T\{\Psi_T(\beta_0,\widehat\Lambda)\}^2}{\widehat V_T}+\op(1),
+    \qquad
+    \frac{\sqrt T\Psi_T(\beta_0,\widehat\Lambda)}{\sqrt{\widehat V_T}}
+    \Rightarrow N(0,1).
+\]
+Part III only merges these two displayed statements with the geometric KKT
+reduction already proved in Part I.
 \part{Merging Part}
 
 \section{Merging Part: Moment Bridge, EL KKT, and \texorpdfstring{\(\chi_1^2\)}{chi-square}}
@@ -1239,6 +2011,20 @@ Wilks: \(\ell_T(\beta_0,\widehat\Lambda)\Rightarrow\chi_1^2\). \\
 \end{tabular}
 \end{center}
 
+\section{Efficiency Language}
+
+The result proved in this workbook is orthogonal profile empirical-likelihood
+Wilks inference. It is efficient-score motivated because the nuisance component
+is projected out before forming the score. It is not, by itself, a full
+semiparametric efficiency theorem. A full efficiency claim would additionally
+require an \(L^2(P)\) approximation of the residualized score to the efficient
+score and an asymptotic linear representation
+\[
+    \sqrt T(\widehat\beta_T-\beta_0)
+    =I_{\mathrm{eff}}^{-1}T^{-1/2}\sum_{t=1}^T S_{\mathrm{eff},t}+\op(1).
+\]
+Without those two extra ingredients, the correct claim is profile EL Wilks
+inference after orthogonalization, not semiparametric efficiency.
 \section{Minimal Final Statement}
 
 The full profile-sieve EL proof is a three-part argument.
