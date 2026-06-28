@@ -116,6 +116,109 @@ Inference for \(\beta\) is therefore carried by the projected moment
             {\bm M_{K,\Lambda}\bm w}.
 \]
 
+
+\section{Paper-Facing Algorithm}
+
+The paper-facing procedure is null-imposed. For a tested value \(\beta\), all
+partition comparisons are computed using
+\[
+    \bm y_\beta=\bm y-\beta\bm x.
+\]
+For a \(p\)-value, \(\beta=\beta_0\). For a confidence set, the same profiling
+step is repeated at each candidate \(\beta\).
+
+The main theorem searches only \(q\in\{0,1\}\): no nuisance break versus one
+nuisance break. Multiple-break searches are exploratory unless the additional
+multi-partition localization and order-selection conditions are proved. The
+score weight has the generic form
+\[
+    w_t=\omega(Z_t),
+\]
+where \(\omega\) is any member of the admissible score-weight class satisfying
+the boundedness or max-score condition, projected variance nondegeneracy, and
+the projected LLN/CLT assumptions.
+
+For each \(q\in\{0,1\}\), select
+\[
+    \widehat\Lambda_q(\beta)
+    \in\arg\min_{\Lambda\in\mathcal L_q}
+    RSS_K(\beta,\Lambda),
+\]
+where
+\[
+    RSS_K(\beta,\Lambda)
+    =T\|\bm M_{K,\Lambda}(\bm y-\beta\bm x)\|_T^2.
+\]
+Then choose the order by the workbook penalty
+\[
+    \widehat q(\beta)
+    \in\arg\min_{q\in\{0,1\}}
+    \left[RSS_K\{\beta,\widehat\Lambda_q(\beta)\}
+    +q\kappa_T R_T\right],
+    \qquad
+    \widehat\Lambda(\beta)=\widehat\Lambda_{\widehat q(\beta)}(\beta).
+\]
+The scalar EL scores are
+\[
+    g_t(\beta,\widehat\Lambda)
+    =\{\bm M_{K,\widehat\Lambda(\beta)}(\bm y-\beta\bm x)\}_t
+     \{\bm M_{K,\widehat\Lambda(\beta)}\bm w\}_t.
+\]
+The EL multiplier solves
+\[
+    \sum_{t=1}^T
+    \frac{g_t(\beta,\widehat\Lambda)}
+         {1+\lambda(\beta)g_t(\beta,\widehat\Lambda)}=0,
+\]
+and the statistic is
+\[
+    \ell_T(\beta)=2\sum_{t=1}^T
+    \log\{1+\lambda(\beta)g_t(\beta,\widehat\Lambda)\}.
+\]
+
+\begin{assumption}[Primitive nuisance-covariate conditions]
+\label{ass:min-nuisance-covariate-sieve}
+The nuisance covariate and sieve are required to satisfy the primitive
+conditions that certify the good-event objects used below.
+\begin{enumerate}[leftmargin=2em]
+\item The lagged design is predetermined:
+\[
+    X_{t-1},W_{t-1}\in\mathcal F_{t-1},
+    \qquad E(U_t\mid\mathcal F_{t-1})=0.
+\]
+Here \(W_{t-1}\) is the nuisance covariate; the score weight \(w_t\) is a
+separate admissible direction.
+
+\item \(W_t\) has a stable marginal law \(P_W\) and satisfies the mixing or
+uniform empirical-law conditions needed for the searched block-sieve and break
+classes.
+
+\item The basis \(P_K(W)=(p_1(W),\ldots,p_K(W))'\) includes an intercept, has
+envelope \(\zeta_K=\sup_w\|P_K(w)\|\), and yields uniformly nonsingular segment
+Gram matrices over admissible partitions.
+
+\item Each regime nuisance \(m_j\) is approximable by the sieve: for some
+\(a_K\downarrow0\),
+\[
+    \max_j\inf_{c_j\in\R^K}
+    \|m_j(W)-P_K(W)'c_j\|_{L^2(P_W)}\le a_K.
+\]
+The resulting true-partition remainder is negligible in norm, score, and
+variance at the rates required by the good event.
+
+\item The paper-facing one-break case has minimum spacing and detectable break
+strength
+\[
+    \min(k_0,T-k_0)\ge \epsilon T,
+    \qquad
+    \Delta_T^2=\|m_1(W)-m_0(W)\|_{L^2(P_W)}^2,
+\]
+with \(R_T=K+\log T+Ta_K^2\), localization radius \(r_T\), and penalty
+\(\kappa_T R_T\) satisfying the rate restrictions used for RSS localization,
+estimated-partition replacement, and order selection.
+\end{enumerate}
+\end{assumption}
+
 \section{Three Bridge Lemmas}
 
 The following three finite-sample facts are the minimum material needed before

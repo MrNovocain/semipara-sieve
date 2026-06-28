@@ -154,6 +154,212 @@ not \(\|\bm M_{K,\widehat\Lambda}-\bm M_0\|_{op}=o_p(1)\).
 
 
 
+
+\section{Paper-Facing Procedure}
+
+The main theorem uses the null-imposed one-break proof object. For a tested
+value \(\beta\), define
+\[
+    \bm y_\beta=\bm y-\beta\bm x.
+\]
+All partition comparisons below are made with this \(\bm y_\beta\). Thus, for a
+\(p\)-value at \(H_0:\beta=\beta_0\), set \(\beta=\beta_0\). For a confidence
+set, repeat the same null-imposed profiling at each candidate \(\beta\).
+
+Let \(q\in\{0,1\}\). The value \(q=0\) is the stable-nuisance model and
+\(q=1\) is the one-nuisance-break model. The score weight is
+\[
+    w_t=\omega(Z_t),
+\]
+where \(\omega\) is arbitrary within the admissible score-weight class:
+boundedness or the required max-score condition, nondegenerate projected
+variance, and the projected LLN/CLT assumptions are imposed on the resulting
+residualized score. Bounded choices are convenient in simulations, but the
+theorem does not require a particular functional form such as a hyperbolic
+tangent.
+
+\begin{quote}
+\noindent\textbf{Algorithm 1: Null-imposed one-break profile-sieve EL.}
+\begin{enumerate}[leftmargin=2em]
+\item \textbf{Input.} Data \(\{Y_t,X_{t-1},W_{t-1},Z_t\}_{t=1}^T\), tested value
+\(\beta\), sieve dimension \(K\), minimum segment length, candidate orders
+\(q\in\{0,1\}\), penalty scale \(\kappa_T R_T\), and admissible score weight
+\(w_t=\omega(Z_t)\).
+
+\item \textbf{Search candidate nuisance subspaces.} For each \(q\in\{0,1\}\)
+and each admissible partition \(\Lambda\in\mathcal L_q\), form the block-sieve
+matrix \(\bm Q_{K,\Lambda}\), projection
+\(\Pi_{K,\Lambda,T}\), and residual-maker
+\(\bm M_{K,\Lambda}=I-\Pi_{K,\Lambda,T}\).
+
+\item \textbf{Profile under the tested value.} Compute
+\[
+    \bm u_\Lambda(\beta)=\bm M_{K,\Lambda}(\bm y-\beta\bm x),
+    \qquad
+    \bm v_\Lambda=\bm M_{K,\Lambda}\bm w,
+\]
+and the null-imposed profile criterion
+\[
+    RSS_K(\beta,\Lambda)=\|\bm u_\Lambda(\beta)\|_2^2.
+\]
+
+\item \textbf{Select the partition for each order.} Set
+\[
+    \widehat\Lambda_q(\beta)
+    \in\arg\min_{\Lambda\in\mathcal L_q}RSS_K(\beta,\Lambda).
+\]
+
+\item \textbf{Select the order.} Use the workbook penalty
+\[
+    IC(q;\beta)
+    =RSS_K\{\beta,\widehat\Lambda_q(\beta)\}
+     +q\,\kappa_T R_T,
+\]
+and set
+\[
+    \widehat q(\beta)\in\arg\min_{q\in\{0,1\}}IC(q;\beta),
+    \qquad
+    \widehat\Lambda(\beta)=\widehat\Lambda_{\widehat q(\beta)}(\beta).
+\]
+
+\item \textbf{Construct scalar EL scores.} With
+\(\widehat M_\beta=\bm M_{K,\widehat\Lambda(\beta)}\), define
+\[
+    g_t(\beta,\widehat\Lambda)
+    =\{\widehat M_\beta(\bm y-\beta\bm x)\}_t
+     \{\widehat M_\beta\bm w\}_t.
+\]
+
+\item \textbf{Solve the scalar EL KKT equation.} Find \(\lambda(\beta)\) such
+that
+\[
+    \sum_{t=1}^T
+    \frac{g_t(\beta,\widehat\Lambda)}
+         {1+\lambda(\beta)g_t(\beta,\widehat\Lambda)}
+    =0,
+    \qquad
+    1+\lambda(\beta)g_t(\beta,\widehat\Lambda)>0.
+\]
+
+\item \textbf{Compute the EL ratio.}
+\[
+    \ell_T(\beta)
+    =2\sum_{t=1}^T
+      \log\{1+\lambda(\beta)g_t(\beta,\widehat\Lambda)\}.
+\]
+Reject \(H_0:\beta=\beta_0\) when \(\ell_T(\beta_0)\) exceeds the
+\(\chi_1^2\) critical value.
+\end{enumerate}
+\end{quote}
+
+\begin{remark}[What Algorithm 1 does not claim]
+Algorithm 1 is the proof object used by the main theorem. It does not assert
+that a particular computational shortcut, such as seeded binary segmentation or
+narrowest-over-threshold search, is part of the statistical contribution.
+Multiple-break searches can be used as exploratory diagnostics, but the
+paper-facing theorem and implementation in this workbook are the
+\(q\in\{0,1\}\) null-imposed procedure above.
+\end{remark}
+
+\begin{assumption}[Nuisance covariate, sieve, and break signal]
+\label{ass:nuisance-covariate-sieve}
+The following primitive conditions are sufficient for the nuisance-covariate
+part of the high-level good event. They do not replace the good-event
+assumptions below; they explain how the \(W\)-driven block sieve can satisfy
+them.
+\begin{enumerate}[leftmargin=2em]
+\item \textbf{Predetermined design.} The lagged design variables are observed
+before the innovation:
+\[
+    X_{t-1},W_{t-1}\in\mathcal F_{t-1},
+    \qquad
+    E(U_t\mid\mathcal F_{t-1})=0.
+\]
+The nuisance covariate is \(W_{t-1}\). The score weight \(w_t\) is a separate
+object.
+
+\item \textbf{Stable nuisance-covariate law.} The process \(W_t\) has a stable
+marginal law \(P_W\) and satisfies the mixing or empirical-process conditions
+needed for uniform laws over the searched sieve and break classes. A primitive
+route is stationary alpha mixing with sufficiently fast decay.
+
+\item \textbf{Sieve basis and envelope.} Let
+\[
+    P_K(W)=(p_1(W),\ldots,p_K(W))'.
+\]
+The basis includes an intercept and has envelope
+\[
+    \zeta_K=\sup_w \|P_K(w)\|.
+\]
+The growth of \(K\) and \(\zeta_K\) is slow enough for the projection and
+local-break perturbation bounds.
+
+\item \textbf{Uniform segment Gram stability.} For every admissible
+partition \(\Lambda\in\mathcal L_T\), the block-sieve design satisfies
+\[
+    0<c\le
+    \lambda_{\min}\{T^{-1}\bm Q_{K,\Lambda}'\bm Q_{K,\Lambda}\}
+    \le
+    \lambda_{\max}\{T^{-1}\bm Q_{K,\Lambda}'\bm Q_{K,\Lambda}\}
+    \le C<\infty
+\]
+with probability tending to one.
+
+\item \textbf{Regime-wise sieve approximation.} For each true regime
+\(j=0,\ldots,q_0\), \(m_j\) belongs to a smoothness class approximable by
+\(P_K\). There exists \(a_K\downarrow0\) such that
+\[
+    \max_{0\le j\le q_0}
+    \inf_{c_j\in\mathbb R^K}
+    \|m_j(W)-P_K(W)'c_j\|_{L^2(P_W)}
+    \le a_K.
+\]
+The induced true-partition remainder
+\(\bm r_{\mu,T}=\bm M_0\bm\mu_0\) is score-negligible:
+\[
+    \|\bm r_{\mu,T}\|_T=o_p(1),
+    \qquad
+    \sqrt T\,|\innerT{\bm r_{\mu,T}}{\bm M_0\bm w}|=o_p(1),
+\]
+\[
+    P_T\{r_{\mu,T,t}^2(\bm M_0\bm w)_t^2\}=o_p(1).
+\]
+
+\item \textbf{Break spacing and break signal.} In the paper-facing one-break
+case, \(q_0=1\) and the true break \(k_0\) satisfies
+\[
+    \min(k_0,T-k_0)\ge\epsilon T
+\]
+for some \(\epsilon>0\). The nuisance break strength is
+\[
+    \Delta_T^2
+    =\|m_1(W)-m_0(W)\|_{L^2(P_W)}^2,
+\]
+and the RSS drift generated by this signal dominates searched stochastic
+fluctuations outside the local window.
+
+\item \textbf{Rate compatibility.} With
+\[
+    R_T=K+\log T+Ta_K^2,
+    \qquad
+    r_T=R_T/\Delta_T^2
+\]
+in the fixed-strength route, or the corresponding weak-break radius in the
+detailed proof, assume
+\[
+    r_T/T\to0,
+    \qquad
+    \zeta_K\sqrt{Kr_T/T}\to0.
+\]
+For unknown order, the workbook penalty obeys
+\[
+    K\log T=o(\kappa_T R_T),
+    \qquad
+    \kappa_T R_T=o(T\Delta_T^2).
+\]
+\end{enumerate}
+\end{assumption}
+
 \section{Proof Architecture: Good-Event Geometry Before Probability}
 
 The main-body proof is organized around the geometric dictionary just defined. Instead
