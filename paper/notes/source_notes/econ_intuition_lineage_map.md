@@ -1,4 +1,4 @@
-﻿# Economic Intuition Lineage Map
+# Economic Intuition Lineage Map
 
 ## One-Sentence Positioning
 

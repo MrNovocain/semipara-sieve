@@ -1,8 +1,11 @@
-﻿application_materials/
+application_materials/
 knowledge/
 .venv/
 .jupyter_runtime/
 .ipynb_checkpoints/
+/tmp/
+/result/
+/pytest-cache-files-*/
 
 # Python build/cache artifacts
 __pycache__/

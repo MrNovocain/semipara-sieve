@@ -1,41 +1,66 @@
 # Semiparametric Profile Sieve
 
 This repository contains a working paper project targeting *Statistica Sinica*.
-The project is organized so the paper, simulations, data inputs, generated outputs, notebooks, and local background material stay separated by purpose.
+The project is organized so math source, paper-facing assets, simulations, data,
+notebooks, generated outputs, and archived drafts have separate roles.
 
 ## Repository Layout
 
-- `src/pseel/`: importable Python package for the config-driven profile-sieve empirical likelihood implementation.
+- `paper/math/`: current KKT math main body and minimal math main body.
+- `paper/math/archive/`: supporting or older KKT workbook materials.
+- `paper/figures/`: stable paper-facing figure copies.
+- `paper/tables/`: stable paper-facing table copies.
+- `paper/notes/`: proof audits, source notes, implementation notes, and submission checklists.
+- `paper/archive/drafts/`: historical manuscript-like drafts and PDFs that are not current authority.
+- `src/pseel/`: importable Python package for profile-sieve empirical likelihood implementation.
 - `pseel/`: source-tree import shim so `python -m pseel.run ...` works before installation.
-- `scripts/make_tables.py`: deterministic table generation from saved run directories.
-- `scripts/make_figures.py`: deterministic figure generation from saved run directories.
+- `scripts/`: reproducible command-line workflows for simulations, figures, tables, diagnostics, and empirical examples.
+- `configs/`: YAML configs for DGPs, methods, and Monte Carlo runs.
 - `notebooks/`: exploratory and executed notebooks.
-- `writing_samples/`: paper drafts, LaTeX source, and selected compiled PDFs.
 - `data/raw/`: raw empirical inputs.
 - `data/processed/`: cleaned inputs used by scripts and diagnostics.
 - `data/interim/`: intermediate working data when needed.
-- `results/`: config-driven Monte Carlo run directories with raw parquet, summaries, diagnostics, and lineage files.
-- `agent.md`: local project operating rules for future agent work.
+- `results/`: ignored config-driven run-output directories with raw parquet, summaries, diagnostics, and lineage files.
+- `archive/generated_20260628/`: legacy generated snapshots moved out of root-level `result/` and `tmp/`.
 - `knowledge/`: local background PDFs, intentionally ignored by Git.
 - `application_materials/`: local CV, transcript, and advisor-selection materials, intentionally ignored by Git.
 
+## Manuscript Authority
+
+For math or paper-text decisions, use these files first:
+
+- Main math body: `paper/math/l2pt_l2p_kkt_workbook_v2_mainbody.tex`
+- Minimal math body: `paper/math/l2pt_l2p_kkt_mainbody_minimal.tex`
+
+Historical drafts live under `paper/archive/drafts/` or `paper/math/archive/`.
+Do not treat them as current authority unless explicitly requested.
+
 ## Reproducibility Policy
 
-Keep source files, scripts, small data inputs, selected PDFs, figures, and CSV summaries in Git when they support the paper's claims.
-Do not track LaTeX build artifacts such as `.aux`, `.log`, `.fls`, `.fdb_latexmk`, or `.synctex.gz` files.
-Do not track Python caches, virtual environments, local Jupyter runtime folders, private application materials, or local background PDFs.
-Do not put generated plots in the repository root; write reproducible outputs to `results/<run_id>/` or stable paper copies under `writing_samples/figures/` and `writing_samples/tables/`.
+Keep source files, scripts, small data inputs, selected PDFs, stable figures,
+and stable CSV/table summaries in Git when they support the paper's claims.
+Do not track LaTeX build artifacts, Python caches, virtual environments,
+local Jupyter runtime folders, private application materials, or local background PDFs.
+
+Generated computational runs should write to `results/<run_id>/` or another
+ignored directory under `results/`. Stable paper copies should be written to
+`paper/figures/` and `paper/tables/`. Do not create new root-level `result/`
+or `tmp/` project state.
 
 ## Main Computational Files
 
-- `src/pseel/dgp.py`: predictive-regression DGP used by the paper-facing Monte Carlo pipeline.
+- `src/pseel/dgp.py`: predictive-regression DGPs, including broken-nuisance designs.
 - `src/pseel/methods.py`: oracle, profile, intercept-only, frontier, and efficient-score EL methods.
+- `src/pseel/breaks.py`: block-sieve partition construction, profile RSS, and break-aware EL statistics.
+- `src/pseel/workbook_mc.py`: one-break workbook-faithful Monte Carlo utilities.
 - `src/pseel/el.py`: scalar empirical-likelihood solver.
 - `src/pseel/experiment.py`: config-driven Monte Carlo runner and summarizer.
 - `src/pseel/io.py`: config hashing, source hashing, environment capture, and output writing.
 - `src/pseel/run.py`: command-line entry point for YAML configs.
 - `scripts/make_tables.py`: deterministic post-processing tables.
 - `scripts/make_figures.py`: deterministic QQ and frontier figures.
+- `scripts/theory_diagnostics.py`: theorem-risk diagnostics for projection/oracle/feasible contracts.
+- `scripts/workbook_break_mc.py`: workbook-faithful one-break Monte Carlo runner.
 
 ## Running Scripts
 
@@ -83,16 +108,15 @@ A contemporaneous-endogeneity stress design is kept separate from the headline W
 python -m pseel.run configs/mc/endogeneity_stress.yaml
 ```
 
-Each run writes a lineage-complete directory under `results/<run_id>/` containing `config.yaml`, `config_hash.txt`, `git_commit.txt`, `source_hash.txt`, `environment.txt`, `manifest.json`, `raw_replications.parquet`, `summary.csv`, `diagnostics.json`, and `logs.txt`. The source hash covers the package shim, `src/pseel`, and Python scripts so uncommitted code-state changes are auditable. Deterministic post-processing additionally writes `summary_size.csv`, `summary_oracle_equiv.csv`, and `summary_frontier.csv` when applicable.
+Each run writes a lineage-complete directory under `results/<run_id>/` containing `config.yaml`, `config_hash.txt`, `git_commit.txt`, `source_hash.txt`, `environment.txt`, `manifest.json`, `raw_replications.parquet`, `summary.csv`, `diagnostics.json`, and `logs.txt`. The source hash covers the package shim, `src/pseel`, and Python scripts so uncommitted code-state changes are auditable.
 
-The currently verified reproducible evidence pack includes these runs:
+The currently verified reproducible evidence pack includes these run ids when present locally:
 
 - `size_main_20260622_220035_894be7b`: 2000 replications, size/oracle-equivalence table, QQ diagnostic.
 - `frontier_main_20260622_220246_9ff471a`: 2000 replications, robustness-efficiency frontier.
 - `endogeneity_stress_20260622_220035_e634f37`: 1000 replications, contemporaneous-endogeneity stress diagnostic.
 
-The current manuscript source of truth is `writing_samples/profile_sieve_bai_perron_theory_workbook.tex`. Stable figure copies remain under `writing_samples/figures/`, compact CSV/table copies remain under `writing_samples/tables/`, and noncanonical manuscript-like TeX files are listed in `writing_samples/source_notes/noncanonical_manuscript_sources.md`.
-
+Stable paper copies remain under `paper/figures/` and `paper/tables/`.
 
 ## Automated Theory Diagnostics
 
@@ -105,7 +129,7 @@ python scripts/theory_diagnostics.py --preset negative --replications 200
 python scripts/theory_diagnostics.py --preset adversarial --replications 80 --max-scenarios 12
 ```
 
-Each run writes `raw_replications.csv`, `method_summary.csv`, `contract_summary.csv`, `deterministic_checks.csv`, and `contract_report.json` under `results/theory_diagnostics_<preset>_<timestamp>/`. Read the contract table as a proof-chain audit: first `projection_pass`, then `oracle_pass`, then `feasible_oracle_pass`. If `oracle_pass` fails, the high-level oracle Wilks input failed; if `oracle_pass` holds but `feasible_oracle_pass` fails, the sieve/profile replacement is the problem. Negative-control presets are expected to be detected rather than pass the core contract.
+Each run writes `raw_replications.csv`, `method_summary.csv`, `contract_summary.csv`, `deterministic_checks.csv`, and `contract_report.json` under `results/theory_diagnostics_<preset>_<timestamp>/`. Read the contract table as a proof-chain audit: first `projection_pass`, then `oracle_pass`, then `feasible_oracle_pass`.
 
 Run the checks with:
 

@@ -308,8 +308,8 @@ def run_empirical(output_dir: Path) -> tuple[pd.DataFrame, dict[str, object]]:
         "score_gap_stable_minus_adaptive": float(stable.score - adaptive.score),
     }
     (output_dir / "ghana_break_empirical_meta.json").write_text(json.dumps(meta, indent=2), encoding="ascii")
-    make_empirical_table(result, meta, ROOT / "writing_samples" / "tables" / "ghana_break_empirical.tex")
-    make_weather_response_plot(df, y, x, w, selected.breaks, K, ROOT / "writing_samples" / "figures" / "ghana_weather_response.png")
+    make_empirical_table(result, meta, ROOT / "paper" / "tables" / "ghana_break_empirical.tex")
+    make_weather_response_plot(df, y, x, w, selected.breaks, K, ROOT / "paper" / "figures" / "ghana_weather_response.png")
     return result, meta
 
 
@@ -375,12 +375,12 @@ def make_weather_response_plot(df: pd.DataFrame, y: np.ndarray, x: np.ndarray, w
 def main() -> int:
     parser = argparse.ArgumentParser(description="Generate break-adaptive Monte Carlo and empirical artifacts.")
     parser.add_argument("--mc-reps", type=int, default=300)
-    parser.add_argument("--output-dir", default="result/break_adaptive_sinica")
+    parser.add_argument("--output-dir", default="results/break_adaptive_sinica")
     args = parser.parse_args()
     output_dir = ROOT / args.output_dir
     raw, summary = run_monte_carlo(reps=args.mc_reps, output_dir=output_dir)
-    make_mc_table(summary, ROOT / "writing_samples" / "tables" / "break_mc_summary.tex")
-    make_mc_plot(summary, ROOT / "writing_samples" / "figures" / "break_mc_false_rejection.png")
+    make_mc_table(summary, ROOT / "paper" / "tables" / "break_mc_summary.tex")
+    make_mc_plot(summary, ROOT / "paper" / "figures" / "break_mc_false_rejection.png")
     empirical, meta = run_empirical(output_dir=output_dir)
     print(f"mc_rows={len(raw)}")
     print(f"mc_summary={output_dir / 'break_mc_summary.csv'}")

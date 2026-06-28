@@ -50,21 +50,21 @@ The table and figure should not include an ad hoc persistent-predictor correctio
 The current visual diagnostic output is:
 
 ```text
-writing_samples/figures/goyal_welch_method_comparison.png
+paper/figures/goyal_welch_method_comparison.png
 ```
 
 The current grid audit output is:
 
 ```text
-result/goyal_welch_empirical/goyal_welch_grid_scan.csv
+archive/generated_20260628/result/goyal_welch_empirical/goyal_welch_grid_scan.csv
 ```
 
 The grid scan is kept to make the visual choice auditable rather than hidden.
 The current reproducible empirical output is:
 
 ```text
-result/goyal_welch_empirical/goyal_welch_comparison.csv
-writing_samples/tables/goyal_welch_empirical_comparison.tex
+archive/generated_20260628/result/goyal_welch_empirical/goyal_welch_comparison.csv
+paper/tables/goyal_welch_empirical_comparison.tex
 ```
 
 The paper-facing version should report beta estimates, confidence intervals or empirical-likelihood confidence sets, p-values, selected break number, selected break dates, and a compact description of the fitted nuisance channel.

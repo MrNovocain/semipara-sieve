@@ -1,11 +1,11 @@
-# Source Logic Versus Bai-Perron Workbook Audit
+# Source Logic Versus KKT Mainbody Audit
 
 ## Scope
 
 Current manuscript authority:
 
 ```text
-writing_samples/profile_sieve_bai_perron_theory_workbook.tex
+paper/math/l2pt_l2p_kkt_workbook_v2_mainbody.tex
 ```
 
 Compared source directory:
@@ -14,7 +14,7 @@ Compared source directory:
 src/pseel/
 ```
 
-This audit compares code logic against the workbook's current conditional-design, one-break Bai-Perron/profile-sieve theory. It does not treat older manuscript-like TeX files as authority.
+This audit compares code logic against the current KKT geometry mainbody and its one-break profile-sieve implementation route. It does not treat archived manuscript-like TeX files as authority.
 
 ## Manuscript Logic To Match
 

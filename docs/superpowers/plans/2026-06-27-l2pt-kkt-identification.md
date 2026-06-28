@@ -1,12 +1,14 @@
 # KKT L2 Geometry for Sieve EL Implementation Plan
 
+> Superseded by the 2026-06-28 project reorganization. The current math main body is paper/math/l2pt_l2p_kkt_workbook_v2_mainbody.tex; the compact body is paper/math/l2pt_l2p_kkt_mainbody_minimal.tex. This file is retained as a historical implementation plan.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Reorganize the manuscript proof around three linked KKT systems: profile projection KKT in \(L^2(P_T)\), empirical-likelihood simplex KKT with local \(L^2(P_T)\) curvature, and the limiting \(L^2(P)\) population KKT that identifies \(\beta_0\).
 
 **Architecture:** Keep the stochastic CLT/LLN/max lemmas, but demote them from the proof architecture to supporting consequences that localize the EL KKT. The main narrative becomes: profiling solves an exact empirical projection problem; EL solves an exact entropy KKT problem whose Hessian is the empirical second moment \(P_TZ^2\) near the root; empirical inner products converge to population \(L^2(P)\) inner products, where the population normal-score equation has a unique zero at \(\beta_0\).
 
-**Tech Stack:** LaTeX source in `writing_samples/profile_sieve_bai_perron_theory_workbook.tex`; audit notes in `proof verify.md`; mathematical consistency checks against `src/pseel/el.py`, `src/pseel/breaks.py`, and targeted pytest files; manuscript verification with `pdflatex`.
+**Tech Stack:** LaTeX source in `paper/archive/drafts/profile_sieve_bai_perron_theory_workbook.tex`; audit notes in `paper/notes/proof verify.md`; mathematical consistency checks against `src/pseel/el.py`, `src/pseel/breaks.py`, and targeted pytest files; manuscript verification with `pdflatex`.
 
 ---
 
@@ -14,7 +16,7 @@
 
 The repository already has partial implementation of the older two-layer plan:
 
-- `writing_samples/profile_sieve_bai_perron_theory_workbook.tex` defines \(\langle a,b\rangle_T=T^{-1}a'b\).
+- `paper/archive/drafts/profile_sieve_bai_perron_theory_workbook.tex` defines \(\langle a,b\rangle_T=T^{-1}a'b\).
 - It has a sample \(L^2(P_T)\) profile KKT lemma.
 - It has a sample EL simplex KKT lemma.
 - It has a high-level population KKT bridge.
@@ -39,7 +41,7 @@ L^2(P_T)\to L^2(P)\text{ identification.}
 
 ## File Map
 
-- Modify: `writing_samples/profile_sieve_bai_perron_theory_workbook.tex`
+- Modify: `paper/archive/drafts/profile_sieve_bai_perron_theory_workbook.tex`
   - Refine the existing sample inner-product paragraph near the primitive setup.
   - Keep and polish the existing sample profile KKT lemma.
   - Replace the current EL separation paragraph with an EL-local-curvature explanation.
@@ -57,14 +59,14 @@ L^2(P_T)\to L^2(P)\text{ identification.}
 ### Task 1: Polish the Empirical \(L^2(P_T)\) Profile KKT
 
 **Files:**
-- Modify: `writing_samples/profile_sieve_bai_perron_theory_workbook.tex`
+- Modify: `paper/archive/drafts/profile_sieve_bai_perron_theory_workbook.tex`
 
 - [ ] **Step 1: Confirm the empirical inner product paragraph is present**
 
 Run:
 
 ```powershell
-Select-String -Path 'W:\Research\semipara sieve\writing_samples\profile_sieve_bai_perron_theory_workbook.tex' -SimpleMatch '\langle \bm a,\bm b\rangle_T'
+Select-String -Path 'W:\Research\semipara sieve\paper\archive\drafts\profile_sieve_bai_perron_theory_workbook.tex' -SimpleMatch '\langle \bm a,\bm b\rangle_T'
 ```
 
 Expected: one match in the primitive setup.
@@ -107,7 +109,7 @@ orthogonal to both the profiled residual and the residualized score weight.
 ### Task 2: Recast EL as Simplex KKT with Local \(L^2(P_T)\) Curvature
 
 **Files:**
-- Modify: `writing_samples/profile_sieve_bai_perron_theory_workbook.tex`
+- Modify: `paper/archive/drafts/profile_sieve_bai_perron_theory_workbook.tex`
 - Read: `src/pseel/el.py`
 
 - [ ] **Step 1: Replace the current EL separation paragraph**
@@ -218,7 +220,7 @@ Expected: matches show the implementation solves the EL KKT equation and compute
 ### Task 3: Add the Three-KKT and Deterministic-Good-Event Roadmap
 
 **Files:**
-- Modify: `writing_samples/profile_sieve_bai_perron_theory_workbook.tex`
+- Modify: `paper/archive/drafts/profile_sieve_bai_perron_theory_workbook.tex`
 
 - [ ] **Step 1: Insert the three-KKT roadmap after the EL definition block**
 
@@ -259,7 +261,7 @@ algebra; they are not the organizing principle of the proof.
 ### Task 4: Tighten the Population KKT Bridge
 
 **Files:**
-- Modify: `writing_samples/profile_sieve_bai_perron_theory_workbook.tex`
+- Modify: `paper/archive/drafts/profile_sieve_bai_perron_theory_workbook.tex`
 
 - [ ] **Step 1: Replace the current population bridge assumption with this version**
 
@@ -326,7 +328,7 @@ geometry; they are the conditions that make the EL KKT use its local
 ### Task 5: Reframe the Known-Partition Wilks Proof Around Local Curvature
 
 **Files:**
-- Modify: `writing_samples/profile_sieve_bai_perron_theory_workbook.tex`
+- Modify: `paper/archive/drafts/profile_sieve_bai_perron_theory_workbook.tex`
 
 - [ ] **Step 1: Add this remark before `thm:wb-known-wilks`**
 
@@ -403,7 +405,7 @@ Expected: all selected tests pass.
 Run:
 
 ```powershell
-Set-Location 'W:\Research\semipara sieve\writing_samples'
+Set-Location 'W:\Research\semipara sieve\paper\archive\drafts'
 pdflatex -interaction=nonstopmode -halt-on-error profile_sieve_bai_perron_theory_workbook.tex
 pdflatex -interaction=nonstopmode -halt-on-error profile_sieve_bai_perron_theory_workbook.tex
 ```
@@ -424,7 +426,7 @@ prop:sample-to-population-kkt
 Run:
 
 ```powershell
-git diff -- docs/superpowers/plans/2026-06-27-l2pt-kkt-identification.md proof\ verify.md writing_samples/profile_sieve_bai_perron_theory_workbook.tex
+git diff -- docs/superpowers/plans/2026-06-27-l2pt-kkt-identification.md paper/notes/proof\ verify.md paper/archive/drafts/profile_sieve_bai_perron_theory_workbook.tex
 ```
 
 Expected: the diff only contains the KKT/L2 proof narrative and audit note. Do not commit in this shared dirty worktree unless the user explicitly asks.

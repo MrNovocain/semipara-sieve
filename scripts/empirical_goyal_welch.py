@@ -34,7 +34,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--raw-path", default="data/raw/goyal_welch/PredictorData2025.xlsx")
     parser.add_argument("--processed-path", default="data/processed/goyal_welch_monthly.csv")
     parser.add_argument("--provenance-path", default="data/raw/goyal_welch/provenance.json")
-    parser.add_argument("--output-dir", default="result/goyal_welch_empirical")
+    parser.add_argument("--output-dir", default="results/goyal_welch_empirical")
     parser.add_argument("--sheet-name", default=None)
     parser.add_argument("--x-col", default="bm")
     parser.add_argument("--w-col", default="ntis")
@@ -103,7 +103,7 @@ def main() -> int:
     comparison_path = output_dir / "goyal_welch_comparison.csv"
     grid_scan_path = output_dir / "goyal_welch_grid_scan.csv"
     exploratory_path = None
-    figure_path = ROOT / "writing_samples" / "figures" / "goyal_welch_method_comparison.png"
+    figure_path = ROOT / "paper" / "figures" / "goyal_welch_method_comparison.png"
     diagnostics_path = output_dir / "goyal_welch_diagnostics.json"
     table.to_csv(comparison_path, index=False)
 
@@ -135,7 +135,7 @@ def main() -> int:
         penalty_multiplier=args.penalty_multiplier,
     )
     scan.to_csv(grid_scan_path, index=False)
-    write_latex_table(table, ROOT / "writing_samples" / "tables" / "goyal_welch_empirical_comparison.tex")
+    write_latex_table(table, ROOT / "paper" / "tables" / "goyal_welch_empirical_comparison.tex")
     plot_method_comparison(table, figure_path, title=f"Goyal-Welch: X={args.x_col}, W={args.w_col}")
     by_method = table.set_index("method")
     standard_row = by_method.loc["standard_predictive_regression"]

@@ -1,4 +1,4 @@
-﻿import json
+import json
 import shutil
 from pathlib import Path
 
@@ -60,7 +60,7 @@ def test_clean_goyal_welch_monthly_constructs_predictors_and_lagged_panel():
 
 
 def test_write_provenance_records_hash_sheet_names_and_processing_summary():
-    scratch = Path("result/goyal_welch_empirical/test_scratch")
+    scratch = Path("results/_test_goyal_welch_pipeline/provenance")
     scratch.mkdir(parents=True, exist_ok=True)
     workbook = scratch / "PredictorData2025.xlsx"
     with pd.ExcelWriter(workbook, engine="openpyxl") as writer:
@@ -84,7 +84,7 @@ def test_write_provenance_records_hash_sheet_names_and_processing_summary():
     assert len(data["raw_file"]["sha256"]) == 64
     assert data["processed_file"]["rows"] == 1
     assert [sheet["name"] for sheet in data["workbook"]["sheets"]] == ["Monthly", "Annual"]
-    shutil.rmtree(scratch, ignore_errors=True)
+    shutil.rmtree(scratch.parent, ignore_errors=True)
 
 
 def test_make_comparison_table_contains_required_empirical_methods():
@@ -150,12 +150,13 @@ def test_plot_method_comparison_writes_nonblank_png():
         grid_step=6,
         penalty_multiplier=1.0,
     )
-    output = Path("result/goyal_welch_empirical/test_method_comparison.png")
+    output = Path("results/_test_goyal_welch_pipeline/test_method_comparison.png")
 
     plot_method_comparison(table, output, title="Test plot")
 
     assert output.exists()
     assert output.stat().st_size > 1000
+    shutil.rmtree(output.parent, ignore_errors=True)
 
 def test_goyal_welch_multiple_breaks_require_explicit_exploratory_mode():
     cleaned = clean_goyal_welch_monthly(_sample_raw_monthly(120))

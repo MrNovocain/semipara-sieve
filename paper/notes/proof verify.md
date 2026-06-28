@@ -17,8 +17,8 @@ events; stochastic lemmas verify those events and the oracle score limits.
 
 Files checked:
 
-- writing_samples/profile_sieve_geometric_paper.tex
-- writing_samples/profile_sieve_geometric_supplement.tex
+- paper/archive/drafts/profile_sieve_geometric_paper.tex
+- paper/archive/drafts/profile_sieve_geometric_supplement.tex
 
 Purpose: check the mathematical logic line by line for the assumptions, conditions, definitions, lemmas, propositions, theorems, corollaries, and supplement proofs.
 
@@ -40,7 +40,7 @@ Those are not internal contradictions. They are assumptions. The theorems are co
 
 ## Small source edits made during this audit
 
-I made two small mathematical-text cleanups in writing_samples/profile_sieve_geometric_paper.tex:
+I made two small mathematical-text cleanups in paper/archive/drafts/profile_sieve_geometric_paper.tex:
 
 1. In Proposition 1, I changed the punctuation after the displayed definition of B_T from a comma to a period.
 2. In Theorem 4, I rewrote the local-alternative convex-hull sentence so it explicitly refers to the feasible true-partition score array, not a generic convex-hull condition.

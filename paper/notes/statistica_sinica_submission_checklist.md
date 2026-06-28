@@ -1,6 +1,6 @@
 # Statistica Sinica Submission Checklist
 
-> Status note: this checklist is retained as a historical submission-readiness note. The current manuscript source of truth is `writing_samples/profile_sieve_bai_perron_theory_workbook.tex`; noncanonical manuscript files are inventoried in `writing_samples/source_notes/noncanonical_manuscript_sources.md`.
+> Status note: this checklist is retained as a historical submission-readiness note. The current manuscript source of truth is `paper/math/l2pt_l2p_kkt_workbook_v2_mainbody.tex`; noncanonical manuscript files are inventoried in `paper/notes/source_notes/noncanonical_manuscript_sources.md`.
 
 Official source checked: https://www3.stat.sinica.edu.tw/statistica/author_instru.html
 Official template checked: https://www3.stat.sinica.edu.tw/statistica/latex.html
