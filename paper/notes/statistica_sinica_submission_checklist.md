@@ -12,7 +12,7 @@ Official template checked: https://www3.stat.sinica.edu.tw/statistica/latex.html
 - Main manuscript is 24 double-spaced pages including references, below the 40-page limit stated in the official instructions.
 - The paper contains theoretical support for the main claims: stable-score decomposition, omitted-break failure, known-partition Wilks theorem, estimated-partition equivalence, unknown-q corollary, and local-power theorem.
 - The paper contains numerical evidence: 300-replication Monte Carlo table and figure, plus the Ghana cocoa/weather empirical application.
-- Numerical evidence is reproducible from `scripts/break_adaptive_results.py` and the data in `data/processed/cocoa_ghana.csv`.
+- Numerical evidence should be reproduced from the active config-driven runners (`python -m pseel.run`, `scripts/workbook_break_mc.py`, and `scripts/empirical_goyal_welch.py`); the old break-adaptive/weather script is archived under `archive/code_20260628/scripts/`.
 - The latest LaTeX logs contain no unresolved references, citation warnings, TeX errors, overfull boxes, or underfull boxes. The only remaining warnings are inherited `sectsty` command-change warnings from the template stack.
 - Rendered PDF pages were checked for blank pages and content clipping.
 

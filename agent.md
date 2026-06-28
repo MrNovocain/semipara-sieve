@@ -4,7 +4,7 @@
 
 - This is a working paper project targeting *Statistica Sinica*.
 - Treat the main project as the profile-sieve empirical likelihood paper, not as an application-materials or advisor-search workspace.
-- Maintain a replicable, modular research structure: source package, scripts, notebooks, paper source, data, generated results, and local background material should remain separated by purpose.
+- Maintain a replicable, modular research structure: source package, scripts, paper source, data, generated results, archived notebooks, and local background material should remain separated by purpose.
 
 ## Hard Constraints
 
@@ -29,9 +29,10 @@
 - Put stable paper-facing figures under `paper/figures/` and stable tables under `paper/tables/`.
 - Put proof audits, source notes, and planning notes under `paper/notes/`.
 - Put old drafts under `paper/archive/drafts/` or `paper/math/archive/`.
+- Put legacy code and notebook snapshots under `archive/code_YYYYMMDD/`, not active `scripts/` or `notebooks/` paths.
 - Put raw inputs under `data/raw/` and cleaned analysis inputs under `data/processed/`.
 - Put generated tables, figures, simulation summaries, and diagnostics under `results/<run_id>/`; copy only selected stable outputs into `paper/figures/` or `paper/tables/`.
-- Keep reusable implementation logic in `src/pseel/` and command-line workflows in `python -m pseel.run`, `scripts/make_tables.py`, `scripts/make_figures.py`, `scripts/theory_diagnostics.py`, and workbook-specific scripts.
+- Keep reusable implementation logic in `src/pseel/` and active command-line workflows in `python -m pseel.run`, `scripts/workbook_break_mc.py`, `scripts/empirical_goyal_welch.py`, `scripts/make_tables.py`, `scripts/make_figures.py`, and `scripts/theory_diagnostics.py`.
 - Keep each computational claim auditable from source code plus saved CSV or figure output.
 
 ## Long-Run Reminder

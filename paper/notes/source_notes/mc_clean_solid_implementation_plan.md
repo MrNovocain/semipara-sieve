@@ -17,13 +17,13 @@
 整个 MC repo 只允许一种运行方式：
 
 ```bash
-python -m pseel.run configs/mc/size_main.yaml
+python -m pseel.run configs/mc/main/size_main.yaml
 ```
 
 或者：
 
 ```bash
-python -m pseel.run configs/mc/frontier_main.yaml
+python -m pseel.run configs/mc/main/frontier_main.yaml
 ```
 
 不能靠手动改代码、手动改 notebook、手动复制参数。
@@ -289,7 +289,7 @@ coverage
 
 一个 config 必须完整描述实验。
 
-例如 `configs/mc/size_main.yaml`：
+例如 `configs/mc/main/size_main.yaml`：
 
 ```yaml
 experiment:
@@ -371,7 +371,7 @@ class SeedManager:
 这样你可以精确复现第 1374 次 replication：
 
 ```bash
-python -m pseel.debug_rep --config configs/mc/size_main.yaml --rep 1374
+python -m pseel.debug_rep --config configs/mc/main/size_main.yaml --rep 1374
 ```
 
 ---

@@ -2,7 +2,7 @@
 
 This repository contains a working paper project targeting *Statistica Sinica*.
 The project is organized so math source, paper-facing assets, simulations, data,
-notebooks, generated outputs, and archived drafts have separate roles.
+generated outputs, archived notebooks, and archived drafts have separate roles.
 
 ## Repository Layout
 
@@ -15,13 +15,14 @@ notebooks, generated outputs, and archived drafts have separate roles.
 - `src/pseel/`: importable Python package for profile-sieve empirical likelihood implementation.
 - `pseel/`: source-tree import shim so `python -m pseel.run ...` works before installation.
 - `scripts/`: reproducible command-line workflows for simulations, figures, tables, diagnostics, and empirical examples.
-- `configs/`: YAML configs for DGPs, methods, and Monte Carlo runs.
-- `notebooks/`: exploratory and executed notebooks.
+- `configs/`: YAML configs; paper-facing MC configs live in `configs/mc/main/`, stress designs in `configs/mc/stress/`, and smoke/demo configs in `configs/mc/demo/`.
+- `archive/code_20260628/notebooks/`: archived exploratory notebook snapshots, not part of the active reproducible pipeline.
 - `data/raw/`: raw empirical inputs.
 - `data/processed/`: cleaned inputs used by scripts and diagnostics.
 - `data/interim/`: intermediate working data when needed.
 - `results/`: ignored config-driven run-output directories with raw parquet, summaries, diagnostics, and lineage files.
 - `archive/generated_20260628/`: legacy generated snapshots moved out of root-level `result/` and `tmp/`.
+- `archive/code_20260628/`: legacy code and notebook snapshots moved out of active `scripts/` and `notebooks/` paths.
 - `knowledge/`: local background PDFs, intentionally ignored by Git.
 - `application_materials/`: local CV, transcript, and advisor-selection materials, intentionally ignored by Git.
 
@@ -67,7 +68,7 @@ or `tmp/` project state.
 Run the current config-driven pipeline from the repository root, for example:
 
 ```powershell
-python -m pseel.run configs/mc/size_main.yaml
+python -m pseel.run configs/mc/main/size_main.yaml
 python scripts/make_tables.py --run-dir results/<size_run_id>
 python scripts/make_figures.py --run-dir results/<size_run_id> --method profile_bounded --fig qq --T 250
 ```
@@ -86,10 +87,17 @@ For `L2(P)` geometry background, use the local ignored folder `knowledge/`, espe
 
 ## Config-Driven Monte Carlo Pipeline
 
+The current KKT workbook one-break simulation is run separately from the older
+stable/no-break baseline pipeline:
+
+```powershell
+python scripts/workbook_break_mc.py configs/mc/main/broken_nuisance_one_break.yaml
+```
+
 The paper-facing simulation path is available through the `pseel` package. The main size design uses stationary alpha-mixing `W_t`, controlled-initial-condition persistent `X_t`, the smooth nuisance `m(w)=0.5 sin(w)+0.3(w^2-1)`, and the bounded score `tanh(X / 8)`:
 
 ```powershell
-python -m pseel.run configs/mc/size_main.yaml
+python -m pseel.run configs/mc/main/size_main.yaml
 python scripts/make_tables.py --run-dir results/<size_run_id>
 python scripts/make_figures.py --run-dir results/<size_run_id> --method profile_bounded --fig qq --T 250
 ```
@@ -97,7 +105,7 @@ python scripts/make_figures.py --run-dir results/<size_run_id> --method profile_
 The robustness-efficiency frontier is generated separately:
 
 ```powershell
-python -m pseel.run configs/mc/frontier_main.yaml
+python -m pseel.run configs/mc/main/frontier_main.yaml
 python scripts/make_tables.py --run-dir results/<frontier_run_id>
 python scripts/make_figures.py --run-dir results/<frontier_run_id> --fig frontier
 ```
@@ -105,7 +113,7 @@ python scripts/make_figures.py --run-dir results/<frontier_run_id> --fig frontie
 A contemporaneous-endogeneity stress design is kept separate from the headline Wilks table:
 
 ```powershell
-python -m pseel.run configs/mc/endogeneity_stress.yaml
+python -m pseel.run configs/mc/stress/endogeneity_stress.yaml
 ```
 
 Each run writes a lineage-complete directory under `results/<run_id>/` containing `config.yaml`, `config_hash.txt`, `git_commit.txt`, `source_hash.txt`, `environment.txt`, `manifest.json`, `raw_replications.parquet`, `summary.csv`, `diagnostics.json`, and `logs.txt`. The source hash covers the package shim, `src/pseel`, and Python scripts so uncommitted code-state changes are auditable.

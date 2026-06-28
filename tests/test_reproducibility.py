@@ -12,7 +12,7 @@ TEST_ROOT = Path("results") / "_pytest_repro"
 
 
 def _mini_config(run_id: str) -> dict:
-    config = load_yaml("configs/mc/size_main.yaml")
+    config = load_yaml("configs/mc/main/size_main.yaml")
     config["experiment"]["n_replications"] = 3
     config["experiment"]["global_seed"] = 777
     config["dgp"]["params"]["T_values"] = [40]

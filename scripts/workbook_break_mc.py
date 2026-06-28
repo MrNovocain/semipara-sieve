@@ -19,7 +19,7 @@ from pseel.workbook_mc import run_workbook_break_monte_carlo  # noqa: E402
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Run the workbook-faithful broken-nuisance one-break Monte Carlo.")
-    parser.add_argument("config", nargs="?", default="configs/mc/broken_nuisance_one_break.yaml")
+    parser.add_argument("config", nargs="?", default="configs/mc/main/broken_nuisance_one_break.yaml")
     parser.add_argument("--output-dir", default=None, help="Override the config output directory.")
     parser.add_argument("--replications", type=int, default=None, help="Override the configured replication count.")
     parser.add_argument("--overwrite", action="store_true", help="Allow replacing an existing output directory.")

@@ -1,4 +1,4 @@
-﻿import numpy as np
+import numpy as np
 
 from pseel.workbook_mc import run_workbook_break_monte_carlo, workbook_break_replication
 
@@ -78,7 +78,7 @@ def test_broken_nuisance_one_break_config_targets_workbook_mc():
     import yaml
     from pathlib import Path
 
-    path = Path("configs/mc/broken_nuisance_one_break.yaml")
+    path = Path("configs/mc/main/broken_nuisance_one_break.yaml")
     assert path.exists()
     config = yaml.safe_load(path.read_text(encoding="utf-8"))
 
