@@ -1,0 +1,230 @@
+\documentclass[11pt]{article}
+\usepackage[letterpaper,margin=0.72in]{geometry}
+\usepackage{amsmath,amssymb,amsfonts,bm,booktabs,array,enumitem}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt}
+\setlist[itemize]{leftmargin=1.2em,itemsep=1pt,topsep=2pt}
+\setlist[enumerate]{leftmargin=1.4em,itemsep=1pt,topsep=2pt}
+\newcommand{\innerT}[2]{\langle #1,#2\rangle_T}
+\newcommand{\innerP}[2]{\langle #1,#2\rangle_P}
+\newcommand{\E}{\mathbb E}
+\newcommand{\N}{\mathcal N}
+
+\pagestyle{empty}
+\begin{document}
+
+\begin{center}
+{\Large\bf Profile Sieve EL with Nuisance Breaks}\\[-1pt]
+{\large A Geometry-First Proof Map}\\[-1pt]
+\end{center}
+
+\vspace{-4pt}
+\textbf{One-sentence thesis.}
+Break-adaptive projection is the decontamination step that turns false
+predictability from structural breaks into valid empirical-likelihood inference
+for \(\beta\).
+
+\section*{1. Gap: structural breaks can look like predictability}
+
+The predictive model is
+\[
+    Y_t=\beta_0X_{t-1}+\mu_{0,t}+U_t,\qquad
+    \mu_{0,t}=m_j(W_{t-1})\quad\text{on regime }j .
+\]
+The difficulty is not only that \(\mu_{0,t}\) is nonparametric. It may also
+break. If inference residualizes with a stable/no-break nuisance space, its
+residual-maker \(M_{\rm st}\) generally leaves a nonzero nuisance residue:
+\[
+    M_{\rm st}\mu_0\neq0 .
+\]
+At the true value \(\beta_0\), the stable projected score is
+\[
+    S_T^{\rm st}(\beta_0)
+    =
+    T^{-1/2}u'M_{\rm st}w
+    +
+    T^{-1/2}\mu_0'M_{\rm st}w .
+\]
+The second term is omitted-break drift:
+\[
+    B_T
+    =
+    T^{-1/2}\mu_0'M_{\rm st}w
+    =
+    \sqrt T\,\innerT{M_{\rm st}\mu_0}{M_{\rm st}w}.
+\]
+Thus false predictability is a geometric angle problem. If the unremoved
+nuisance residue \(M_{\rm st}\mu_0\) is not orthogonal to the residualized score
+direction \(M_{\rm st}w\), the score can be large even when \(\beta=\beta_0\).
+
+\textbf{Gap.} Existing stable-nuisance predictability procedures can confuse
+nuisance structural breaks with predictive signal. The missing piece is a
+method that ties break selection, nuisance removal, and EL inference together
+so that break residue cannot enter the predictive score.
+
+\textbf{New idea.} Treat a candidate break partition as a nuisance subspace:
+\[
+    \Lambda\longmapsto
+    \N_{K,\Lambda,T}=\operatorname{col}(Q_{K,\Lambda})\subset L^2(P_T),
+    \qquad
+    M_{K,\Lambda}=I-\Pi_{K,\Lambda,T}.
+\]
+Break search is then subspace selection, not just date estimation.
+
+\textbf{Why it matters.} Under the correct break-aware subspace,
+\[
+    M_0\mu_0\approx0,
+\]
+whereas under a stable nuisance subspace \(M_{\rm st}\mu_0\not\approx0\). The
+geometry identifies exactly which component must be removed before testing
+predictability.
+
+\newpage
+\section*{2. Geometry: break search and inference happen in normal space}
+
+Let \(L^2(P_T)=(\mathbb R^T,\innerT{a}{b}=T^{-1}a'b)\). For a trial
+\(\beta\), write \(y_\beta=y-\beta x\). Profiling over a block sieve nuisance
+is orthogonal projection:
+\[
+    RSS_K(\beta,\Lambda)
+    =
+    T\operatorname{dist}_T^2(y-\beta x,\N_{K,\Lambda,T})
+    =
+    T\|M_{K,\Lambda}(y-\beta x)\|_T^2 .
+\]
+So the break estimator chooses the nuisance subspace closest to \(y_\beta\).
+The projected score uses only normal-space components:
+\[
+    \Psi_T(\beta,\Lambda)
+    =
+    \innerT{M_{K,\Lambda}(y-\beta x)}
+            {M_{K,\Lambda}w}.
+\]
+This is the decontaminated predictability moment.
+
+\textbf{Population identification.} Let \(M_0^P\) project away the true
+break-aware nuisance tangent space. Since \(\mu_0\) belongs to that nuisance
+space,
+\[
+    M_0^P\mu_0=0 .
+\]
+The population moment satisfies
+\[
+    \Psi(\beta,\Lambda_0)
+    =
+    \innerP{M_0^P(Y-\beta X)}{M_0^Pw}
+    =
+    -(\beta-\beta_0)\Gamma,
+    \qquad
+    \Gamma=\innerP{M_0^PX}{M_0^Pw}\neq0.
+\]
+Thus \(\beta_0\) is identified by transversality: after quotienting out the
+nuisance space, the residualized parametric direction is not orthogonal to the
+chosen score direction.
+
+\textbf{Good-event proof map.} Probability builds the random geometry. Once the
+following good event holds, the proof is deterministic:
+\[
+    \mathcal G_T
+    =
+    G_T^{iso}\cap G_T^{approx}\cap G_T^{angle}
+    \cap G_T^{local}\cap G_T^{select}\cap G_T^{convex}.
+\]
+\[
+\begin{array}{p{0.22\linewidth}p{0.69\linewidth}}
+\toprule
+Component & Meaning and use\\
+\midrule
+\(G_T^{iso}\) & Gram and inner-product stability for projection and variance.\\
+\(G_T^{approx}\) & \(M_0\mu_0\) is small, so nuisance residue is negligible.\\
+\(G_T^{angle}\) & \(\Gamma\neq0\) and score variance is nondegenerate.\\
+\(G_T^{local}\) & \(\widehat\Lambda\) replaces \(\Lambda_0\) in score and variance.\\
+\(G_T^{select}\) & RSS localizes breaks and selects the order.\\
+\(G_T^{convex}\) & EL convex hull and max-score conditions hold.\\
+\bottomrule
+\end{array}
+\]
+The full stochastic proof verifies \(\Pr(\mathcal G_T)\to1\) through Gram
+laws, sieve approximation, RSS concentration, break replacement, CLT, variance
+LLN, max-score, and convex-hull bounds.
+
+\newpage
+\section*{3. EL inference and the payoff}
+
+For fixed \((\beta,\Lambda)\), define
+\[
+    g_t(\beta,\Lambda)
+    =
+    \{M_{K,\Lambda}(y-\beta x)\}_t\{M_{K,\Lambda}w\}_t .
+\]
+The scalar empirical likelihood is a convex simplex problem:
+\[
+    \max_{\pi\in\Delta_T}\sum_{t=1}^T\log(T\pi_t)
+    \quad\text{s.t.}\quad
+    \sum_{t=1}^T\pi_t g_t(\beta,\Lambda)=0.
+\]
+Its KKT form is
+\[
+    \pi_t(\lambda)=\frac{1}{T\{1+\lambda g_t\}},
+    \qquad
+    P_T\left\{\frac{g_t}{1+\lambda g_t}\right\}=0.
+\]
+On \(\mathcal G_T\), the logarithmic barrier has the local quadratic expansion
+\[
+    -2\log EL(\beta_0,\widehat\Lambda)
+    =
+    \frac{T\{\Psi_T(\beta_0,\widehat\Lambda)\}^2}
+         {V_T(\widehat\Lambda)}
+    +o_p(1).
+\]
+The break-aware projection bridge gives the oracle score reduction
+\[
+    \sqrt T\,\Psi_T(\beta_0,\widehat\Lambda)
+    =
+    T^{-1/2}u'M_0w+o_p(1).
+\]
+If
+\[
+    T^{-1/2}u'M_0w\Rightarrow N(0,V),\qquad
+    V_T(\widehat\Lambda)\to_p V>0,
+\]
+then
+\[
+    -2\log EL(\beta_0,\widehat\Lambda)\Rightarrow\chi_1^2 .
+\]
+
+\textbf{Why this fills the gap.} The method turns unknown nuisance breaks into
+a subspace-selection problem:
+\[
+    \text{break partition}
+    \Rightarrow
+    \text{nuisance subspace}
+    \Rightarrow
+    \text{orthogonal residual}
+    \Rightarrow
+    \text{projected score}
+    \Rightarrow
+    \text{EL KKT}
+    \Rightarrow
+    \chi_1^2 .
+\]
+The contaminated stable score is replaced by the oracle break-aware score. That
+is why the geometry is central to the paper, not a notation choice.
+
+\textbf{Efficiency add-on.} Under a conditional Gaussian location efficiency
+calculation with variance \(\sigma^2(S,W)\), choose
+\[
+    w^*=\frac{X}{\sigma^2(S,W)}.
+\]
+Then
+\[
+    M_0^Pw^*
+    =
+    \frac{X-E(X\mid S,W)}{\sigma^2(S,W)},
+\]
+so the projected score equals the efficient score. In the homoskedastic case,
+using \(w=X\) gives the same root.
+
+\end{document}

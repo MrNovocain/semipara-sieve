@@ -1,0 +1,577 @@
+\documentclass[12pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsfonts,amsthm,bm,array,booktabs,enumitem}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+
+\numberwithin{equation}{section}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}{Proposition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{assumption}{Assumption}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{remark}{Remark}
+
+\newcommand{\E}{\mathbb E}
+\newcommand{\R}{\mathbb R}
+\newcommand{\Pp}{\mathbb P}
+\newcommand{\ind}{\mathbf 1}
+\newcommand{\op}{o_p}
+\newcommand{\Op}{O_p}
+\newcommand{\N}{\mathcal N}
+\newcommand{\Hh}{\mathcal H}
+\newcommand{\LtwoT}{L^2(P_T)}
+\newcommand{\LtwoP}{L^2(P)}
+\newcommand{\innerT}[2]{\langle #1,#2\rangle_T}
+\newcommand{\innerP}[2]{\langle #1,#2\rangle_P}
+
+\begin{document}
+
+\begin{center}
+{\Large\bf Minimal Main Body for Profile Sieve EL}\\[6pt]
+{\large Minimum Geometry Needed to Understand the Proof}\\[6pt]
+{\normalsize Standalone main-body version}\\[12pt]
+\end{center}
+
+\tableofcontents
+\newpage
+
+\section{Model and Geometry}
+
+The finite sample is viewed as the empirical Hilbert space
+\[
+    \LtwoT=(\R^T,\innerT{a}{b}=T^{-1}a'b),
+    \qquad \|a\|_T^2=\innerT{a}{a}.
+\]
+The population limit is
+\[
+    \LtwoP,\qquad \innerP{f}{g}=\E\{fg\}.
+\]
+The sample model is
+\[
+    \bm y=\beta_0\bm x+\bm\mu_0+\bm u,
+\]
+where
+\[
+    \mu_{0,t}=m_{j_0(t)}(W_{t-1}),
+    \qquad
+    j_0(t)=j\iff k_{j,0}<t\le k_{j+1,0}.
+\]
+Thus \(\bm\mu_0\) is the stacked nuisance mean. If there are no nuisance
+breaks, \(\mu_{0,t}=m(W_{t-1})\). With nuisance breaks, the function changes by
+regime.
+
+A candidate partition is
+\[
+    \Lambda=(k_1,\ldots,k_q),
+    \qquad
+    0=k_0<k_1<\cdots<k_q<k_{q+1}=T,
+\]
+with segments
+\[
+    I_j(\Lambda)=\{t:k_j<t\le k_{j+1}\}.
+\]
+Let \(P\) be the \(T\times K\) sieve matrix with row
+\[
+    P_K(W_{t-1})'=(p_1(W_{t-1}),\ldots,p_K(W_{t-1})).
+\]
+Let \(D_j(\Lambda)\) be the diagonal selector for segment \(I_j(\Lambda)\), and
+define the block-sieve design
+\[
+    \bm Q_{K,\Lambda}
+    =
+    [D_0(\Lambda)P,\ldots,D_q(\Lambda)P].
+\]
+The candidate nuisance subspace is
+\[
+    \N_{K,\Lambda,T}
+    =
+    \operatorname{col}(\bm Q_{K,\Lambda})
+    \subset \LtwoT.
+\]
+Let \(\Pi_{K,\Lambda,T}\) be the empirical orthogonal projection onto this
+subspace and
+\[
+    \bm M_{K,\Lambda}=I-\Pi_{K,\Lambda,T}
+\]
+the residual-maker. The proof is governed by the subspace-valued map
+\[
+    \Lambda\longmapsto \N_{K,\Lambda,T}.
+\]
+For a trial \(\beta\), define
+\[
+    \bm y_\beta=\bm y-\beta\bm x.
+\]
+The profiled residual \(\bm M_{K,\Lambda}\bm y_\beta\) and the residualized
+score direction \(\bm M_{K,\Lambda}\bm w\) both lie in the normal space
+\[
+    \N_{K,\Lambda,T}^{\perp_T}.
+\]
+Inference for \(\beta\) is therefore carried by the projected moment
+\[
+    \Psi_T(\beta,\Lambda)
+    =
+    \innerT{\bm M_{K,\Lambda}(\bm y-\beta\bm x)}
+            {\bm M_{K,\Lambda}\bm w}.
+\]
+
+\section{Three Bridge Lemmas}
+
+The following three finite-sample facts are the minimum material needed before
+the good-event proof.
+
+\begin{lemma}[Profiling is distance to a nuisance subspace]
+\label{lem:min-rss-distance}
+For fixed \((\beta,\Lambda)\),
+\[
+    RSS_K(\beta,\Lambda)
+    =
+    T\operatorname{dist}_T^2(\bm y-\beta\bm x,\N_{K,\Lambda,T})
+    =
+    T\|\bm M_{K,\Lambda}(\bm y-\beta\bm x)\|_T^2.
+\]
+\end{lemma}
+
+\begin{proof}
+The profile RSS minimizes over a separate sieve coefficient vector \(c_j\) on
+each segment:
+\[
+    RSS_K(\beta,\Lambda)
+    =
+    \min_{c_0,\ldots,c_q}
+    \sum_{j=0}^q\sum_{t\in I_j(\Lambda)}
+    \{Y_t-\beta X_{t-1}-P_K(W_{t-1})'c_j\}^2.
+\]
+Stacking \(c=(c_0',\ldots,c_q')'\), the fitted nuisance vector is
+\(\bm Q_{K,\Lambda}c\). Hence
+\[
+    RSS_K(\beta,\Lambda)
+    =
+    \min_c\|\bm y-\beta\bm x-\bm Q_{K,\Lambda}c\|_2^2
+    =
+    \inf_{g\in\N_{K,\Lambda,T}}\|\bm y_\beta-g\|_2^2.
+\]
+Since \(\|a\|_2^2=T\|a\|_T^2\), and since the orthogonal projection gives the
+nearest point in \(\N_{K,\Lambda,T}\), the claim follows.
+\end{proof}
+
+\begin{lemma}[Projected moment and population identification]
+\label{lem:min-pop-ident}
+Let the true population nuisance space be
+\[
+    \Hh_0
+    =
+    \left\{
+    h(A)=\sum_{j=0}^{q_0}h_j(W)
+    \ind\{\tau_{j,0}<S\le \tau_{j+1,0}\}:h_j\in L^2(P_W)
+    \right\},
+\]
+where \(A=(S,W)\). Let \(M_0^P\) be the population residual-maker onto
+\(\Hh_0^\perp\). If \(\mu_0\in\Hh_0\), \(\E(U\mid X,A)=0\), and
+\[
+    \Gamma=\innerP{M_0^PX}{M_0^Pw}\ne0,
+\]
+then
+\[
+    \Psi(\beta,\Lambda_0)
+    =
+    \innerP{M_0^P(Y-\beta X)}{M_0^Pw}
+    =
+    -(\beta-\beta_0)\Gamma.
+\]
+Therefore \(\beta_0\) is the unique population zero.
+\end{lemma}
+
+\begin{proof}
+At the truth,
+\[
+    Y-\beta X=\mu_0+U-(\beta-\beta_0)X.
+\]
+Because \(\mu_0\in\Hh_0\), \(M_0^P\mu_0=0\). Because \(M_0^Pw\) is a function
+orthogonal to the nuisance space and \(\E(U\mid X,A)=0\), the population
+exogeneity condition gives
+\[
+    \innerP{M_0^PU}{M_0^Pw}=0.
+\]
+Thus
+\[
+    \Psi(\beta,\Lambda_0)
+    =
+    -(\beta-\beta_0)\innerP{M_0^PX}{M_0^Pw}
+    =
+    -(\beta-\beta_0)\Gamma.
+\]
+If \(\Gamma\ne0\), this equals zero only when \(\beta=\beta_0\).
+\end{proof}
+
+\begin{lemma}[Scalar EL is convex KKT]
+\label{lem:min-el-kkt}
+For fixed \((\beta,\Lambda)\), define
+\[
+    g_t(\beta,\Lambda)
+    =
+    \{\bm M_{K,\Lambda}(\bm y-\beta\bm x)\}_t
+    \{\bm M_{K,\Lambda}\bm w\}_t.
+\]
+The one-dimensional empirical likelihood problem is
+\[
+    \max_{\pi\in\Delta_T}\sum_{t=1}^T\log(T\pi_t)
+    \quad\text{subject to}\quad
+    \sum_{t=1}^T\pi_tg_t(\beta,\Lambda)=0.
+\]
+If zero lies in the interior of the convex hull of \(\{g_t\}_{t=1}^T\), the KKT
+weights have the form
+\[
+    \pi_t(\lambda)=\frac{1}{T\{1+\lambda g_t\}},
+    \qquad
+    P_T\left\{\frac{g_t}{1+\lambda g_t}\right\}=0,
+\]
+where \(P_Ta_t=T^{-1}\sum_ta_t\). If additionally
+\[
+    P_Tg_t=O(T^{-1/2}),\qquad
+    P_Tg_t^2\ge c>0,\qquad
+    \max_t|g_t|/\sqrt T=o(1),
+\]
+then
+\[
+    -2\log EL(\beta,\Lambda)
+    =
+    \frac{T(P_Tg_t)^2}{P_Tg_t^2}+o(1).
+\]
+\end{lemma}
+
+\begin{proof}
+The feasible set is the intersection of the probability simplex with the affine
+moment hyperplane \(\sum_t\pi_tg_t=0\). The Lagrangian first-order condition for
+\(\pi_t\), together with \(\sum_t\pi_t=1\), gives
+\[
+    \pi_t=\frac{1}{T(1+\lambda g_t)}
+\]
+for a scalar multiplier \(\lambda\). The moment restriction gives the displayed
+dual equation. Under the size conditions, the dual equation implies
+\[
+    \lambda=\frac{P_Tg_t}{P_Tg_t^2}+o(T^{-1/2})
+\]
+and \(\max_t|\lambda g_t|=o(1)\). Expanding
+\[
+    -2\log EL(\beta,\Lambda)
+    =
+    2\sum_{t=1}^T\log(1+\lambda g_t)
+\]
+to second order gives the quadratic formula.
+\end{proof}
+
+\section{The Good Event}
+
+The proof separates deterministic geometry from probability. Let
+\(\delta_T\downarrow0\). The good event is
+\[
+    \mathcal G_T
+    =
+    G_T^{\mathrm{iso}}
+    \cap G_T^{\mathrm{approx}}
+    \cap G_T^{\mathrm{angle}}
+    \cap G_T^{\mathrm{local}}
+    \cap G_T^{\mathrm{select}}
+    \cap G_T^{\mathrm{convex}}.
+\]
+The components mean:
+\begin{enumerate}[leftmargin=2em]
+\item \(G_T^{\mathrm{iso}}\): empirical Gram matrices and the empirical inner
+products used in the score, derivative, and variance are stable on the searched
+subspaces.
+\item \(G_T^{\mathrm{approx}}\): the true nuisance is close to the true
+break-aware sieve subspace. With \(\bm M_0=\bm M_{K,\Lambda_0}\),
+\(\bm r_{\mu,T}=\bm M_0\bm\mu_0\) satisfies
+\[
+    \|\bm r_{\mu,T}\|_T\le\delta_T,\qquad
+    T^{-1/2}|\bm r_{\mu,T}'\bm M_0\bm w|\le\delta_T.
+\]
+\item \(G_T^{\mathrm{angle}}\): the population transversality constant
+\(|\Gamma|\) is bounded away from zero, and the oracle score variance is
+nondegenerate. With \(\bm v_0=\bm M_0\bm w\),
+\[
+    A_T^0=T^{-1/2}\bm u'\bm v_0,\qquad
+    B_T^0=T^{-1}\sum_{t=1}^Tu_t^2v_{0,t}^2,
+\]
+we have \(|A_T^0|\le C\) and \(B_T^0\ge c>0\).
+\item \(G_T^{\mathrm{local}}\): the estimated partition can replace the true
+partition in the only directions needed by the score:
+\[
+    \sqrt T|\Psi_T(\beta_0,\widehat\Lambda)-\Psi_T(\beta_0,\Lambda_0)|
+    \le\delta_T,
+\]
+\[
+    |V_T(\widehat\Lambda)-V_T(\Lambda_0)|\le\delta_T,
+    \qquad
+    \sup_{\beta\in\mathcal B}
+    |\Psi_T(\beta,\widehat\Lambda)-\Psi_T(\beta,\Lambda_0)|\le\delta_T.
+\]
+Equivalently, residual-makers are close in the directional topology actually
+used by the proof, not necessarily in global operator norm.
+\item \(G_T^{\mathrm{select}}\): RSS selects a local break partition and, under
+unknown order, the penalized criterion selects \(q_0\).
+\item \(G_T^{\mathrm{convex}}\): the scalar EL moment cloud straddles zero and
+\(\max_t|g_t(\beta_0,\widehat\Lambda)|/\sqrt T\le\delta_T\), so the EL KKT root
+exists and the logarithmic barrier expansion is valid.
+\end{enumerate}
+
+\begin{center}
+\begin{tabular}{p{0.27\textwidth}p{0.6\textwidth}}
+\toprule
+Component & Used for \\
+\midrule
+\(G_T^{\mathrm{iso}}\) & stable projection geometry and denominator control \\
+\(G_T^{\mathrm{approx}}\) & remove the nuisance from the oracle score \\
+\(G_T^{\mathrm{angle}}\) & identification, nonzero derivative, nonzero variance \\
+\(G_T^{\mathrm{local}}\) & replace \(\Lambda_0\) by \(\widehat\Lambda\) \\
+\(G_T^{\mathrm{select}}\) & justify break localization and order selection \\
+\(G_T^{\mathrm{convex}}\) & justify EL KKT existence and quadratic expansion \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The full-detail version proves
+\[
+    \Pp(\mathcal G_T)\to1.
+\]
+The main body uses only the deterministic implications of \(\mathcal G_T\).
+
+\section{Deterministic Geometry on the Good Event}
+
+\begin{theorem}[Consistency on \(\mathcal G_T\)]
+\label{thm:min-consistency}
+Suppose Lemma~\ref{lem:min-pop-ident} holds. On \(\mathcal G_T\), if
+\[
+    |\Psi_T(\widehat\beta,\widehat\Lambda)|\le\delta_T,
+\]
+then
+\[
+    |\widehat\beta-\beta_0|\le \frac{2\delta_T}{|\Gamma|}.
+\]
+Consequently, if \(\Pp(\mathcal G_T)\to1\), then
+\(\widehat\beta\to_p\beta_0\).
+\end{theorem}
+
+\begin{proof}
+On \(\mathcal G_T\), the uniform bridge between sample and population moments
+gives
+\[
+    \sup_{\beta\in\mathcal B}
+    |\Psi_T(\beta,\widehat\Lambda)-\Psi(\beta,\Lambda_0)|\le\delta_T.
+\]
+Therefore
+\[
+    |\Psi(\widehat\beta,\Lambda_0)|
+    \le
+    |\Psi(\widehat\beta,\Lambda_0)-\Psi_T(\widehat\beta,\widehat\Lambda)|
+    +|\Psi_T(\widehat\beta,\widehat\Lambda)|
+    \le 2\delta_T.
+\]
+By Lemma~\ref{lem:min-pop-ident},
+\[
+    |\Psi(\widehat\beta,\Lambda_0)|
+    =
+    |\widehat\beta-\beta_0||\Gamma|,
+\]
+so the claim follows.
+\end{proof}
+
+\begin{theorem}[Wilks reduction on \(\mathcal G_T\)]
+\label{thm:min-wilks-reduction}
+Let
+\[
+    V_T(\Lambda)=P_Tg_t(\beta_0,\Lambda)^2.
+\]
+On \(\mathcal G_T\),
+\[
+    -2\log EL(\beta_0,\widehat\Lambda)
+    =
+    \frac{(A_T^0)^2}{B_T^0}+o(1),
+\]
+where
+\[
+    A_T^0=T^{-1/2}\bm u'\bm v_0,
+    \qquad
+    B_T^0=T^{-1}\sum_{t=1}^Tu_t^2v_{0,t}^2,
+    \qquad
+    \bm v_0=\bm M_0\bm w.
+\]
+If additionally
+\[
+    A_T^0\Rightarrow N(0,V),
+    \qquad
+    B_T^0\to_p V>0,
+\]
+then
+\[
+    -2\log EL(\beta_0,\widehat\Lambda)\Rightarrow \chi_1^2.
+\]
+\end{theorem}
+
+\begin{proof}
+By Lemma~\ref{lem:min-el-kkt} and \(G_T^{\mathrm{convex}}\),
+\[
+    -2\log EL(\beta_0,\widehat\Lambda)
+    =
+    \frac{T\{\Psi_T(\beta_0,\widehat\Lambda)\}^2}
+         {V_T(\widehat\Lambda)}+o(1).
+\]
+By \(G_T^{\mathrm{local}}\), \(\widehat\Lambda\) can be replaced by
+\(\Lambda_0\) in both numerator and denominator. At the true partition,
+\[
+    \sqrt T\Psi_T(\beta_0,\Lambda_0)
+    =
+    T^{-1/2}\bm u'\bm v_0
+    +
+    T^{-1/2}\bm r_{\mu,T}'\bm v_0
+    =
+    A_T^0+o(1),
+\]
+where the last equality uses \(G_T^{\mathrm{approx}}\). Also
+\[
+    V_T(\Lambda_0)=B_T^0+o(1)
+\]
+by \(G_T^{\mathrm{iso}}\) and the variance part of \(G_T^{\mathrm{angle}}\).
+Substitution gives the good-event reduction. The chi-square limit follows by
+Slutsky.
+\end{proof}
+
+\begin{proposition}[Break search is subspace selection]
+\label{prop:min-break-search}
+By Lemma~\ref{lem:min-rss-distance}, the break estimator chooses the nuisance
+subspace closest to \(\bm y-\beta\bm x\):
+\[
+    \widehat\Lambda_q(\beta)
+    \in
+    \arg\min_{\Lambda\in\mathcal L_q(\epsilon)}
+    \operatorname{dist}_T^2(\bm y-\beta\bm x,\N_{K,\Lambda,T}).
+\]
+On \(G_T^{\mathrm{select}}\), this nearest-subspace selector is local around
+\(\Lambda_0\), and the penalized selector chooses \(q_0\).
+\end{proposition}
+
+\section{Main Theorem}
+
+\begin{theorem}[Profile-sieve EL main theorem]
+\label{thm:min-main}
+Assume:
+\begin{enumerate}[leftmargin=2em]
+\item the model and population identification conditions in
+Lemma~\ref{lem:min-pop-ident};
+\item the stochastic regularity conditions imply \(\Pp(\mathcal G_T)\to1\);
+\item the oracle projected score satisfies
+\[
+    A_T^0=T^{-1/2}\bm u'\bm M_0\bm w\Rightarrow N(0,V),
+    \qquad
+    B_T^0=T^{-1}\sum_{t=1}^Tu_t^2(\bm M_0\bm w)_t^2\to_p V>0;
+\]
+\item the estimator satisfies the local projected moment condition, with
+probability tending to one,
+\[
+    |\Psi_T(\widehat\beta,\widehat\Lambda)|\le \delta_T.
+\]
+\end{enumerate}
+Then
+\[
+    \widehat\beta\to_p\beta_0
+\]
+and
+\[
+    -2\log EL(\beta_0,\widehat\Lambda)\Rightarrow \chi_1^2.
+\]
+\end{theorem}
+
+\begin{proof}
+Consistency follows from Theorem~\ref{thm:min-consistency} because
+\(\Pp(\mathcal G_T)\to1\). The Wilks result follows from
+Theorem~\ref{thm:min-wilks-reduction}, the oracle score CLT, and the oracle
+variance LLN.
+\end{proof}
+
+\section{Efficiency Add-On}
+
+Efficiency is not needed for Wilks validity. It requires an additional
+efficiency model. Let \(A=(S,W)\), and suppose the conditional Gaussian location
+calculation is valid:
+\[
+    U\mid X,A\sim N(0,\sigma^2(A)),
+    \qquad 0<c\le\sigma^2(A)\le C<\infty.
+\]
+The raw score is \(UX/\sigma^2(A)\), and the nuisance tangent directions are
+\[
+    Uh(A)/\sigma^2(A),\qquad h\in\Hh_0.
+\]
+Projecting the raw score away from the nuisance tangent space gives
+\[
+    S_{\mathrm{eff}}
+    =
+    \frac{U\{X-E(X\mid A)\}}{\sigma^2(A)}.
+\]
+The efficient information is
+\[
+    I_{\mathrm{eff}}
+    =
+    \E\left[
+    \frac{\{X-E(X\mid A)\}^2}{\sigma^2(A)}
+    \right].
+\]
+To make the projected sample score equal this efficient score, choose
+\[
+    w^*(X,A)=\frac{X}{\sigma^2(A)}.
+\]
+Because \(\sigma^2(A)\) is \(A\)-measurable,
+\[
+    M_0^Pw^*
+    =
+    \frac{X-E(X\mid A)}{\sigma^2(A)}.
+\]
+Thus, at \(\beta_0\),
+\[
+    \{M_0^P(Y-\beta_0X)\}\{M_0^Pw^*\}
+    =
+    \frac{U\{X-E(X\mid A)\}}{\sigma^2(A)}
+    =
+    S_{\mathrm{eff}}.
+\]
+If the sieve and estimated-break replacements preserve this score at
+\(T^{-1/2}\) scale, then any EL or moment root using \(w^*\) has
+\[
+    \sqrt T(\widehat\beta-\beta_0)
+    =
+    I_{\mathrm{eff}}^{-1}T^{-1/2}\sum_{t=1}^T
+    \frac{U_t\{X_t-E(X_t\mid A_t)\}}{\sigma^2(A_t)}
+    +o_p(1),
+\]
+and hence attains the semiparametric efficiency bound
+\[
+    I_{\mathrm{eff}}^{-1}
+    =
+    \left\{
+    \E\left[
+    \frac{\{X-E(X\mid A)\}^2}{\sigma^2(A)}
+    \right]
+    \right\}^{-1}.
+\]
+In the homoskedastic case, \(w^*=X/\sigma^2\), so the same root is obtained by
+using \(w=X\).
+
+\section{What This Minimal Body Leaves to the Full Version}
+
+The minimal body does not reprove the probability bounds. The full-detail body
+contains the supporting proofs for:
+\begin{enumerate}[leftmargin=2em]
+\item empirical Gram stability and empirical-to-population projection bridges;
+\item sieve approximation of the true nuisance and projected score directions;
+\item RSS localization and unknown-order penalty comparisons;
+\item estimated-break directional replacement;
+\item oracle score CLT and variance LLN;
+\item max-score and convex-hull control for EL;
+\item heteroskedastic efficient-weight replacement, if the efficiency theorem is
+used.
+\end{enumerate}
+The role of this minimal body is to show exactly how those stochastic facts are
+used once they are available.
+
+\end{document}

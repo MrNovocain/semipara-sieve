@@ -29,8 +29,8 @@
 
 \begin{center}
 {\Large\bf L2 Geometry Workbook for Profile Sieve EL}\\[6pt]
-{\large Three-Part Proof: Geometry, Small Stochastic Bounds, and Merging}\\[6pt]
-{\normalsize Solved derivation workbook}\\[12pt]
+{\large Full-Detail Main Body: Geometry, Stochastic Bounds, and Merge}\\[6pt]
+{\normalsize Complete standalone proof body with all derivations retained}\\[12pt]
 \end{center}
 
 \tableofcontents
@@ -86,12 +86,75 @@ projection; EL is the likelihood wrapper around the projected score.
 \fbox{\parbox{0.92\textwidth}{
 \textbf{Three-part proof map.} Part I is finite-sample geometry: profiling,
 residual scores, and EL are all KKT/convex objects in \(\LtwoT\). Part II is
-small stochastic verification: Gram stability, sieve and break errors, CLT,
+small stochastic certification of the random geometry: Gram stability, sieve and break errors, CLT,
 variance, max-score, and convex-hull size. Part III merges them: consistency
-comes from the moment bridge plus unique population zero, while Wilks comes
+comes from transversality plus the moment bridge, while Wilks comes
 from the EL KKT quadratic reduction plus the standardized score CLT.}}
 \end{center}
 
+\section{Unified Geometric Dictionary}
+
+This workbook uses one geometric dictionary throughout. The partition does not
+only index a design matrix. It indexes a nuisance subspace:
+\[
+    \mathfrak N_T:\Lambda\longmapsto \N_{K,\Lambda,T}
+    =\operatorname{col}(\bm Q_{K,\Lambda})\subset\LtwoT.
+\]
+Thus break search is a finite-dimensional subspace-selection problem. For each
+\(\Lambda\), the profiled nuisance estimate is the foot of the perpendicular
+from \(\bm y_\beta^\circ=\bm y-\beta\bm x\) to \(\N_{K,\Lambda,T}\), and the
+profile residual
+\[
+    \bm M_{K,\Lambda}\bm y_\beta^\circ
+\]
+lives in the normal space
+\[
+    \N_{K,\Lambda,T}^{\perp_T}.
+\]
+The raw score direction \(\bm w\) is also pushed into the same normal space:
+\[
+    \bm M_{K,\Lambda}\bm w\in \N_{K,\Lambda,T}^{\perp_T}.
+\]
+Therefore inference for \(\beta\) takes place in the quotient geometry
+\[
+    \LtwoT/\N_{K,\Lambda,T}
+    \quad\text{or equivalently in}\quad
+    \N_{K,\Lambda,T}^{\perp_T}.
+\]
+The projected moment is the inner product of two normal components:
+\[
+    \Psi_T(\beta,\Lambda)
+    =\innerT{\bm M_{K,\Lambda}(\bm y-\beta\bm x)}
+             {\bm M_{K,\Lambda}\bm w}.
+\]
+
+The empirical likelihood part adds a second geometry. For the scalar moment
+\(g_t(\beta,\Lambda)\), define
+\[
+    C_T(\beta,\Lambda)
+    =\left\{\pi\in\Delta_T:
+      \sum_{t=1}^T\pi_tg_t(\beta,\Lambda)=0\right\},
+\]
+where \(\Delta_T=\{\pi_t\ge0,\sum_t\pi_t=1\}\). EL is the intersection of the
+probability simplex with a moment hyperplane. The multiplier \(\lambda_T\) is
+the normal coordinate to that hyperplane, and Wilks is the local quadratic
+curvature of the logarithmic barrier around the uniform weight vector.
+
+Finally, estimated partitions are compared in the topology the proof actually
+uses, not in operator norm. For a set of relevant directions \(\mathcal D_T\),
+define
+\[
+    d_{\mathcal D,T}(M_1,M_0)
+    =\sup_{a,b\in\mathcal D_T}
+      \left|T^{-1/2}a'(M_1-M_0)b\right|.
+\]
+The relevant directions are the few vectors that enter the score and derivative,
+such as \(\bm\mu_0,\bm u,\bm x,\bm w\), and in the efficient theorem
+\(\bm w^*\). The estimated-break proof requires
+\[
+    d_{\mathcal D,T}(\bm M_{K,\widehat\Lambda},\bm M_0)=o_p(1),
+\]
+not \(\|\bm M_{K,\widehat\Lambda}-\bm M_0\|_{op}=o_p(1)\).
 \section{Finite-Sample Hilbert Space: Viewing the Entire Model in \texorpdfstring{\(L^2(P_T)\)}{L2PT}}
 
 \subsection{The empirical space}
@@ -640,7 +703,7 @@ The term \(T^{-1/2}\bm r_0'\bm v_0\) is the only approximation-rate term in this
 decomposition, because it is the only term containing the sieve residual
 \(\bm r_0\).
 \end{proof}
-\section{Omitted Breaks: False Predictivity as a Projection Drift}
+\section{Omitted Breaks: False Predictivity as a Projection Angle}
 
 Let \(\N_{K,0,T}\) be the stable/no-break nuisance space and let
 \(\bm M_{\mathrm{st}}\) be the residual-maker for orthogonal projection onto
@@ -728,6 +791,23 @@ which proves \eqref{eq:stable-score-drift-inner-product}. If the empirical
 inner product converges to \(b\ne0\), the drift is \(B_T=\sqrt T\,b+o(\sqrt T)\).
 \end{proof}
 
+The same statement can be read as an angle condition. On the stable normal
+space, define the empirical cosine
+\[
+    \cos_T(\bm M_{\mathrm{st}}\bm\mu_0,\bm v_{\mathrm{st}})
+    =\frac{\innerT{\bm M_{\mathrm{st}}\bm\mu_0}{\bm v_{\mathrm{st}}}}
+           {\|\bm M_{\mathrm{st}}\bm\mu_0\|_T\|\bm v_{\mathrm{st}}\|_T},
+\]
+when both norms are nonzero. Then
+\[
+    B_T=\sqrt T\,
+    \|\bm M_{\mathrm{st}}\bm\mu_0\|_T\,\|\bm v_{\mathrm{st}}\|_T\,
+    \cos_T(\bm M_{\mathrm{st}}\bm\mu_0,\bm v_{\mathrm{st}}).
+\]
+Thus false predictivity is a nonzero angle between the unremoved nuisance
+residue and the residualized score direction. The correct break-aware projection
+is needed because it makes the nuisance residue \(\bm M_0\bm\mu_0\) small in the
+relevant normal space.
 As a toy example, suppose there are no covariates and the stable nuisance space
 contains only constants:
 \[
@@ -831,7 +911,14 @@ The reason this is weaker than operator-norm convergence is visible from
 \eqref{eq:estimated-partition-score-decomposition}. We do not need
 \(\|\widehat M_T-\bm M_0\|_{op}\to0\). We only need the difference to be small
 when applied to the score direction \(\bm w\) and paired with \(\bm\mu_0\) and
-\(\bm u\), plus the analogous second-moment replacement.
+\(\bm u\), plus the analogous second-moment replacement. In the directional
+topology of the geometric dictionary, this is a statement that
+\[
+    d_{\mathcal D,T}(\widehat M_T,\bm M_0)=o_p(1)
+\]
+for a direction set \(\mathcal D_T\) containing the vectors that appear in the
+score, variance, and derivative. This is the topology induced by the theorem,
+not an after-the-fact weakening of an operator-norm claim.
 
 The localization proof uses the RSS distance identity from
 Lemma~\ref{lem:rss-hilbert-distance}. At \(\beta_0\), set
@@ -1068,6 +1155,17 @@ The relevance condition is
 \[
     \Gamma=\innerP{M_0^PX}{v_0^P}\ne0.
 \]
+Geometrically this is a transversality condition. After quotienting out the
+nuisance tangent space, the parametric direction is not invisible to the chosen
+normal score direction:
+\[
+    M_0^PX\not\perp_P M_0^Pw.
+\]
+Equivalently, the \(\beta\)-line crosses the population moment hyperplane
+non-tangentially. If \(M_0^PX\) were orthogonal to every usable residualized
+score direction, the parametric direction would be swallowed by the nuisance
+space and \(\beta\) would not be identified by this moment.
+
 Under these two conditions,
 \[
     \Psi(\beta,\Lambda_0)=-(\beta-\beta_0)\Gamma.
@@ -2613,7 +2711,7 @@ and
     \left|\innerT{\bm M_{K,\widehat\Lambda}\bm x}
     {\bm M_{K,\widehat\Lambda}(\widehat{\bm w}^*-\bm w^*)}\right|=\op(1).
 \]
-This plug-in statement is an appendix-level add-on; the main optional theorem
+This plug-in statement is a secondary add-on; the main optional theorem
 should use either \(w=X\) under homoskedasticity or the oracle heteroskedastic
 weight \(w^*=X/\sigma^2(A)\).
 \end{remark}
@@ -2621,91 +2719,525 @@ This theorem is conditional on the efficiency model and the efficient-weight
 choice. With only martingale exogeneity and no conditional variance or local
 likelihood structure, the workbook proves valid profile EL Wilks inference, but
 not a Fisher-style semiparametric efficiency bound.
-\section{Three-Part Logic Checklist}
+\part{Final Geometry-First Main Proof}
 
-\begin{center}
-\begin{tabular}{>{\raggedright\arraybackslash}p{0.22\textwidth}
-                >{\raggedright\arraybackslash}p{0.35\textwidth}
-                >{\raggedright\arraybackslash}p{0.33\textwidth}}
-\toprule
-Proof part & Object & What it proves \\
-\midrule
-Geometry / KKT &
-\(\bm y=\beta_0\bm x+\bm\mu_0+\bm u\in\LtwoT\) &
-The full sample model is a Hilbert-space identity. \\
-\addlinespace
-Geometry / KKT &
-\(\N_{K,\Lambda,T}=\operatorname{col}(Q_{K,\Lambda})\) &
-The sieve basis represents the nuisance tangent plane. \\
-\addlinespace
-Geometry / KKT &
-\(M_{K,\Lambda}=I-\Pi_{K,\Lambda,T}\) &
-Profiling is the KKT normal equation for orthogonal projection. \\
-\addlinespace
-Geometry / KKT &
-\(g_t=\{M(y-\beta x)\}_t\{Mw\}_t\) &
-The profile score is one projected inner product. \\
-\addlinespace
-Geometry / KKT &
-EL primal/dual KKT &
-EL is a convex simplex problem cut by the moment hyperplane. \\
-\addlinespace
-Population geometry &
-\(\Psi(\beta,\Lambda_0)=-(\beta-\beta_0)\Gamma\) &
-Exogeneity and relevance give the unique population zero. \\
-\addlinespace
-Small stochastic &
-\(\sup_\beta|\Psi_T-\Psi|=\op(1)\) &
-The sample projected moment reaches the population moment. \\
-\addlinespace
-Small stochastic &
-CLT, variance, max-score, convex hull &
-The EL KKT expansion is valid locally and the standardized score is normal. \\
-\addlinespace
-Merging &
-Moment bridge plus unique zero &
-Consistency: \(\widehat\beta_T\to_p\beta_0\). \\
-\addlinespace
-Merging &
-EL KKT quadratic reduction plus CLT &
-Wilks: \(\ell_T(\beta_0,\widehat\Lambda)\Rightarrow\chi_1^2\). \\
-\bottomrule
-\end{tabular}
-\end{center}
+\section{Final Main Proof: Good-Event Geometry Before Probability}
 
-\section{Minimal Final Statement}
-
-The full profile-sieve EL proof is a three-part argument.
-
-\begin{quote}
-\textbf{Geometric/KKT body.} In \(\LtwoT\), the model is
-\(\bm y=\beta_0\bm x+\bm\mu_0+\bm u\). A candidate partition and sieve define the
-nuisance tangent plane \(\N_{K,\Lambda,T}=\operatorname{col}(Q_{K,\Lambda})\).
-Profiling is orthogonal projection onto this space. The residual score is the
-projected inner product
+The final main proof reorganizes the preceding detailed derivations around the geometric dictionary above. Instead
+of presenting many steps as stochastic lemmas first, it separates the argument
+into two layers:
 \[
-    \Psi_T(\beta,\Lambda)
-    =\innerT{M_{K,\Lambda}(\bm y-\beta\bm x)}{M_{K,\Lambda}\bm w}.
+\begin{array}{c}
+    \text{deterministic geometry on a good event}\\[3pt]
+    +\\[3pt]
+    \text{stochastic proof that the good event}\\
+    \text{has probability }1-o(1)
+\end{array}
 \]
-EL is then a convex simplex problem with the moment hyperplane
-\(\sum_t\pi_tg_t=0\), whose KKT system gives
-\(\pi_t=1/[T\{1+\lambda g_t\}]\).
+The geometric layer is a finite-sample statement in \(L^2(P_T)\). It uses only
+projection identities, KKT identities, distance comparisons, and deterministic
+size inequalities. The stochastic layer proves that the deterministic hypotheses
+of the geometric layer are satisfied with probability tending to one.
 
-\textbf{Small stochastic body.} The stochastic lemmas verify that the empirical
-projection, estimated break partition, sieve approximation, score variance,
-convex hull, and max-score terms are small enough for the sample KKT objects to
-approximate their population limits.
+This is the main proof slogan:
+\[
+    \mathcal G_T
+    \Longrightarrow
+    \left\{
+    \begin{array}{l}
+    \text{moment bridge and consistency},\\
+    \text{EL KKT quadratic reduction},\\
+    \text{estimated-partition score and variance replacement},\\
+    \text{Wilks reduction to a standardized score},\\
+    \text{optional efficient-score linearization when }w=w^*.
+    \end{array}
+    \right.
+\]
+Then Part II proves \(\Pr(\mathcal G_T)\to1\), and the remaining stochastic
+input is only the CLT/LLN for the oracle score.
 
-\textbf{Merging body.} For consistency, combine
-\(\Psi_T\to\Psi\) with the unique population zero. For Wilks, combine the EL KKT
-quadratic reduction with the standardized score CLT:
+\section{The Good Event}
+
+Fix a deterministic sequence \(\delta_T\downarrow0\) and constants
+\(0<c<C<\infty\). The good event is written as a set of geometric regularity
+conditions:
+\[
+    \mathcal G_T
+    =G_T^{\mathrm{iso}}
+     \cap G_T^{\mathrm{approx}}
+     \cap G_T^{\mathrm{angle}}
+     \cap G_T^{\mathrm{local}}
+     \cap G_T^{\mathrm{select}}
+     \cap G_T^{\mathrm{convex}}.
+\]
+These names are not cosmetic. They identify which geometric fact each
+stochastic lemma must certify.
+
+\begin{enumerate}[leftmargin=2em]
+\item \textbf{Approximate isometry: \(G_T^{\mathrm{iso}}\).} For all searched
+partitions \(\Lambda\in\mathcal L_T\), the empirical Gram matrix of
+\(\bm Q_{K,\Lambda}\) is nonsingular with eigenvalues in \([c,C]\). The empirical
+inner products appearing in \(\Psi_T\), the derivative, and the variance differ
+from their population analogues by at most \(\delta_T\), uniformly over the
+needed finite-dimensional directions. This says the random \(L^2(P_T)\) geometry
+is approximately isometric to the population geometry on the relevant subspaces.
+
+\item \textbf{Small nuisance distance: \(G_T^{\mathrm{approx}}\).} With
+\(\bm r_{\mu,T}=\bm M_0\bm\mu_0\),
+\[
+    \|\bm r_{\mu,T}\|_T\le \delta_T,
+    \qquad
+    \sqrt T\,|\innerT{\bm r_{\mu,T}}{\bm v_0}|\le \delta_T,
+    \qquad
+    P_T(r_{\mu,T,t}^2v_{0,t}^2)\le \delta_T.
+\]
+This says the true nuisance surface lies close to the true break-aware sieve
+subspace, and its normal residue is negligible in the score direction.
+
+\item \textbf{Angle and nondegeneracy: \(G_T^{\mathrm{angle}}\).} Let
+\[
+    A_T^0=T^{-1/2}\bm u'\bm v_0,
+    \qquad
+    B_T^0=T^{-1}\sum_{t=1}^T u_t^2v_{0,t}^2.
+\]
+The score is bounded at the local KKT scale, \(|A_T^0|\le C\), and the variance
+is nondegenerate, \(B_T^0\ge c\). At the population level, the transversality
+constant satisfies \(|\Gamma|\ge c\). This is the finite-sample version of the
+statement that the residualized parametric direction has a nonzero angle with
+the chosen residualized score direction.
+
+\item \textbf{Local subspace stability: \(G_T^{\mathrm{local}}\).} The estimated
+partition lies in the local window, \(\widehat\Lambda\in\mathcal N_T(r_T)\), and
+throughout this window,
+\[
+    \sup_{\Lambda\in\mathcal N_T(r_T)}
+    \sqrt T\,|\Psi_T(\beta_0,\Lambda)-\Psi_T(\beta_0,\Lambda_0)|\le\delta_T,
+\]
+\[
+    \sup_{\Lambda\in\mathcal N_T(r_T)}
+    |V_T(\Lambda)-V_T(\Lambda_0)|\le\delta_T,
+\]
+\[
+    \sup_{\Lambda\in\mathcal N_T(r_T)}\sup_{\beta\in\mathcal B}
+    |\Psi_T(\beta,\Lambda)-\Psi_T(\beta,\Lambda_0)|\le\delta_T.
+\]
+Equivalently, the residual-makers are close in the directional topology needed
+by the proof, not necessarily in operator norm.
+
+\item \textbf{Subspace selection: \(G_T^{\mathrm{select}}\).} Outside the local
+window, the projection-distance drift dominates the noise fluctuation:
+\[
+    \inf_{\Lambda\in\mathcal L_T\setminus\mathcal N_T(r_T)}
+    \{RSS_K(\beta_0,\Lambda)-RSS_K(\beta_0,\Lambda_0)\}>0.
+\]
+For unknown order, every underfitted order has larger penalized criterion than
+\(q_0\), and every overfitted order also has larger penalized criterion than
+\(q_0\). This is the nearest-subspace selection event.
+
+\item \textbf{Convex feasibility: \(G_T^{\mathrm{convex}}\).} The max condition
+holds,
+\[
+    \max_t|g_t(\beta_0,\widehat\Lambda)|/\sqrt T\le\delta_T,
+\]
+and the scalar convex hull of
+\(\{g_t(\beta_0,\widehat\Lambda):1\le t\le T\}\) contains zero in its interior.
+This says the simplex-hyperplane intersection defining EL is locally feasible
+and the logarithmic barrier expansion is valid.
+\end{enumerate}
+
+Part II certifies
+\[
+    \Pr(\mathcal G_T)\to1
+\]
+for suitable \(\delta_T\downarrow0\), constants, and rates.
+\section{Geometry Theorem I: Consistency Is Deterministic on \texorpdfstring{\(\mathcal G_T\)}{GT}}
+
+\begin{theorem}[Good-event consistency]
+\label{thm:v2-good-event-consistency}
+Assume the population geometry from Part I gives
+\[
+    \Psi(\beta,\Lambda_0)=-(\beta-\beta_0)\Gamma,
+    \qquad \Gamma\ne0.
+\]
+On \(\mathcal G_T\), if \(\widehat\beta_T\in\mathcal B\) satisfies
+\[
+    |\Psi_T(\widehat\beta_T,\widehat\Lambda)|\le\delta_T,
+\]
+then
+\[
+    |\widehat\beta_T-\beta_0|\le \frac{2\delta_T}{|\Gamma|}
+\]
+for all large \(T\). Hence consistency follows once
+\(\Pr(\mathcal G_T)\to1\).
+\end{theorem}
+
+\begin{proof}
+On \(\mathcal G_T\), the uniform moment bridge gives
+\[
+    \sup_{\beta\in\mathcal B}
+    |\Psi_T(\beta,\widehat\Lambda)-\Psi(\beta,\Lambda_0)|\le\delta_T.
+\]
+Therefore
+\[
+    |\Psi(\widehat\beta_T,\Lambda_0)|
+    \le |\Psi(\widehat\beta_T,\Lambda_0)
+          -\Psi_T(\widehat\beta_T,\widehat\Lambda)|
+       +|\Psi_T(\widehat\beta_T,\widehat\Lambda)|
+    \le 2\delta_T.
+\]
+The population geometry gives
+\(|\Psi(\widehat\beta_T,\Lambda_0)|=|\widehat\beta_T-\beta_0||\Gamma|\), which
+proves the claim.
+\end{proof}
+
+\section{Geometry Theorem II: EL Is Convex KKT Plus a Size Event}
+
+\begin{theorem}[Good-event EL quadratic reduction]
+\label{thm:v2-good-event-el}
+On \(\mathcal G_T\), the scalar EL dual root at
+\((\beta_0,\widehat\Lambda)\) exists and satisfies
+\[
+    \lambda_T
+    =\frac{P_Tg_t(\beta_0,\widehat\Lambda)}
+           {P_Tg_t(\beta_0,\widehat\Lambda)^2}
+      +o_{\mathcal G}(T^{-1/2}),
+\]
+where \(o_{\mathcal G}(\cdot)\) denotes a deterministic remainder controlled on
+\(\mathcal G_T\). Moreover,
+\[
+    \ell_T(\beta_0,
+    \widehat\Lambda)
+    =\frac{T\{\Psi_T(\beta_0,\widehat\Lambda)\}^2}
+           {V_T(\widehat\Lambda)}+o_{\mathcal G}(1).
+\]
+\end{theorem}
+
+\begin{proof}
+The EL problem is the finite-dimensional convex simplex problem from Part I.
+On \(\mathcal G_T\), the scalar convex hull contains zero in its interior, so the
+KKT multiplier \(\lambda_T\) exists and satisfies
+\[
+    P_T\left\{\frac{g_t}{1+\lambda_Tg_t}\right\}=0,
+    \qquad 1+\lambda_Tg_t>0.
+\]
+The same event gives \(P_Tg_t=O(T^{-1/2})\),
+\(P_Tg_t^2\ge c/2\), and \(\max_t|g_t|/\sqrt T\le\delta_T\). The deterministic
+KKT expansion from Lemma~\ref{lem:part2-scalar-el-proof-claim} then gives the
+multiplier expansion and
+\[
+    2\sum_t\log(1+\lambda_Tg_t)
+    =\frac{T(P_Tg_t)^2}{P_Tg_t^2}+o_{\mathcal G}(1).
+\]
+Since \(P_Tg_t=\Psi_T(\beta_0,\widehat\Lambda)\) and
+\(P_Tg_t^2=V_T(\widehat\Lambda)\), the displayed formula follows.
+\end{proof}
+
+\section{Geometry Theorem III: Directional Break Perturbations}
+
+The important v2 point is that the estimated-partition argument does not need
+operator-norm convergence of \(\bm M_{K,\widehat\Lambda}\) to \(\bm M_0\).
+Projection matrices for two nearby break partitions may differ substantially as
+operators. What matters is their action on the few directions entering the
+score:
+\[
+    \bm y_{\beta_0}^\circ=\bm\mu_0+\bm u,
+    \qquad \bm x,
+    \qquad \bm w.
+\]
+
+\begin{proposition}[Good-event estimated-partition bridge]
+\label{prop:v2-good-event-break-bridge}
+On \(\mathcal G_T\),
+\[
+    \sqrt T\{\Psi_T(\beta_0,\widehat\Lambda)
+      -\Psi_T(\beta_0,\Lambda_0)\}=o_{\mathcal G}(1),
+\]
+\[
+    V_T(\widehat\Lambda)-V_T(\Lambda_0)=o_{\mathcal G}(1),
+\]
+and
+\[
+    \sup_{\beta\in\mathcal B}
+    |\Psi_T(\beta,\widehat\Lambda)-\Psi_T(\beta,\Lambda_0)|=o_{\mathcal G}(1).
+\]
+\end{proposition}
+
+\begin{proof}
+Because \(\widehat\Lambda\in\mathcal N_T(r_T)\) on \(\mathcal G_T\), the three
+displayed inequalities are immediate from the local directional replacement
+component of \(\mathcal G_T\). The geometric reason this is plausible is local
+support: when a candidate break is \(h\) observations away from a true break,
+the regime labels differ only on a boundary block of size \(h\). The nuisance
+part is a projection residual supported on that block plus the sieve remainder,
+and the stochastic part is the directional quantity
+\(\bm u'(\bm M_{K,\Lambda}-\bm M_0)\bm w\). Part II proves these quantities are
+small with high probability; this proposition only uses the resulting good-event
+inequalities.
+\end{proof}
+
+\section{Geometry Theorem IV: Wilks Is a Two-Step Consequence}
+
+\begin{theorem}[Good-event Wilks reduction]
+\label{thm:v2-good-event-wilks-reduction}
+On \(\mathcal G_T\),
 \[
     \ell_T(\beta_0,\widehat\Lambda)
-    =\frac{T\Psi_T(\beta_0,\widehat\Lambda)^2}{V_T(\widehat\Lambda)}+\op(1),
-    \qquad
-    \frac{\sqrt T\Psi_T(\beta_0,\widehat\Lambda)}
-         {\sqrt{V_T(\widehat\Lambda)}}\Rightarrow N(0,1).
+    =\frac{(A_T^0)^2}{B_T^0}+o_{\mathcal G}(1),
 \]
-Therefore \(\ell_T(\beta_0,\widehat\Lambda)\Rightarrow\chi_1^2\).
-\end{quote}
+where
+\[
+    A_T^0=T^{-1/2}\bm u'\bm v_0,
+    \qquad
+    B_T^0=T^{-1}\sum_{t=1}^T u_t^2v_{0,t}^2.
+\]
+Consequently, if the stochastic shell proves
+\[
+    A_T^0\Rightarrow N(0,V),
+    \qquad B_T^0\to_p V>0,
+\]
+then
+\[
+    \ell_T(\beta_0,\widehat\Lambda)\Rightarrow\chi_1^2.
+\]
+\end{theorem}
+
+\begin{proof}
+Theorem~\ref{thm:v2-good-event-el} gives
+\[
+    \ell_T(\beta_0,\widehat\Lambda)
+    =\frac{T\{\Psi_T(\beta_0,\widehat\Lambda)\}^2}
+           {V_T(\widehat\Lambda)}+o_{\mathcal G}(1).
+\]
+The estimated-partition bridge replaces \(\widehat\Lambda\) by \(\Lambda_0\).
+At the true partition,
+\[
+    \sqrt T\Psi_T(\beta_0,\Lambda_0)
+    =T^{-1/2}\bm u'\bm v_0
+      +T^{-1/2}\bm r_{\mu,T}'\bm v_0
+    =A_T^0+o_{\mathcal G}(1),
+\]
+and
+\[
+    V_T(\Lambda_0)=B_T^0+o_{\mathcal G}(1).
+\]
+Substitution gives the displayed good-event reduction. The final
+\(\chi_1^2\) conclusion is now purely stochastic Slutsky: geometry has reduced
+EL to the square of the standardized oracle score.
+\end{proof}
+
+\section{Geometry Theorem V: Break Search Is Subspace Selection}
+
+\begin{proposition}[Good-event break localization and order selection]
+\label{prop:v2-good-event-rss-selection}
+On the RSS separation component of \(\mathcal G_T\), the known-order RSS
+estimator satisfies
+\[
+    \widehat\Lambda\in\mathcal N_T(r_T).
+\]
+On the unknown-order penalty component of \(\mathcal G_T\),
+\[
+    \widehat q=q_0.
+\]
+\end{proposition}
+
+\begin{proof}
+The finite-sample RSS identity from Part I gives
+\[
+    RSS_K(\beta_0,\Lambda)
+    =T\operatorname{dist}_T^2(\bm y-\beta_0\bm x,
+      \N_{K,\Lambda,T}).
+\]
+Thus break search is selection among candidate nuisance subspaces. On the RSS
+separation component of \(\mathcal G_T\), every partition outside the local
+window has larger RSS than \(\Lambda_0\), so an RSS minimizer must lie inside
+\(\mathcal N_T(r_T)\). For order selection, the same deterministic comparison
+applies to the penalized criterion: underfitted orders have deterministic
+omitted-break distance loss larger than any penalty saving, and overfitted
+orders have penalty increases larger than any spurious distance gain. Therefore
+\(\widehat q=q_0\) on the event.
+\end{proof}
+
+\section{Optional Efficiency in the Final Main Proof}
+
+The optional efficiency result also has a geometric good-event form. Add the
+efficient model and the efficient weight
+\[
+    w^*=X/\sigma^2(A),
+    \qquad A=(J_0,W),
+\]
+as in the optional theorem above. Add the efficiency event \(\mathcal G_T^{\rm eff}\):
+\[
+    \left\|\bm M_0\bm w^*-
+    \left(\frac{\widetilde X_1}{\sigma^2(A_1)},\ldots,
+          \frac{\widetilde X_T}{\sigma^2(A_T)}\right)'\right\|_T
+    \le\delta_T,
+\]
+\[
+    T^{-1/2}|\bm r_{\mu,T}'\bm M_0\bm w^*|\le\delta_T,
+\]
+\[
+    \sqrt T|\Psi_T^*(\beta_0,\widehat\Lambda)
+      -\Psi_T^*(\beta_0,\Lambda_0)|\le\delta_T,
+\]
+and
+\[
+    \left|\innerT{\bm M_{K,\widehat\Lambda}\bm x}
+      {\bm M_{K,\widehat\Lambda}\bm w^*}
+      -\innerT{\bm M_0\bm x}{\bm M_0\bm w^*}\right|\le\delta_T,
+    \qquad
+    \innerT{\bm M_0\bm x}{\bm M_0\bm w^*}\to I_{\mathrm{eff}}>0.
+\]
+
+\begin{theorem}[Good-event efficient linearization]
+\label{thm:v2-good-event-efficiency}
+On \(\mathcal G_T\cap\mathcal G_T^{\rm eff}\), if
+\[
+    \Psi_T^*(\widehat\beta_T,\widehat\Lambda)=o_{\mathcal G}(T^{-1/2}),
+\]
+then
+\[
+    \sqrt T(\widehat\beta_T-\beta_0)
+    =I_{\mathrm{eff}}^{-1}
+      T^{-1/2}\sum_{t=1}^T
+      \frac{U_t\{X_t-E(X_t\mid A_t)\}}{\sigma^2(A_t)}
+      +o_{\mathcal G}(1).
+\]
+\end{theorem}
+
+\begin{proof}
+For fixed \(\Lambda\), \(\Psi_T^*(\beta,\Lambda)\) is affine in \(\beta\), with
+slope
+\[
+    -\innerT{\bm M_{K,\Lambda}\bm x}{\bm M_{K,\Lambda}\bm w^*}.
+\]
+Expanding the root at \(\beta_0\) and using the derivative bridge gives
+\[
+    \sqrt T(\widehat\beta_T-\beta_0)
+    =\left\{\innerT{\bm M_0\bm x}{\bm M_0\bm w^*}\right\}^{-1}
+      \sqrt T\Psi_T^*(\beta_0,\Lambda_0)+o_{\mathcal G}(1).
+\]
+The efficient-score approximation event gives
+\[
+    \sqrt T\Psi_T^*(\beta_0,\Lambda_0)
+    =T^{-1/2}\sum_{t=1}^T
+      \frac{U_t\{X_t-E(X_t\mid A_t)\}}{\sigma^2(A_t)}+o_{\mathcal G}(1),
+\]
+and the denominator converges to \(I_{\mathrm{eff}}\). This proves the result.
+The limiting normal distribution and efficiency bound are then supplied by the
+stochastic shell: the efficient-score CLT and the standard Hilbert-space
+information inequality.
+\end{proof}
+
+\section{What Remains Stochastic in the Final Main Proof}
+
+The v2 proof makes the main body geometric, but it does not pretend probability
+has disappeared. The genuinely stochastic tasks are exactly these:
+\begin{enumerate}[leftmargin=2em]
+\item uniform empirical Gram and inner-product laws, which put the sample
+projection geometry close to population geometry;
+\item sieve approximation rates for \(\mu_0\), \(E(w\mid A)\), and, in the
+efficient theorem, \(E(w^*\mid A)\);
+\item RSS concentration, which proves the distance gap for wrong partitions is
+not overwhelmed by noise;
+\item break-date localization and unknown-order penalty probability statements;
+\item martingale or mixing CLT for \(T^{-1/2}\bm u'\bm v_0\), and the matching
+variance LLN;
+\item max-score and convex-hull probability bounds for the scalar EL KKT root;
+\item in the optional efficiency theorem, the efficient-score CLT and any
+plug-in variance-weight replacement.
+\end{enumerate}
+
+Thus the final proof body is:
+\[
+\begin{array}{c}
+    \text{Part I geometry}\\
+    \Longrightarrow\\
+    \text{good-event finite-sample reductions}\\
+    \Longrightarrow\\
+    \text{Part II proves }\Pr(\mathcal G_T)\to1\\
+    \Longrightarrow\\
+    \text{CLT gives Wilks or efficiency.}
+\end{array}
+\]
+The stochastic lemmas certify the good event rather than carrying the main logical burden.
+\section{Minimal Final Statement}
+
+The complete proof is governed by one geometric object: the subspace-valued map
+\[
+    \Lambda\longmapsto \N_{K,\Lambda,T}\subset L^2(P_T).
+\]
+For a trial \(\beta\), profiling is the orthogonal projection of
+\(\bm y-\beta\bm x\) onto this nuisance subspace. The profiled residual and the
+score direction both live in the normal space
+\(\N_{K,\Lambda,T}^{\perp_T}\), so the projected moment is
+\[
+    \Psi_T(\beta,
+    \Lambda)=\innerT{\bm M_{K,\Lambda}(\bm y-\beta\bm x)}
+                    {\bm M_{K,\Lambda}\bm w}.
+\]
+Population identification is the corresponding normal-space statement in
+\(L^2(P)\): the nuisance disappears under \(M_0^P\), and transversality
+\[
+    \Gamma=\innerP{M_0^PX}{M_0^Pw}\ne0
+\]
+forces the population moment line to cross zero only at \(\beta_0\).
+
+Break search is nearest-subspace selection:
+\[
+    RSS_K(\beta,\Lambda)
+    =T\operatorname{dist}_T^2(\bm y-\beta\bm x,
+      \N_{K,\Lambda,T}).
+\]
+A wrong break chooses the wrong subspace. A stable no-break nuisance space can
+leave a nonzero normal component \(\bm M_{\mathrm{st}}\bm\mu_0\); false
+predictivity is the nonzero angle between this omitted nuisance residue and the
+residualized score direction.
+
+EL adds convex geometry. The empirical likelihood feasible set is
+\[
+    C_T(\beta,\Lambda)=
+    \left\{\pi\in\Delta_T:\sum_t\pi_tg_t(\beta,\Lambda)=0\right\},
+\]
+the intersection of the probability simplex with a moment hyperplane. The EL
+multiplier is the normal coordinate to that hyperplane, and the Wilks expansion
+is the local quadratic curvature of the logarithmic barrier around uniform
+weights.
+
+The stochastic lemmas certify the good event
+\[
+    \mathcal G_T
+    =G_T^{\mathrm{iso}}
+     \cap G_T^{\mathrm{approx}}
+     \cap G_T^{\mathrm{angle}}
+     \cap G_T^{\mathrm{local}}
+     \cap G_T^{\mathrm{select}}
+     \cap G_T^{\mathrm{convex}},
+    \qquad \Pr(\mathcal G_T)\to1.
+\]
+On this event the proof is deterministic geometry: consistency follows from the
+uniform moment bridge plus transversality; EL reduces to the square of the
+standardized projected score; estimated breaks can replace true breaks because
+\(\widehat M_T\) is close to \(M_0\) in the directional topology actually used by
+the score, not in global operator norm. The remaining probability is the oracle
+score CLT and variance LLN, giving
+\[
+    \ell_T(\beta_0,\widehat\Lambda)\Rightarrow\chi_1^2.
+\]
+
+The optional efficiency theorem is separate. Under the conditional Gaussian
+location efficiency model and efficient weight \(w^*=X/\sigma^2(A)\), the same
+normal-space projection gives
+\[
+    M_0^Pw^*=\frac{X-E(X\mid A)}{\sigma^2(A)}
+\]
+and hence the projected score equals the efficient score. With the efficient
+sieve approximation and estimated-partition derivative bridge,
+\[
+    \sqrt T(\widehat\beta_T-\beta_0)
+    =I_{\mathrm{eff}}^{-1}T^{-1/2}\sum_{t=1}^T
+      \frac{U_t\{X_t-E(X_t\mid A_t)\}}{\sigma^2(A_t)}+
+      o_p(1).
+\]
+Thus efficiency is a conditional add-on to the Wilks proof, not part of the
+minimal validity argument.
 \end{document}
